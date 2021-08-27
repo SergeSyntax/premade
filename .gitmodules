@@ -1,0 +1,3 @@
+[submodule "microservices-common"]
+	path = ticketing/common
+	url = git@github.com:SergwayKhodyachikh/microservices-common.git
