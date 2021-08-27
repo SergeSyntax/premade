@@ -1,4 +1,4 @@
-import { NotAuthorizedError, NotFoundError, requireAuth } from '@assign-management/common';
+import { NotAuthorizedError, NotFoundError, requireAuth } from '@sergway/common';
 import express, { Request, Response } from 'express';
 import { Order } from '../model/order';
 

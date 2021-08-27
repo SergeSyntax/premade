@@ -1,4 +1,4 @@
-import { NotFoundError } from '@assign-management/common';
+import { NotFoundError } from '@sergway/common';
 import express, { Request, Response } from 'express';
 import { Ticket } from '../../models/ticket';
 

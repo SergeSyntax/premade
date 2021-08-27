@@ -1,9 +1,4 @@
-import {
-  NotAuthorizedError,
-  NotFoundError,
-  requireAuth,
-  validateRequest,
-} from '@assign-management/common';
+import { NotAuthorizedError, NotFoundError, requireAuth, validateRequest } from '@sergway/common';
 import { Request, Response, Router } from 'express';
 import { body } from 'express-validator';
 import { Ticket } from '../../models/ticket';

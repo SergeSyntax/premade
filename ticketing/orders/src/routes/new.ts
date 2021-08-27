@@ -4,12 +4,14 @@ import {
   OrderStatus,
   requireAuth,
   validateRequest,
-} from '@assign-management/common';
+} from '@sergway/common';
 import express, { Request, Response } from 'express';
 import { body } from 'express-validator';
 import mongoose from 'mongoose';
+import { OrderCreatedPublisher } from '../events/pubishers/order-created-publisher';
 import { Order } from '../model/order';
 import { Ticket } from '../model/ticket';
+import { natsWrapper } from '../nats-wrapper';
 
 const router = express.Router();
 
@@ -47,6 +49,16 @@ router.post(
     });
     await order.save();
     // Publish an event saying that an order was created
+    new OrderCreatedPublisher(natsWrapper.client).publish({
+      id: order.id,
+      status: order.status,
+      userId: order.userId,
+      expiresAt: order.expiriesAt.toISOString(),
+      ticket: {
+        id: ticket.id,
+        price: ticket.price,
+      },
+    });
     res.status(201).send(order);
   }
 );

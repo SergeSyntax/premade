@@ -1,4 +1,4 @@
-import { requireAuth } from '@assign-management/common';
+import { requireAuth } from '@sergway/common';
 import express, { Request, Response } from 'express';
 import { Order } from '../model/order';
 

@@ -1,5 +1,5 @@
-import { Publisher, Subjects, TicketedCreatedEvent } from '@assign-management/common';
+import { Publisher, Subjects, TicketCreatedEvent } from '@sergway/common';
 
-export class TicketCreatedPublisher extends Publisher<TicketedCreatedEvent> {
+export class TicketCreatedPublisher extends Publisher<TicketCreatedEvent> {
   readonly subject = Subjects.TicketCreated;
 }

@@ -2,7 +2,7 @@ import express from 'express';
 import 'express-async-errors';
 import { json } from 'body-parser';
 import cookieSession from 'cookie-session';
-import { currentUser, errorHandler, NotFoundError } from '@assign-management/common';
+import { currentUser, errorHandler, NotFoundError } from '@sergway/common';
 import { showOrderRouter } from './routes/show';
 import { newOrderRouter } from './routes/new';
 import { deleteOrderRouter } from './routes/delete';

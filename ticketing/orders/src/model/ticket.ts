@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 import { Order, OrderStatus } from './order';
 
 interface TicketAttrs {
+  id?: string;
   title: string;
   price: number;
 }
@@ -38,7 +39,14 @@ const ticketSchema = new mongoose.Schema<TicketDoc>(
   }
 );
 
-ticketSchema.statics.build = (attrs: TicketAttrs) => new Ticket(attrs);
+ticketSchema.statics.build = (attrs: TicketAttrs) => {
+  if (attrs.id) {
+    const _id = attrs.id;
+    delete attrs.id;
+    return new Ticket({ ...attrs, _id });
+  }
+  return new Ticket(attrs);
+};
 
 // Run query to look at all orders. Find an order where the ticket
 // is the ticket we just found *and* the orders status is *not* cancelled

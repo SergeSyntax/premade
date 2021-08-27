@@ -5,7 +5,7 @@ import { currentUserRouter } from './routes/current-user';
 import { signinRouter } from './routes/signin';
 import { signoutRouter } from './routes/signout';
 import { signupRouter } from './routes/signup';
-import { errorHandler, NotFoundError } from '@assign-management/common';
+import { errorHandler, NotFoundError } from '@sergway/common';
 
 const app = express();
 // traffic proxy through nginx-ingress

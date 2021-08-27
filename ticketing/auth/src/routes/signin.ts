@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 import { body, validationResult } from 'express-validator';
 import { User } from '../models/user';
 import { Password } from '../services/password';
-import { BadRequestError, validateRequest } from '@assign-management/common';
+import { BadRequestError, validateRequest } from '@sergway/common';
 
 const router = express.Router();
 

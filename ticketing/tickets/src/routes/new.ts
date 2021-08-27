@@ -1,4 +1,4 @@
-import { currentUser, requireAuth, validateRequest } from '@assign-management/common';
+import { currentUser, requireAuth, validateRequest } from '@sergway/common';
 import express, { Request, Response } from 'express';
 import { body } from 'express-validator';
 import { Ticket } from '../../models/ticket';

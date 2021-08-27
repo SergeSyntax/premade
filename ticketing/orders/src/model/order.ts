@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { OrderStatus } from '@assign-management/common';
+import { OrderStatus } from '@sergway/common';
 import { TicketDoc } from './ticket';
 
 interface OrderAttrs {
@@ -12,7 +12,7 @@ interface OrderAttrs {
 interface OrderDoc extends mongoose.Document {
   userId: string;
   status: OrderStatus;
-  expiriesAt: string;
+  expiriesAt: Date;
   ticket: TicketDoc;
 }
 

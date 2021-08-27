@@ -1,5 +1,5 @@
 import express from 'express';
-import { currentUser } from '@assign-management/common';
+import { currentUser } from '@sergway/common';
 
 const router = express.Router();
 

@@ -1,7 +1,7 @@
 import { Publisher } from './base-publisher';
 import { Subjects } from './subjects';
-import { TicketedCreatedEvent } from './ticket-created-event';
+import { TicketCreatedEvent } from './ticket-created-event';
 
-export class TicketCreatedPublisher extends Publisher<TicketedCreatedEvent> {
+export class TicketCreatedPublisher extends Publisher<TicketCreatedEvent> {
   readonly subject = Subjects.TicketCreated;
 }

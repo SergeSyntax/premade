@@ -1,4 +1,4 @@
-import { BadRequestError, validateRequest } from '@assign-management/common';
+import { BadRequestError, validateRequest } from '@sergway/common';
 import express, { Request, Response } from 'express';
 import { body } from 'express-validator';
 import jwt from 'jsonwebtoken';
