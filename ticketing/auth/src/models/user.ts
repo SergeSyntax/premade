@@ -12,22 +12,19 @@ interface UserAttrs {
 
 /**
  * An interface that describes the properties
+ * that a User Document has
+ */
+interface UserDoc extends Document, UserAttrs {}
+
+/**
+ * An interface that describes the properties
  * that a User Model has
  */
 interface UserModel extends Model<UserDoc> {
   build(attrs: UserAttrs): UserDoc;
 }
 
-/**
- * An interface that describes the properties
- * that a User Document has
- */
-interface UserDoc extends Document {
-  email: string;
-  password: string;
-}
-
-const userSchema = new Schema(
+const userSchema = new Schema<UserDoc, UserModel>(
   {
     email: {
       type: String,

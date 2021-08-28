@@ -1,8 +1,8 @@
 import { currentUser, requireAuth, validateRequest } from '@sergway/common';
 import express, { Request, Response } from 'express';
 import { body } from 'express-validator';
-import { Ticket } from '../../models/ticket';
 import { TicketCreatedPublisher } from '../events/publishers/ticket-create-publisher';
+import { Ticket } from '../models/ticket';
 import { natsWrapper } from '../nats-wrapper';
 
 const router = express.Router();
@@ -25,6 +25,7 @@ router.post(
       title: ticket.title,
       price: ticket.price,
       userId: ticket.userId,
+      version: ticket.version,
     });
     res.status(201).send(ticket);
   }

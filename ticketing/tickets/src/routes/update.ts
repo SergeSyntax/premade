@@ -1,7 +1,13 @@
-import { NotAuthorizedError, NotFoundError, requireAuth, validateRequest } from '@sergway/common';
+import {
+  BadRequestError,
+  NotAuthorizedError,
+  NotFoundError,
+  requireAuth,
+  validateRequest,
+} from '@sergway/common';
 import { Request, Response, Router } from 'express';
 import { body } from 'express-validator';
-import { Ticket } from '../../models/ticket';
+import { Ticket } from '../models/ticket';
 import { TicketUpdatedPublisher } from '../events/publishers/ticket-updated-publisher';
 import { natsWrapper } from '../nats-wrapper';
 
@@ -21,6 +27,8 @@ router.put(
 
     if (ticket.userId !== req.currentUser!.id) throw new NotAuthorizedError();
 
+    if (ticket.orderId) throw new BadRequestError('Cannot edit a reserved ticket.');
+
     ticket.set({
       title: req.body.title,
       price: req.body.price,
@@ -33,6 +41,7 @@ router.put(
       title: ticket.title,
       price: ticket.price,
       userId: ticket.userId,
+      version: ticket.version,
     });
 
     res.send(ticket);

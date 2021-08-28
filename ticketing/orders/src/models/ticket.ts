@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import { Order, OrderStatus } from './order';
 
 interface TicketAttrs {
-  id?: string;
+  id: string;
   title: string;
   price: number;
 }
@@ -10,14 +10,18 @@ interface TicketAttrs {
 export interface TicketDoc extends mongoose.Document {
   title: string;
   price: number;
+  version: number;
   isReserved(): Promise<boolean>;
 }
 
+type Event = { id: string; version: number };
+
 interface TicketModel extends mongoose.Model<TicketDoc> {
   build(attrs: TicketAttrs): TicketDoc;
+  findByEvent(event: Event): Promise<TicketDoc | null>;
 }
 
-const ticketSchema = new mongoose.Schema<TicketDoc>(
+const ticketSchema = new mongoose.Schema<TicketDoc, TicketModel>(
   {
     title: {
       type: String,
@@ -30,6 +34,8 @@ const ticketSchema = new mongoose.Schema<TicketDoc>(
     },
   },
   {
+    optimisticConcurrency: true,
+    versionKey: 'version',
     toJSON: {
       transform(doc, ret) {
         ret.id = ret._id;
@@ -39,13 +45,16 @@ const ticketSchema = new mongoose.Schema<TicketDoc>(
   }
 );
 
+ticketSchema.statics.findByEvent = (event: Event) => {
+  return Ticket.findOne({ _id: event.id, version: event.version - 1 });
+};
+
 ticketSchema.statics.build = (attrs: TicketAttrs) => {
-  if (attrs.id) {
-    const _id = attrs.id;
-    delete attrs.id;
-    return new Ticket({ ...attrs, _id });
-  }
-  return new Ticket(attrs);
+  return new Ticket({
+    _id: attrs.id,
+    title: attrs.title,
+    price: attrs.price,
+  });
 };
 
 // Run query to look at all orders. Find an order where the ticket
