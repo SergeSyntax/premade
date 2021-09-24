@@ -1,0 +1,11 @@
+name: tests-tickets
+# tricket on events
+on: pull_request
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      # take all the code in the project
+      - uses: actions/checkout@v2
+      - run: cd tickets && npm i && npm run test:ci
