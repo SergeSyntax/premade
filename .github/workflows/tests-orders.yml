@@ -1,6 +1,9 @@
 name: tests-orders
 # tricket on events
-on: pull_request
+on:
+  pull_request:
+    paths:
+      - 'orders/**'
 
 jobs:
   build:
