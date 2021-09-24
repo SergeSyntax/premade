@@ -1,12 +1,11 @@
-name: tests
+name: tests-auth
 # tricket on events
-on:
-  pull_request
-  
+on: pull_request
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-        # take all the code in the project
+      # take all the code in the project
       - uses: actions/checkout@v2
       - run: cd auth && npm i && npm run test:ci
