@@ -7,7 +7,7 @@ export const buildClient = ({ req }) => {
   const options = {};
 
   if (typeof window === 'undefined') {
-    options.baseURL = 'http://ingress-nginx-controller.ingress-nginx.svc.cluster.local';
+    options.baseURL = 'http://assign-management.xyz';
     options.headers = req.headers;
   }
 

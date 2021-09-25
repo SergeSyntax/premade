@@ -17,7 +17,7 @@ app.use(
     // jwt is already encrypted and can't be tempered
     signed: false,
     // check that the user use https connection
-    secure: process.env.NODE_ENV !== 'test',
+    secure: false,
   })
 );
 
