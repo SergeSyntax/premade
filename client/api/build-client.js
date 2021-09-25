@@ -4,7 +4,7 @@ export const buildClient = ({ req }) => {
   /**
    * @type {import('axios').AxiosRequestConfig}
    */
-  const options = {};
+  const options = { baseURL: '/' };
 
   if (typeof window === 'undefined') {
     options.baseURL = 'http://www.assign-management.xyz';
