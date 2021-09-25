@@ -36,6 +36,7 @@ spec:
                 secretKeyRef:
                   key: STRIPE_KEY
                   name: stripe-secret
+
 ---
 apiVersion: v1
 kind: Service
