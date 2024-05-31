@@ -1,3 +1,0 @@
-[submodule "microservices-common"]
-	path = common
-	url = ./microservices-common
