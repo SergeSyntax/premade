@@ -14,6 +14,10 @@
     "test": "tests"
   },
   "files": [
+    "eslint.config.mjs",
+    ".prettierrc.json",
+    "jest.config.mjs",
+    "tsconfig.json",
     "build"
   ],
   "repository": {

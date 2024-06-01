@@ -5,7 +5,12 @@
 
 create command example:
 ```bash
-pnpm dlx lerna create ms-common packages/ms-common
+pnpm dlx lerna create ms-common packages --private --yes
+```
+
+create command example:
+```bash
+pnpm dlx lerna create auth services --private --yes
 ```
 
 

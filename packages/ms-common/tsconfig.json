@@ -110,4 +110,5 @@
     "resolveFullPaths": true,
     "verbose": true
   },
+  "include": ["./src"]
 }

@@ -22,7 +22,7 @@
     "clean": "rimraf build logs",
     "format": "prettier --write src/**/*.{js,ts,tsx,json}",
     "lint": "eslint src/**/*.{ts,tsx}",
-    "test": "echo 'test'",
+    "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest",
     "build": "tsc && tsc-alias -p tsconfig.json",
     "dev": "nodemon --no-warnings",
     "start": "node ."
@@ -35,6 +35,7 @@
     "@premade/ms-common": "workspace:*",
     "@types/express": "^4.17.21",
     "@types/node": "^20.12.13",
+    "cross-env": "^7.0.3",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "tsc-alias": "^1.8.10",
@@ -48,5 +49,6 @@
     "rimraf": "^5.0.7",
     "ts-jest": "^29.1.4",
     "ts-node": "^10.9.2"
-  }
+  },
+  "prettier": "@premade/ms-common/prettier.config.mjs"
 }

@@ -5,13 +5,12 @@
     "graph": "nx graph",
     "test": "lerna run test --parallel",
     "build": "lerna run build",
+    "format": "lerna run format",
     "clean": "nx reset &&  lerna run clean && lerna clean -y"
   },
   "dependencies": {
     "nx": "^19.1.1",
     "lerna": "^8.1.3"
-  },
-  "devDependencies": {
   },
   "packageManager": "pnpm@9.1.4"
 }
