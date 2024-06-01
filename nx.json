@@ -13,6 +13,9 @@
     },
     "build": {
       "cache": true,
+      "dependsOn": [
+        "^build"
+      ],      
       "outputs": [
         "{projectRoot}/build"
       ]

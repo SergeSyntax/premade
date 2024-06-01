@@ -1,5 +1,4 @@
 import chalk from "chalk";
-// import { isLogTypeJSON } from '';
 import { MorganEcsMessagePayload } from "./types";
 import { TransformableInfo } from "logform";
 
@@ -33,7 +32,7 @@ enum MessageKeys {
 }
 
 export const formatLogMessage =
-  (isLogTypeJSON = false) =>
+  (isJSONFormat = false) =>
   ({ timestamp, level, message, stack }: TransformableInfo) => {
     // extract the tag from the message or the first message in an array
     const tag = formatTag(message);
@@ -45,7 +44,7 @@ export const formatLogMessage =
       [MessageKeys.MESSAGE_KEY]: formatMessage(stack ?? message),
     };
 
-    if (isLogTypeJSON) {
+    if (isJSONFormat) {
       if (timestamp) messagePayload[MessageKeys.TIMESTAMP_KEY] = timestamp;
       return JSON.stringify(messagePayload);
     }

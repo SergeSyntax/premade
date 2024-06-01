@@ -1,15 +1,15 @@
 {
-  "name": "auth",
+  "name": "@premade/ms-auth",
   "version": "1.0.0",
   "type": "module",
   "private": true,
-  "description": "Now I’m the model of a modern major general / The venerated Virginian veteran whose men are all / Lining up, to put me up on a pedestal / Writin’ letters to relatives / Embellishin’ my elegance and eloquence / But the elephant is in the room / The truth is in ya face when ya hear the British cannons go / BOOM",
+  "description": "The service in charge of the authentication / authorization",
   "keywords": [],
   "author": "SergeSyntax <serge.syntax@gmail.com>",
   "license": "ISC",
   "main": "build/index.js",
   "directories": {
-    "test": "__tests__"
+    "test": "tests"
   },
   "files": [
     "build"
@@ -22,10 +22,10 @@
     "clean": "rimraf build logs",
     "format": "prettier --write src/**/*.{js,ts,tsx,json}",
     "lint": "eslint src/**/*.{ts,tsx}",
-    "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest",
+    "test": "jest",
     "build": "tsc && tsc-alias -p tsconfig.json",
-    "dev": "nodemon --no-warnings",
-    "start": "node ."
+    "start": "node .",
+    "dev": "nodemon --no-warnings"
   },
   "bugs": {
     "url": "https://github.com/SergeSyntax/premade/issues"
@@ -35,19 +35,16 @@
     "@premade/ms-common": "workspace:*",
     "@types/express": "^4.17.21",
     "@types/node": "^20.12.13",
-    "cross-env": "^7.0.3",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "tsc-alias": "^1.8.10",
-    "typescript": "^5.4.5"
+    "typescript": "^5.4.5",
+    "un": "^0.0.0"
   },
   "devDependencies": {
-    "@types/jest": "^29.5.12",
-    "chalk": "4",
     "jest": "^29.7.0",
     "nodemon": "^3.1.2",
     "rimraf": "^5.0.7",
-    "ts-jest": "^29.1.4",
     "ts-node": "^10.9.2"
   },
   "prettier": "@premade/ms-common/prettier.config.mjs"

@@ -1,5 +1,6 @@
-import { LevelType } from "./config";
 import winston from "winston";
+import { LevelType } from "../types";
+import { CreateHTTPLogMiddleware } from "./morgan";
 
 type MessageHandler = (...unknown: unknown[]) => winston.Logger;
 
@@ -10,6 +11,20 @@ export interface CustomLogger extends winston.Logger {
   http: MessageHandler;
   debug: MessageHandler;
 }
+
+export type CreateLoggerReturn = {
+  logger: CustomLogger;
+  httpLogMiddleware: ReturnType<CreateHTTPLogMiddleware>;
+};
+
+export type CreateLoggerArg = {
+  level?: LevelType;
+  createLogFile?: boolean;
+  isJSONFormat?: boolean;
+  disableMorgan?: boolean;
+};
+
+export type CreateLogger = (args: CreateLoggerArg) => CreateLoggerReturn;
 
 export interface MorganEcsMessagePayload {
   "@timestamp": Date;

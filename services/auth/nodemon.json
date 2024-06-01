@@ -1,9 +1,6 @@
 {
-  "execMap": {
-    "ts": "node --loader ts-node/esm.mjs --es-module-specifier-resolution=node"
-  },
   "watch": ["src"],
-  "ext": "ts,json",
-  "ignore": ["/tests/", "/build/"],
-  "script": "./src/index.ts"
+  "ext": "ts,js",
+  "ignore": ["src/**/*.test.ts"],
+  "exec": "node --loader ts-node/esm --experimental-specifier-resolution=node --no-warnings src/index.ts"
 }

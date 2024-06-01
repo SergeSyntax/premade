@@ -6,6 +6,8 @@
     "test": "lerna run test --parallel",
     "build": "lerna run build",
     "format": "lerna run format",
+    "predev": "npm run build",
+    "dev": "lerna run dev",
     "clean": "nx reset &&  lerna run clean && lerna clean -y"
   },
   "dependencies": {
