@@ -1,6 +1,7 @@
 {
   "name": "auth",
   "version": "1.0.0",
+  "type": "module",
   "private": true,
   "description": "Now I’m the model of a modern major general / The venerated Virginian veteran whose men are all / Lining up, to put me up on a pedestal / Writin’ letters to relatives / Embellishin’ my elegance and eloquence / But the elephant is in the room / The truth is in ya face when ya hear the British cannons go / BOOM",
   "keywords": [],
@@ -21,9 +22,9 @@
     "clean": "rimraf build logs",
     "format": "prettier --write src/**/*.{js,ts,tsx,json}",
     "lint": "eslint src/**/*.{ts,tsx}",
-    "test": "echo",
-    "build": "tsc",
-    "dev": "nodemon --watch src ./src/index.ts",
+    "test": "echo 'test'",
+    "build": "tsc && tsc-alias -p tsconfig.json",
+    "dev": "nodemon --no-warnings",
     "start": "node ."
   },
   "bugs": {
@@ -36,6 +37,7 @@
     "@types/node": "^20.12.13",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
+    "tsc-alias": "^1.8.10",
     "typescript": "^5.4.5"
   },
   "devDependencies": {
