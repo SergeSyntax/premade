@@ -1,4 +1,4 @@
-lerna create ms-lint-config packages/ms-lint-config
-
+pnpm dlx lerna create ms-common packages
+pnpm --package=typescript dlx tsc --init  
 
 lerna create ms-lint-config

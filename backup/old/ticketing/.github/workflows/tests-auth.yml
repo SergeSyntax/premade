@@ -1,0 +1,14 @@
+name: tests-auth
+# tricket on events
+on:
+  pull_request:
+    paths:
+      - 'auth/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      # take all the code in the project
+      - uses: actions/checkout@v2
+      - run: cd auth && npm i && npm run test:ci
