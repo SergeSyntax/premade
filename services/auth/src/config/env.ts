@@ -1,4 +1,4 @@
-import { Env, LevelType } from "@premade/ms-common";
+import { Env, LevelType } from "@premade/ms-common/build/types";
 import dotenv from "dotenv";
 
 dotenv.config({
@@ -38,9 +38,9 @@ export const {
   LOG_IN_JSON_FORMAT,
   LOG_LEVEL = LevelType.DEBUG,
   // mongodb
-  MONGO_USERNAME,
-  MONGO_PASSWORD,
-  MONGO_DB_NAME,
+  MONGO_USERNAME = "admin",
+  MONGO_PASSWORD = "admin",
+  MONGO_DB_NAME = "auth",
   MONGO_PORT = "27017",
-  MONGO_HOST,
+  MONGO_HOST = "localhost",
 } = process.env as EnvVars;

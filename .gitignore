@@ -5,6 +5,7 @@
 # Build
 build
 services/auth/build
+cache/volumes
 # Logs
 logs
 *.log

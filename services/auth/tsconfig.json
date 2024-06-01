@@ -1,6 +1,8 @@
 {
   "extends": "@premade/ms-common/tsconfig.json",
   "compilerOptions": {
-    "declaration": false
+    "declaration": false,
+    "outDir": "./build"
   },
+  "include": ["./src"]
 }

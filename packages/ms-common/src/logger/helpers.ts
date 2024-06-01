@@ -1,5 +1,3 @@
-import path from "path";
-import appRoot from "app-root-path";
 import { levels } from "./config";
 
 export const omitRowIndication = (term: string) => term.split(":").shift();
@@ -10,15 +8,12 @@ export const omitFilePathExtension = (filePath: string) => {
 export function getTag(stack?: string) {
   // get invocation path
   const stackTrace = stack || new Error().stack
-  const [, , ,invokePath] = stackTrace?.split(/\s+at.+\(/g).map(omitRowIndication) ?? [];
+  
+  const [, , ,invokePath] = stackTrace?.split(/\s+at.+premade\//).map(omitRowIndication) ?? [];
   if (!invokePath) return "";
-
-  const normalizedInvokePath = path.normalize(invokePath);
-  const normalizedAppRoot = path.normalize(appRoot.toString());
-  const relativeInvokePath = path.relative(normalizedAppRoot, normalizedInvokePath);
   
   // convert to relative path
-  const tag = omitFilePathExtension(relativeInvokePath).toUpperCase();
+  const tag = omitFilePathExtension(invokePath).toUpperCase();
 
   return tag;
 }
