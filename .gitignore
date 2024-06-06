@@ -2,10 +2,11 @@
 # Edit at https://www.toptal.com/developers/gitignore?templates=node
 
 ### Node ###
-# Build
+# Custom build generate output
 build
 services/auth/build
 cache/volumes
+
 # Logs
 logs
 *.log
@@ -95,6 +96,10 @@ web_modules/
 .next
 out
 
+# Vite build generate output
+dist-ssr
+*.local
+
 # Nuxt.js build / generate output
 .nuxt
 dist
@@ -125,6 +130,17 @@ dist
 
 # TernJS port file
 .tern-port
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
 
 # Stores VSCode versions used for testing VSCode extensions
 .vscode-test

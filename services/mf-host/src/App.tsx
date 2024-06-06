@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import Typography from '@mui/material/Typography';
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
@@ -17,6 +18,9 @@ function App() {
         </a>
       </div>
       <h1>Vite + React</h1>
+      <Typography variant="h4" component="h1" sx={{ mb: 2 }}>
+          Material UI Vite.js example in TypeScript
+        </Typography>
       <div className="card">
         <button onClick={() => setCount((count) => count + 1)}>
           count is {count}
