@@ -12,12 +12,12 @@ export interface CustomLogger extends winston.Logger {
   debug: MessageHandler;
 }
 
-export type CreateLoggerReturn = {
+export interface CreateLoggerReturn {
   logger: CustomLogger;
   httpLogMiddleware: ReturnType<CreateHTTPLogMiddleware>;
 };
 
-export type CreateLoggerArg = {
+export interface CreateLoggerArg {
   level?: LevelType;
   createLogFile?: boolean;
   isJSONFormat?: boolean;

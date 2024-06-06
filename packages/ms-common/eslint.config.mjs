@@ -1,7 +1,12 @@
 import globals from "globals";
 import pluginJs from "@eslint/js";
-import tseslint from "typescript-eslint";
+import typescriptEslint from "typescript-eslint";
 import eslintConfigPrettier from "eslint-config-prettier";
+import importXPlugin from "eslint-plugin-import-x";
+import nodePlugin from "eslint-plugin-n";
+import * as regexpPlugin from "eslint-plugin-regexp";
+import jestPlugin from "eslint-plugin-jest";
+import eslintPluginYml from "eslint-plugin-yml";
 
 // https://www.youtube.com/watch?v=MvnTwjAjhic
 // https://github.com/michey85/react-starter/blob/master/eslint.config.js
@@ -9,10 +14,34 @@ import eslintConfigPrettier from "eslint-config-prettier";
 export default [
   { languageOptions: { globals: globals.node } },
   pluginJs.configs.recommended,
-  ...tseslint.configs.recommended,
-  ...tseslint.configs.stylistic,
+  ...typescriptEslint.configs.recommended,
+  ...typescriptEslint.configs.stylistic,
+  // https://github.com/ota-meshi/eslint-plugin-yml
+  ...eslintPluginYml.configs["flat/recommended"],
   eslintConfigPrettier,
   {
     ignores: ["build"],
+    // https://github.com/eslint/eslint/issues/18391
+    plugins: {
+      // https://www.npmjs.com/package/eslint-plugin-import-x
+      "import-x": importXPlugin.configs["typescript"],
+      // https://www.npmjs.com/package/eslint-plugin-n
+      node: nodePlugin.configs["flat/recommended-module"],
+      // https://www.npmjs.com/package/eslint-plugin-regexp
+      regexp: regexpPlugin.configs["flat/recommended"],
+    },
+  },
+  {
+    // rules: {
+    //   "node/*": ["error"],
+    //   "import-x": ["warn"],
+    // },
+  },
+  {
+    files: ["*.test.ts", "*.spec.ts"],
+    // https://www.npmjs.com/package/eslint-plugin-jest
+    plugins: {
+      jest: jestPlugin.configs["flat/recommended"],
+    },
   },
 ];
