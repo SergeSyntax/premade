@@ -1,5 +1,6 @@
 import { RequestHandler } from "express";
 import Joi, { ValidationError } from "joi";
+
 import { RequestValidationError } from "../lib/http-error";
 
 enum ReqAttr {
@@ -15,9 +16,11 @@ const validateRequest =
   ): RequestHandler =>
   async (req, _res, next) => {
     try {
+      // eslint-disable-next-line security/detect-object-injection
       const validated = await schema.validateAsync(req[requestAttribute], {
         stripUnknown: true,
       });
+      // eslint-disable-next-line security/detect-object-injection
       req[requestAttribute] = validated;
       next();
     } catch (err) {
@@ -29,4 +32,4 @@ const validateRequest =
     }
   };
 
-export { validateRequest, ReqAttr };
+export { ReqAttr,validateRequest };

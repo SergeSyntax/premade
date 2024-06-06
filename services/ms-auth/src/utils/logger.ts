@@ -1,6 +1,8 @@
-import { createLogger, Env } from "@premade/ms-common";
 import "@premade/ms-common/eslint.config.mjs";
-import { NODE_ENV, LOG_IN_JSON_FORMAT, LOG_LEVEL, CREATE_LOG_FILE } from "../config";
+
+import { createLogger, Env } from "@premade/ms-common";
+
+import { LOG_IN_JSON_FORMAT, LOG_LEVEL, NODE_ENV } from "../config";
 
 export const { httpLogMiddleware, logger } = createLogger({
   createLogFile: NODE_ENV === Env.Development,

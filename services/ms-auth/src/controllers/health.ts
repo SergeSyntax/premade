@@ -1,6 +1,7 @@
 import { RequestHandler } from "express";
+import { StatusCodes } from 'http-status-codes';
+
 import { mongoConnectionCheck } from "../services";
-import { StatusCodes, ReasonPhrases } from 'http-status-codes';
 
 export const readyController: RequestHandler = async (_req, res) => {
   try {

@@ -1,5 +1,5 @@
+import { ReasonPhrases,StatusCodes } from "http-status-codes";
 import { ValidationError } from "joi";
-import { StatusCodes, ReasonPhrases } from "http-status-codes";
 
 interface ParsedError {
   message: string;

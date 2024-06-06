@@ -4,4 +4,4 @@ export interface LoginReqBody {
 }
 
 
-export interface RegisterReqBody extends LoginReqBody {}
+export type RegisterReqBody = LoginReqBody

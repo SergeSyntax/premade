@@ -1,13 +1,16 @@
-import jwt from 'jsonwebtoken';
-import { RequestHandler } from 'express';
-import { NotAuthorizedError } from '../lib/http-error';
-import { JWT_SECRET } from '../config/env';
+import { RequestHandler } from "express";
+import jwt from "jsonwebtoken";
+
+import { JWT_SECRET } from "../config/env";
+import { NotAuthorizedError } from "../lib/http-error";
+import { logger } from "../utils";
 
 interface UserPayload {
   id: string;
   email: string;
 }
 
+/* eslint-disable @typescript-eslint/no-namespace */
 declare global {
   namespace Express {
     interface Request {
@@ -15,6 +18,7 @@ declare global {
     }
   }
 }
+ 
 
 export const injectCurrentUser: RequestHandler = (req, _res, next) => {
   if (!req.session?.jwt) return next();
@@ -22,7 +26,9 @@ export const injectCurrentUser: RequestHandler = (req, _res, next) => {
   try {
     const payload = jwt.verify(req.session.jwt, JWT_SECRET) as UserPayload;
     req.currentUser = payload;
-  } catch (err) {}
+  } catch (err) {
+    logger.debug("failed to inject user", err);
+  }
   next();
 };
 

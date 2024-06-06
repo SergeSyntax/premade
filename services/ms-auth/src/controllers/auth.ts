@@ -1,6 +1,7 @@
 import { RequestHandler } from "express";
 import { StatusCodes } from "http-status-codes";
 import jwt from "jsonwebtoken";
+
 import { JWT_SECRET } from "../config";
 import { loginService, registerService } from "../services/auth";
 
@@ -30,4 +31,4 @@ const logoutController: RequestHandler = (req, res) => {
   res.send({});
 };
 
-export { loginController, registerController, currentUserController, logoutController };
+export { currentUserController, loginController, logoutController,registerController };

@@ -1,4 +1,5 @@
 import Joi from "joi";
+
 import { LoginReqBody } from "../types";
 
 const loginBodySchema = Joi.object<LoginReqBody>({

@@ -1,6 +1,6 @@
-import { LoginReqBody, RegisterReqBody } from "../types";
-import { User } from "../models/user";
 import { BadRequestError } from "../lib/http-error";
+import { User } from "../models/user";
+import { LoginReqBody, RegisterReqBody } from "../types";
 import { Password } from "../utils/password";
 
 const loginService = async ({ email, password }: LoginReqBody) => {

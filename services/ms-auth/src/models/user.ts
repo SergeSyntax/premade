@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+
 import { Password } from '../utils/password';
 
 interface UserAttrs {

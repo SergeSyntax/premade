@@ -1,9 +1,10 @@
 import { Router } from "express";
+
 import { liveController } from "../controllers";
-import { ReqAttr, validateRequest } from "../middleware";
-import { loginBodySchema, registerBodySchema } from "../schemas/login.schemas";
 import { currentUserController, loginController, logoutController, registerController } from "../controllers/auth";
+import { ReqAttr, validateRequest } from "../middleware";
 import { injectCurrentUser } from "../middleware/authentication-handler";
+import { loginBodySchema, registerBodySchema } from "../schemas/login.schemas";
 
 const router = Router();
 

@@ -1,12 +1,14 @@
 import "express-async-errors";
-import express, { RequestHandler } from "express";
+
 import { Env } from "@premade/ms-common";
+import cookieSession from "cookie-session";
+import express, { RequestHandler } from "express";
+
+import { NODE_ENV } from "./config";
 import { NotFoundError } from "./lib/http-error";
 import { Routes } from "./routes";
-import { httpLogMiddleware } from "./utils";
-import cookieSession from "cookie-session";
 import { errorRequestHandler } from "./routes/error-response-handler";
-import { NODE_ENV } from "./config";
+import { httpLogMiddleware } from "./utils";
 
 const notFoundController: RequestHandler = () => {
   throw new NotFoundError();
