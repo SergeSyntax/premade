@@ -32,7 +32,7 @@ export const {
   // common
   NODE_ENV = Env.Development,
   PORT = "3000",
-  JWT_SECRET,
+  JWT_SECRET='some_secret',
   // logs
   CREATE_LOG_FILE,
   LOG_IN_JSON_FORMAT,

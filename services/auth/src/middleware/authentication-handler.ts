@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import { RequestHandler } from 'express';
-import { NotAuthorizedError } from '../lib/http-error.js';
-import { JWT_SECRET } from '../config/env.js';
+import { NotAuthorizedError } from '../lib/http-error';
+import { JWT_SECRET } from '../config/env';
 
 interface UserPayload {
   id: string;

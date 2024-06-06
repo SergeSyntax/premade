@@ -1,8 +1,8 @@
 import ErrorStackParser from 'error-stack-parser';
 import { ErrorRequestHandler } from 'express';
-import { CustomError } from '../lib/http-error.js';
+import { CustomError } from '../lib/http-error';
 import { StatusCodes, ReasonPhrases } from 'http-status-codes';
-import { logger } from '../utils/logger.js';
+import { logger } from '../utils/logger';
 
 interface HttpError extends Error {
   status?: number;

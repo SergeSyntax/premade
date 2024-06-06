@@ -1,1 +1,1 @@
-export * from './validate-request-body.js';
+export * from './validate-request';
