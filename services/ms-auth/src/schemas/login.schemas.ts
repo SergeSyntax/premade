@@ -1,15 +1,16 @@
 import Joi from "joi";
-
 import { LoginReqBody } from "../types";
 
-const loginBodySchema = Joi.object<LoginReqBody>({
+export const loginBodySchema = Joi.object<LoginReqBody>({
   email: Joi.string().email().lowercase().required(),
   password: Joi.string().min(5).required(),
-})
+});
 
-const registerBodySchema = Joi.object<LoginReqBody>({
+export const registerBodySchema = Joi.object<LoginReqBody>({
   email: Joi.string().email().lowercase().required(),
   password: Joi.string().min(5).required(),
-})
+});
 
-export { loginBodySchema, registerBodySchema }
+export const verifyEmailSchema = Joi.object({
+  email: Joi.string().email().lowercase().required(),
+});

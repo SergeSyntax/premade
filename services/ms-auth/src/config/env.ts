@@ -31,7 +31,7 @@ type EnvVars = CommonEnvVars & MongoEnvVars & LogEnvVars;
 export const {
   // common
   NODE_ENV = Env.Development,
-  PORT = "3000",
+  PORT = "5000",
   JWT_SECRET='some_secret',
   // logs
   CREATE_LOG_FILE,

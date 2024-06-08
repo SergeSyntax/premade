@@ -3,7 +3,7 @@ import "express-async-errors";
 import { Env } from "@premade/ms-common";
 import cookieSession from "cookie-session";
 import express, { RequestHandler } from "express";
-
+import cors from "cors";
 import { NODE_ENV } from "./config";
 import { NotFoundError } from "./lib/http-error";
 import { Routes } from "./routes";
@@ -19,6 +19,7 @@ const app = express();
 // express don't trust to ssl on proxy by default
 app.set("trust proxy", true);
 app.use(express.json({ limit: "100kb" }));
+app.use(cors());
 // change secure to use ssl
 app.use(cookieSession({ signed: false, secure: NODE_ENV === Env.Production }));
 app.use(httpLogMiddleware);

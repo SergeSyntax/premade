@@ -3,7 +3,12 @@ import { StatusCodes } from "http-status-codes";
 import jwt from "jsonwebtoken";
 
 import { JWT_SECRET } from "../config";
-import { loginService, registerService } from "../services/auth";
+import {
+  searchEmailService,
+  loginService,
+  registerService,
+  isEmailAvilableService,
+} from "../services/auth";
 
 const loginController: RequestHandler = async (req, res) => {
   const user = await loginService(req.body);
@@ -31,4 +36,10 @@ const logoutController: RequestHandler = (req, res) => {
   res.send({});
 };
 
-export { currentUserController, loginController, logoutController,registerController };
+export { currentUserController, loginController, logoutController, registerController };
+
+export const verifyEmailController: RequestHandler = async (req, res) => {
+  const isEmailInUse = await isEmailAvilableService(req.body.email);
+
+  res.send({ isValid: !isEmailInUse });
+};
