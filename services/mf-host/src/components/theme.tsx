@@ -4,12 +4,12 @@ import { red } from '@mui/material/colors';
 // A custom theme for this app
 const theme = createTheme({
   palette: {
-    // mode: 'dark',
-    primary: {
-      main: '#556cd6',
-    },
+  //   // mode: 'dark',
+  //   primary: {
+  //     main: '#556cd6',
+  //   },
     secondary: {
-      main: '#19857b',
+      main: '#E10050',
     },
     error: {
       main: red.A400,
