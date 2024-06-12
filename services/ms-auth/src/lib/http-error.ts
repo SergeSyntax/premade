@@ -44,7 +44,7 @@ export class BadRequestError extends CustomError {
     super(message);
 
     // Only because we are extending a built in class
-    Object.setPrototypeOf(this, RequestValidationError.prototype);
+    Object.setPrototypeOf(this, BadRequestError.prototype);
   }
 
   serializeErrors(): ParsedError[] {

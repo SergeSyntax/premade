@@ -39,7 +39,6 @@ const logoutController: RequestHandler = (req, res) => {
 export { currentUserController, loginController, logoutController, registerController };
 
 export const verifyEmailController: RequestHandler = async (req, res) => {
-  const isEmailInUse = await isEmailAvilableService(req.body.email);
-
-  res.send({ isValid: !isEmailInUse });
+  await isEmailAvilableService(req.body.email);
+  res.sendStatus(StatusCodes.OK);
 };

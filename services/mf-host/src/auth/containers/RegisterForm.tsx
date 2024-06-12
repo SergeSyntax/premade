@@ -5,31 +5,21 @@ import Button from "@mui/material/Button";
 import TextField from "@/components/TextField";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
-import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import { Container } from "@mui/material";
-import * as Yup from "yup";
 import { yupValidator } from "@tanstack/yup-form-adapter";
-import { DefaultComponentProps, OverridableTypeMap } from "@mui/material/OverridableComponent";
-import { verifyEmail } from "@/api/verifyEmail";
+import { Copyright } from "../components/Copyright";
+import { useRegister } from "../hooks/useRegister";
+import { emailSchema, passwordSchema, textSchema } from "../schemas";
+import { Link } from "@/components/link";
+import { verifyEmail } from "../api/register";
 
-function Copyright(props: DefaultComponentProps<OverridableTypeMap>) {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {"Copyright © "}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{" "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
+export const RegisterForm = () => {
+  const { mutate } = useRegister();
 
-const RegisterForm = () => {
   const form = useForm({
     defaultValues: {
       firstName: "",
@@ -39,10 +29,7 @@ const RegisterForm = () => {
       confirmPassword: "",
       allowExtraEmails: false,
     },
-    onSubmit: async ({ value }) => {
-      // Do something with form data
-      console.log(value);
-    },
+    onSubmit: async ({ value }) => mutate(value),
     validatorAdapter: yupValidator,
   });
 
@@ -78,10 +65,7 @@ const RegisterForm = () => {
               name="firstName"
               children={TextField}
               validators={{
-                onChange: Yup.string()
-                  .min(3, "First name must be at least 3 characters")
-                  .max(255)
-                  .required(),
+                onChange: textSchema,
               }}
             />
           </Grid>
@@ -90,10 +74,7 @@ const RegisterForm = () => {
               name="lastName"
               children={TextField}
               validators={{
-                onChange: Yup.string()
-                  .min(3, "Last name must be at least 3 characters")
-                  .max(255)
-                  .required(),
+                onChange: textSchema,
               }}
             />
           </Grid>
@@ -103,24 +84,15 @@ const RegisterForm = () => {
               children={TextField}
               asyncDebounceMs={300}
               validators={{
-                onChange: Yup.string().min(3).max(255).email().required(),
-                onChangeAsync: Yup.string().test(
-                  "isEmailUnique",
-                  "This email is already in use.",
-                  async (value?: string) => {
-                    try {
-                      if (value) {
-                        const { data } = await verifyEmail(value);
-                        return data?.isValid;
-                      }
-                      return false;
-                    } catch (error) {
-                      console.log(error);
-                      
-                      return false;
-                    }
-                  },
-                ),
+                onChange: emailSchema,
+                onChangeAsync: async ({ value }) => {
+                  if (value) {
+                    const errorMessage = await verifyEmail(value);
+                    console.log("errorMessage", errorMessage);
+
+                    if (errorMessage) return errorMessage;
+                  }
+                },
               }}
             />
           </Grid>
@@ -129,9 +101,12 @@ const RegisterForm = () => {
               name="password"
               children={(field) => (
                 <>
-                  <TextField {...field} type="password" />
+                  <TextField {...field} inputProps={{ type: "password" }} />
                 </>
               )}
+              validators={{
+                onChange: passwordSchema,
+              }}
             />
           </Grid>
           <Grid item xs={12}>
@@ -139,12 +114,13 @@ const RegisterForm = () => {
               name="confirmPassword"
               children={(field) => (
                 <>
-                  <TextField {...field} type="password" />
+                  <TextField {...field} inputProps={{ type: "password" }} />
                 </>
               )}
               validators={{
                 onChangeListenTo: ["password"],
-                onChange: ({ value, fieldApi }) => {
+                onChange: passwordSchema,
+                onChangeAsync: ({ value, fieldApi }) => {
                   if (value !== fieldApi.form.getFieldValue("password")) {
                     return "Passwords do not match";
                   }
@@ -192,7 +168,7 @@ const RegisterForm = () => {
         />
         <Grid container justifyContent="flex-end">
           <Grid item>
-            <Link href="#" variant="body2">
+            <Link to="/login" variant="body2">
               Already have an account? Sign in
             </Link>
           </Grid>
@@ -202,5 +178,3 @@ const RegisterForm = () => {
     </Container>
   );
 };
-
-export default RegisterForm;

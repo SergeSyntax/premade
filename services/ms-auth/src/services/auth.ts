@@ -10,9 +10,9 @@ export const searchEmailService = async (email: string) => {
 };
 
 export const isEmailAvilableService = async (email: string) => {
-  const isEmailInUse = await searchEmailService(email);
+  const existingUser = await searchEmailService(email);
 
-  return Boolean(isEmailInUse);
+  if (existingUser) throw new BadRequestError("this email already in use")
 };
 
 export const loginService = async ({ email, password }: LoginReqBody) => {
@@ -26,7 +26,7 @@ export const loginService = async ({ email, password }: LoginReqBody) => {
 };
 
 export const registerService = async ({ email, password }: RegisterReqBody) => {
-  const existingUser = await isEmailAvilableService(email);
+  const existingUser = await searchEmailService(email);
   if (existingUser) throw new BadRequestError("user already exists");
 
   const newUser = new User({ email, password });

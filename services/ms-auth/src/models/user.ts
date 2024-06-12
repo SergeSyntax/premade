@@ -1,10 +1,13 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
-import { Password } from '../utils/password';
+import { Password } from "../utils/password";
 
 interface UserAttrs {
   email: string;
   password: string;
+  firstName?: string;
+  lastName?: string;
+  allowExtraEmails?: boolean;
 }
 
 const userSchema = new mongoose.Schema<UserAttrs>(
@@ -15,6 +18,16 @@ const userSchema = new mongoose.Schema<UserAttrs>(
       unique: true,
     },
     password: { type: String, required: true },
+    firstName: {
+      type: String,
+    },
+    lastName: {
+      type: String,
+    },
+    allowExtraEmails: {
+      type: Boolean,
+      default: false
+    },
   },
   {
     timestamps: true,
@@ -37,13 +50,13 @@ const userSchema = new mongoose.Schema<UserAttrs>(
   },
 );
 
-userSchema.pre('save', async function (done) {
-  if (this.isModified('password'))
-    this.set('password', await Password.toHash(this.get('password')));
+userSchema.pre("save", async function (done) {
+  if (this.isModified("password"))
+    this.set("password", await Password.toHash(this.get("password")));
 
   done();
 });
 
-const User = mongoose.model('User', userSchema);
+const User = mongoose.model("User", userSchema);
 
 export { User };

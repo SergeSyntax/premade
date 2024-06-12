@@ -13,8 +13,9 @@ import { createFileRoute } from '@tanstack/react-router'
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as AuthIndexImport } from './routes/auth/index'
-import { Route as AuthRegisterImport } from './routes/auth/register'
+import { Route as PublicImport } from './routes/_public'
+import { Route as PublicRegisterImport } from './routes/_public/register'
+import { Route as PublicLoginImport } from './routes/_public/login'
 
 // Create Virtual Routes
 
@@ -28,19 +29,24 @@ const AboutLazyRoute = AboutLazyImport.update({
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/about.lazy').then((d) => d.Route))
 
+const PublicRoute = PublicImport.update({
+  id: '/_public',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const IndexLazyRoute = IndexLazyImport.update({
   path: '/',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
 
-const AuthIndexRoute = AuthIndexImport.update({
-  path: '/auth/',
-  getParentRoute: () => rootRoute,
+const PublicRegisterRoute = PublicRegisterImport.update({
+  path: '/register',
+  getParentRoute: () => PublicRoute,
 } as any)
 
-const AuthRegisterRoute = AuthRegisterImport.update({
-  path: '/auth/register',
-  getParentRoute: () => rootRoute,
+const PublicLoginRoute = PublicLoginImport.update({
+  path: '/login',
+  getParentRoute: () => PublicRoute,
 } as any)
 
 // Populate the FileRoutesByPath interface
@@ -54,6 +60,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexLazyImport
       parentRoute: typeof rootRoute
     }
+    '/_public': {
+      id: '/_public'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof PublicImport
+      parentRoute: typeof rootRoute
+    }
     '/about': {
       id: '/about'
       path: '/about'
@@ -61,19 +74,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutLazyImport
       parentRoute: typeof rootRoute
     }
-    '/auth/register': {
-      id: '/auth/register'
-      path: '/auth/register'
-      fullPath: '/auth/register'
-      preLoaderRoute: typeof AuthRegisterImport
-      parentRoute: typeof rootRoute
+    '/_public/login': {
+      id: '/_public/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof PublicLoginImport
+      parentRoute: typeof PublicImport
     }
-    '/auth/': {
-      id: '/auth/'
-      path: '/auth'
-      fullPath: '/auth'
-      preLoaderRoute: typeof AuthIndexImport
-      parentRoute: typeof rootRoute
+    '/_public/register': {
+      id: '/_public/register'
+      path: '/register'
+      fullPath: '/register'
+      preLoaderRoute: typeof PublicRegisterImport
+      parentRoute: typeof PublicImport
     }
   }
 }
@@ -82,9 +95,11 @@ declare module '@tanstack/react-router' {
 
 export const routeTree = rootRoute.addChildren({
   IndexLazyRoute,
+  PublicRoute: PublicRoute.addChildren({
+    PublicLoginRoute,
+    PublicRegisterRoute,
+  }),
   AboutLazyRoute,
-  AuthRegisterRoute,
-  AuthIndexRoute,
 })
 
 /* prettier-ignore-end */
@@ -96,22 +111,30 @@ export const routeTree = rootRoute.addChildren({
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/about",
-        "/auth/register",
-        "/auth/"
+        "/_public",
+        "/about"
       ]
     },
     "/": {
       "filePath": "index.lazy.tsx"
     },
+    "/_public": {
+      "filePath": "_public.tsx",
+      "children": [
+        "/_public/login",
+        "/_public/register"
+      ]
+    },
     "/about": {
       "filePath": "about.lazy.tsx"
     },
-    "/auth/register": {
-      "filePath": "auth/register.tsx"
+    "/_public/login": {
+      "filePath": "_public/login.tsx",
+      "parent": "/_public"
     },
-    "/auth/": {
-      "filePath": "auth/index.ts"
+    "/_public/register": {
+      "filePath": "_public/register.tsx",
+      "parent": "/_public"
     }
   }
 }
