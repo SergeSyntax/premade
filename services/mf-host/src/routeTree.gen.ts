@@ -13,9 +13,9 @@ import { createFileRoute } from '@tanstack/react-router'
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as PublicImport } from './routes/_public'
-import { Route as PublicRegisterImport } from './routes/_public/register'
-import { Route as PublicLoginImport } from './routes/_public/login'
+import { Route as AuthImport } from './routes/_auth'
+import { Route as AuthRegisterImport } from './routes/_auth/register'
+import { Route as AuthLoginImport } from './routes/_auth/login'
 
 // Create Virtual Routes
 
@@ -29,8 +29,8 @@ const AboutLazyRoute = AboutLazyImport.update({
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/about.lazy').then((d) => d.Route))
 
-const PublicRoute = PublicImport.update({
-  id: '/_public',
+const AuthRoute = AuthImport.update({
+  id: '/_auth',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -39,14 +39,14 @@ const IndexLazyRoute = IndexLazyImport.update({
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
 
-const PublicRegisterRoute = PublicRegisterImport.update({
+const AuthRegisterRoute = AuthRegisterImport.update({
   path: '/register',
-  getParentRoute: () => PublicRoute,
+  getParentRoute: () => AuthRoute,
 } as any)
 
-const PublicLoginRoute = PublicLoginImport.update({
+const AuthLoginRoute = AuthLoginImport.update({
   path: '/login',
-  getParentRoute: () => PublicRoute,
+  getParentRoute: () => AuthRoute,
 } as any)
 
 // Populate the FileRoutesByPath interface
@@ -60,11 +60,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexLazyImport
       parentRoute: typeof rootRoute
     }
-    '/_public': {
-      id: '/_public'
+    '/_auth': {
+      id: '/_auth'
       path: ''
       fullPath: ''
-      preLoaderRoute: typeof PublicImport
+      preLoaderRoute: typeof AuthImport
       parentRoute: typeof rootRoute
     }
     '/about': {
@@ -74,19 +74,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutLazyImport
       parentRoute: typeof rootRoute
     }
-    '/_public/login': {
-      id: '/_public/login'
+    '/_auth/login': {
+      id: '/_auth/login'
       path: '/login'
       fullPath: '/login'
-      preLoaderRoute: typeof PublicLoginImport
-      parentRoute: typeof PublicImport
+      preLoaderRoute: typeof AuthLoginImport
+      parentRoute: typeof AuthImport
     }
-    '/_public/register': {
-      id: '/_public/register'
+    '/_auth/register': {
+      id: '/_auth/register'
       path: '/register'
       fullPath: '/register'
-      preLoaderRoute: typeof PublicRegisterImport
-      parentRoute: typeof PublicImport
+      preLoaderRoute: typeof AuthRegisterImport
+      parentRoute: typeof AuthImport
     }
   }
 }
@@ -95,10 +95,7 @@ declare module '@tanstack/react-router' {
 
 export const routeTree = rootRoute.addChildren({
   IndexLazyRoute,
-  PublicRoute: PublicRoute.addChildren({
-    PublicLoginRoute,
-    PublicRegisterRoute,
-  }),
+  AuthRoute: AuthRoute.addChildren({ AuthLoginRoute, AuthRegisterRoute }),
   AboutLazyRoute,
 })
 
@@ -111,30 +108,30 @@ export const routeTree = rootRoute.addChildren({
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/_public",
+        "/_auth",
         "/about"
       ]
     },
     "/": {
       "filePath": "index.lazy.tsx"
     },
-    "/_public": {
-      "filePath": "_public.tsx",
+    "/_auth": {
+      "filePath": "_auth.tsx",
       "children": [
-        "/_public/login",
-        "/_public/register"
+        "/_auth/login",
+        "/_auth/register"
       ]
     },
     "/about": {
       "filePath": "about.lazy.tsx"
     },
-    "/_public/login": {
-      "filePath": "_public/login.tsx",
-      "parent": "/_public"
+    "/_auth/login": {
+      "filePath": "_auth/login.tsx",
+      "parent": "/_auth"
     },
-    "/_public/register": {
-      "filePath": "_public/register.tsx",
-      "parent": "/_public"
+    "/_auth/register": {
+      "filePath": "_auth/register.tsx",
+      "parent": "/_auth"
     }
   }
 }
