@@ -1,11 +1,13 @@
+import { Outlet } from "@tanstack/react-router";
 import { useProfile } from "../hooks/profile";
+import { AppBar } from "./AppBar";
 
 export const Dashboard = () => {
   const { data } = useProfile();
   return (
-    <div className="p-2">
-      <h3>Welcome Home!</h3>
-      <pre>{JSON.stringify(data?.data)}</pre>
-    </div>
+    <>
+      <AppBar currentUser={data?.data?.user} />
+      <Outlet />
+    </>
   );
 };
