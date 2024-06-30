@@ -1,6 +1,6 @@
-import "@premade/ms-common/eslint.config.mjs";
+import "@devops-premade/ms-common/eslint.config.mjs";
 
-import { createLogger, Env } from "@premade/ms-common";
+import { createLogger, Env } from "@devops-premade/ms-common";
 
 import { LOG_IN_JSON_FORMAT, LOG_LEVEL, NODE_ENV } from "../config";
 

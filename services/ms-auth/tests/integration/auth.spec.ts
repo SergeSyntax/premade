@@ -1,7 +1,7 @@
 import request from 'supertest';
 import { StatusCodes } from 'http-status-codes';
 import { app } from '../../src/app';
-import { expect, it } from '@premade/ms-common/tests/utils';
+import { expect, it } from '@devops-premade/ms-common/tests/utils';
 import { USER } from '../auth.mock';
 import { TestRoutes } from '../consts';
 

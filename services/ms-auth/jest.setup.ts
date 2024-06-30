@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 import { app } from './src/app';
 import request from 'supertest';
 import { StatusCodes } from 'http-status-codes';
-import { beforeAll, beforeEach, afterAll } from '@premade/ms-common/tests/utils';
+import { beforeAll, beforeEach, afterAll } from '@devops-premade/ms-common/tests/utils';
 import { USER } from './tests/auth.mock';
 import { TestRoutes } from './tests/consts';
 

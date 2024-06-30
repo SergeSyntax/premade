@@ -1,4 +1,4 @@
-import { Env, LevelType } from "@premade/ms-common/build/types";
+import { Env, LevelType } from "@devops-premade/ms-common/build/types";
 import dotenv from "dotenv";
 
 dotenv.config({

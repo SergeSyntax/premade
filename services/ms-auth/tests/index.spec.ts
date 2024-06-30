@@ -1,4 +1,4 @@
-import { describe, expect, it } from '@premade/ms-common/tests/utils';
+import { describe, expect, it } from '@devops-premade/ms-common/tests/utils';
 
 describe('auth', () => {
   it('should be configured', async () => {
