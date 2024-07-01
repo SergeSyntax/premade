@@ -1,20 +1,15 @@
-import ErrorStackParser from 'error-stack-parser';
-import { ErrorRequestHandler } from 'express';
-import { ReasonPhrases,StatusCodes } from 'http-status-codes';
+import { CustomError } from "@devops-premade/ms-common";
+import ErrorStackParser from "error-stack-parser";
+import { ErrorRequestHandler } from "express";
+import { ReasonPhrases, StatusCodes } from "http-status-codes";
 
-import { CustomError } from '../lib/http-error';
-import { logger } from '../utils/logger';
+import { logger } from "../utils/logger";
 
 interface HttpError extends Error {
   status?: number;
 }
 
-export const errorRequestHandler: ErrorRequestHandler = (
-  err: HttpError,
-  _req,
-  res,
-  _next,
-) => {
+export const errorRequestHandler: ErrorRequestHandler = (err: HttpError, _req, res, _next) => {
   if (err instanceof CustomError)
     return res.status(err.statusCode).send({ errors: err.serializeErrors() });
 

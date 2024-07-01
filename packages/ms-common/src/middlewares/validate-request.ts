@@ -1,7 +1,7 @@
 import { RequestHandler } from "express";
 import Joi, { ValidationError } from "joi";
 
-import { RequestValidationError } from "../lib/http-error";
+import { RequestValidationError } from "../errors";
 
 enum ReqAttr {
   BODY = "body",
@@ -9,11 +9,10 @@ enum ReqAttr {
   QUERY = "query",
 }
 
+// TODO: don't like this solution but I don't want env nested in packages so
+// that a work around for now
 const validateRequest =
-  (
-    requestAttribute: ReqAttr,
-    schema: Joi.ObjectSchema<unknown>,
-  ): RequestHandler =>
+  (requestAttribute: ReqAttr, schema: Joi.ObjectSchema<unknown>): RequestHandler =>
   async (req, _res, next) => {
     try {
       // eslint-disable-next-line security/detect-object-injection
@@ -32,4 +31,4 @@ const validateRequest =
     }
   };
 
-export { ReqAttr,validateRequest };
+export { ReqAttr, validateRequest };

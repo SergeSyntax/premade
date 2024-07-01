@@ -1,4 +1,5 @@
-import { BadRequestError } from "../lib/http-error";
+import { BadRequestError } from "@devops-premade/ms-common";
+
 import { User } from "../models/user";
 import { LoginReqBody, RegisterReqBody } from "../types";
 import { Password } from "../utils/password";
@@ -12,7 +13,7 @@ export const searchEmailService = async (email: string) => {
 export const isEmailAvilableService = async (email: string) => {
   const existingUser = await searchEmailService(email);
 
-  if (existingUser) throw new BadRequestError("this email already in use")
+  if (existingUser) throw new BadRequestError("this email already in use");
 };
 
 export const loginService = async ({ email, password }: LoginReqBody) => {

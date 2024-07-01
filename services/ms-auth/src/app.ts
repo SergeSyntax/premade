@@ -1,12 +1,12 @@
 import "express-async-errors";
 
+import { NotFoundError } from "@devops-premade/ms-common";
 import { Env } from "@devops-premade/ms-common";
 import cookieSession from "cookie-session";
 import cors from "cors";
 import express, { RequestHandler } from "express";
 
 import { NODE_ENV } from "./config";
-import { NotFoundError } from "./lib/http-error";
 import { Routes } from "./routes";
 import { errorRequestHandler } from "./routes/error-response-handler";
 import { httpLogMiddleware } from "./utils";
