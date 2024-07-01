@@ -4,17 +4,25 @@ import { useRouter } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
 
 export const Logout = () => {
-  const { removeQueries } = useQueryClient();
+  const queryClient = useQueryClient();
   const { navigate } = useRouter();
+
   useEffect(() => {
-    postLogout()
-      .catch(console.error)
-      .finally(() => {
-        removeQueries();
+    const handleLogout = async () => {
+      try {
+        await postLogout();
+      } catch (error) {
+        console.error(error);
+      } finally {
+        await queryClient.invalidateQueries();
         navigate({
           to: "/",
         });
-      });
-  }, [navigate, removeQueries]);
+      }
+    };
+
+    handleLogout();
+  }, [navigate, queryClient]);
+
   return <div>Signing out..</div>;
 };
