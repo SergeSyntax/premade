@@ -1,9 +1,9 @@
 {
-  "name": "@devops-premade/ms-auth",
+  "name": "@devops-premade/ms-media",
   "version": "1.0.0",
   "type": "module",
   "private": true,
-  "description": "The service in charge of the authentication / authorization",
+  "description": "The service in charge of the media management",
   "keywords": [],
   "author": "SergeSyntax <serge.syntax@gmail.com>",
   "license": "ISC",
@@ -51,6 +51,7 @@
     "typescript": "^5.4.5"
   },
   "devDependencies": {
+    "@faker-js/faker": "^8.4.1",
     "@types/supertest": "^6.0.2",
     "cross-env": "^7.0.3",
     "jest": "^29.7.0",
