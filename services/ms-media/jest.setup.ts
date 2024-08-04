@@ -15,7 +15,7 @@ import { TestRoutes } from "./tests/consts";
 
 declare global {
   // eslint-disable-next-line no-var
-  var login: () => string[];
+  var login: (id?: mongoose.Types.ObjectId | string) => string[];
 }
 
 // Generate a Mongoose ObjectId
@@ -23,7 +23,7 @@ const generateObjectId = () => {
   return new mongoose.Types.ObjectId();
 };
 
-global.login = (id?: mongoose.Types.ObjectId) => {
+global.login = (id) => {
   const payload = {
     id: id ?? generateObjectId(),
     email: faker.internet.email({ firstName: "test" }),

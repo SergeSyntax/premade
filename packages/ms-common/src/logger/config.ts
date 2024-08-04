@@ -1,4 +1,5 @@
 import winston, { config } from "winston";
+
 import { LevelType } from "../types";
 
 export const levels = Object.freeze<config.AbstractConfigSetLevels>({

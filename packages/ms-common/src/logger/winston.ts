@@ -1,6 +1,7 @@
 import winston from "winston";
-import { ALL_LOGS_TRANSPORTER, ERROR_LOGS_TRANSPORTER, TIMESTAMP_FORMAT, colors, levels } from "./config";
+
 import { LevelType } from "../types";
+import { ALL_LOGS_TRANSPORTER, colors, ERROR_LOGS_TRANSPORTER, levels,TIMESTAMP_FORMAT } from "./config";
 import { formatLogMessage } from "./format";
 
 const { File, Console } = winston.transports;

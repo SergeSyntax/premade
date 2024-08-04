@@ -1,42 +1,11 @@
-import { Env, LevelType } from "@devops-premade/ms-common/build/types";
-import dotenv from "dotenv";
+import { CommonEnvVars, MongoEnvVars, ServiceEnvVars } from "@devops-premade/ms-common/src/types";
 
-dotenv.config({
-  // services/auth/.env
-  path: ".env",
-});
+type EnvVars = CommonEnvVars & ServiceEnvVars & MongoEnvVars;
 
-interface CommonEnvVars extends NodeJS.ProcessEnv {
-  NODE_ENV: Env;
-  PORT: string;
-  JWT_SECRET: string;
-}
-
-interface MongoEnvVars {
-  MONGO_USERNAME: string;
-  MONGO_PASSWORD: string;
-  MONGO_DB_NAME: string;
-  MONGO_HOST: string;
-  MONGO_PORT: string;
-}
-
-interface LogEnvVars {
-  CREATE_LOG_FILE?: string;
-  LOG_IN_JSON_FORMAT?: string;
-  LOG_LEVEL?: LevelType;
-}
-
-type EnvVars = CommonEnvVars & MongoEnvVars & LogEnvVars;
+export * from "@devops-premade/ms-common/src/config/env";
 
 export const {
-  // common
-  NODE_ENV = Env.Development,
   PORT = "5001",
-  JWT_SECRET='some_secret',
-  // logs
-  CREATE_LOG_FILE,
-  LOG_IN_JSON_FORMAT,
-  LOG_LEVEL = LevelType.DEBUG,
   // mongodb
   MONGO_USERNAME = "admin",
   MONGO_PASSWORD = "admin",

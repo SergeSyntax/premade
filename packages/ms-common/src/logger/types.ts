@@ -1,4 +1,5 @@
 import winston from "winston";
+
 import { LevelType } from "../types";
 import { CreateHTTPLogMiddleware } from "./morgan";
 
@@ -15,14 +16,15 @@ export interface CustomLogger extends winston.Logger {
 export interface CreateLoggerReturn {
   logger: CustomLogger;
   httpLogMiddleware: ReturnType<CreateHTTPLogMiddleware>;
-};
+}
 
 export interface CreateLoggerArg {
   level?: LevelType;
   createLogFile?: boolean;
   isJSONFormat?: boolean;
   disableMorgan?: boolean;
-};
+  tag?: string;
+}
 
 export type CreateLogger = (args: CreateLoggerArg) => CreateLoggerReturn;
 

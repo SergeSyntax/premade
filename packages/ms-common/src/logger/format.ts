@@ -1,6 +1,7 @@
 import chalk from "chalk";
-import { MorganEcsMessagePayload } from "./types";
 import { TransformableInfo } from "logform";
+
+import { MorganEcsMessagePayload } from "./types";
 
 const formatMessage = (message: unknown) => {
   if (Array.isArray(message) && !(message[0] instanceof Error))

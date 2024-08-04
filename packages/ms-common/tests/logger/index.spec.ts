@@ -1,10 +1,11 @@
 import { describe, expect, it } from '@jest/globals';
-import { createLogger } from '../../src/logger';
 
-describe('createLogger', () => {
-  it('should not throw an error when invoked with no arguments', () => {
+import { logger } from '../../src/logger';
+
+describe('Logger', () => {
+  it('should not throw an error when debug is invoked with no arguments', () => {
     expect(() => {
-      createLogger({});
+      logger.debug();
     }).not.toThrow();
   });
 });

@@ -1,15 +1,22 @@
 import "express-async-errors";
 
+import dotenv from "dotenv";
+
+dotenv.config({
+  // services/auth/.env
+  path: ".env",
+});
+
 import { NotFoundError } from "@devops-premade/ms-common";
 import { Env } from "@devops-premade/ms-common";
+import { httpLogMiddleware } from "@devops-premade/ms-common/src/logger";
 import cookieSession from "cookie-session";
 import cors from "cors";
 import express, { RequestHandler } from "express";
 
-import { NODE_ENV } from "./config";
+import * as env from "./config/env";
 import { Routes } from "./routes";
 import { errorRequestHandler } from "./routes/error-response-handler";
-import { httpLogMiddleware } from "./utils";
 
 const notFoundController: RequestHandler = () => {
   throw new NotFoundError();
@@ -27,7 +34,7 @@ app.use(
   }),
 );
 // change secure to use ssl
-app.use(cookieSession({ signed: false, secure: NODE_ENV === Env.Production }));
+app.use(cookieSession({ signed: false, secure: env.NODE_ENV === Env.Production }));
 app.use(httpLogMiddleware);
 app.use("/api/media", Routes);
 app.all("*", notFoundController);

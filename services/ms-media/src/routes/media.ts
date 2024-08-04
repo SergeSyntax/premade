@@ -1,4 +1,4 @@
-import { ReqAttr, validateRequest } from "@devops-premade/ms-common";
+import { ReqAttr, requireAuth, validateRequest } from "@devops-premade/ms-common";
 import { Router } from "express";
 
 import {
@@ -7,7 +7,6 @@ import {
   getMediaResourceListController,
   updateMediaController,
 } from "../controllers/media";
-import { requireAuth } from "../middlewares";
 import { mediaBodySchema, mediaResourceParamsSchema } from "../schemas";
 
 const router = Router();

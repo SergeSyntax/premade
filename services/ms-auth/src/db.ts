@@ -1,7 +1,7 @@
+import { logger } from "@devops-premade/ms-common/src/logger";
 import mongoose from "mongoose";
 
 import { MONGO_DB_NAME, MONGO_HOST, MONGO_PASSWORD, MONGO_PORT, MONGO_USERNAME } from "./config";
-import { logger } from "./utils";
 
 export const initMongoConnection = async () => {
   logger.info({

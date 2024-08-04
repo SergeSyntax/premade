@@ -2,17 +2,12 @@ import { RequestHandler } from "express";
 import { StatusCodes } from "http-status-codes";
 import jwt from "jsonwebtoken";
 
-import { JWT_SECRET } from "../config";
-import {
-  searchEmailService,
-  loginService,
-  registerService,
-  isEmailAvilableService,
-} from "../services/auth";
+import * as env from "../config/env";
+import { isEmailAvilableService, loginService, registerService } from "../services/auth";
 
 const loginController: RequestHandler = async (req, res) => {
   const user = await loginService(req.body);
-  const userJWT = jwt.sign({ id: user.id, email: user.email }, JWT_SECRET);
+  const userJWT = jwt.sign({ id: user.id, email: user.email }, env.JWT_SECRET);
 
   req.session = { jwt: userJWT };
   res.status(StatusCodes.CREATED).send({ user });
@@ -20,7 +15,7 @@ const loginController: RequestHandler = async (req, res) => {
 
 const registerController: RequestHandler = async (req, res) => {
   const user = await registerService(req.body);
-  const userJWT = jwt.sign({ id: user.id, email: user.email }, JWT_SECRET);
+  const userJWT = jwt.sign({ id: user.id, email: user.email }, env.JWT_SECRET);
 
   req.session = { jwt: userJWT };
   res.status(StatusCodes.CREATED).send({ user });

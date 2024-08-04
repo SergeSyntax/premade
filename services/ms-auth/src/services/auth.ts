@@ -2,7 +2,7 @@ import { BadRequestError } from "@devops-premade/ms-common";
 
 import { User } from "../models/user";
 import { LoginReqBody, RegisterReqBody } from "../types";
-import { Password } from "../utils/password";
+import { Password } from "../utils";
 
 export const searchEmailService = async (email: string) => {
   const existingUser = await User.findOne({ email });

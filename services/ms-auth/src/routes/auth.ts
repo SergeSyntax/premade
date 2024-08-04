@@ -1,4 +1,4 @@
-import { ReqAttr, validateRequest } from "@devops-premade/ms-common";
+import { injectCurrentUser, ReqAttr, validateRequest } from "@devops-premade/ms-common";
 import { Router } from "express";
 
 import { liveController } from "../controllers";
@@ -9,7 +9,6 @@ import {
   registerController,
   verifyEmailController,
 } from "../controllers/auth";
-import { injectCurrentUser } from "../middlewares";
 import { loginBodySchema, registerBodySchema, verifyEmailSchema } from "../schemas/login.schemas";
 
 const router = Router();
