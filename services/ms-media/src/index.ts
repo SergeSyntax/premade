@@ -4,12 +4,12 @@ import mongoose from "mongoose";
 import { app } from "./app";
 import { PORT } from "./config";
 import { messageBusClient } from "./message-bus-client";
-import { connectMongoDB } from "./mongodb";
+import { connectMongoDB, disconnectMongoDB } from "./mongodb";
 
 const handleTerm = async () => {
+  await disconnectMongoDB();
   await messageBusClient.disconnect();
-  await mongoose.disconnect();
-  process.exit(0);
+  process.exit();
 };
 
 process.on("SIGTERM", handleTerm);

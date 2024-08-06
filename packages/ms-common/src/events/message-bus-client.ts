@@ -44,9 +44,11 @@ export class MessageBusClient {
     });
 
     this.connection.on("connectFailed", ({ err, url }) => {
-      logger.error(`[${connectionName}] RabbitMQ connection to ${url} failed: ${err.message}`);
+      const { password, username, ...urlParams } = url as Options.Connect;
+      logger.error(
+        `[${connectionName}] RabbitMQ connection to ${JSON.stringify(urlParams)} failed: ${err.message}`,
+      );
     });
-
     this.connection.on("blocked", ({ reason }) => {
       logger.error(`[${connectionName}] RabbitMQ connection blocked: ${reason}`);
     });
@@ -79,7 +81,9 @@ export class MessageBusClient {
   public async disconnect() {
     await this.channelWrapper.close();
     await this.connection.close();
-    logger.info(`[${this.options.connectionName}] RabbitMQ connection closed by request.`);
+    logger.info(
+      `RabbitMQ (${this.options.connectionName}): Connection closed gracefully due to application termination.`,
+    );
   }
 
   public async ack(message: Message, allUpTo?: boolean) {
