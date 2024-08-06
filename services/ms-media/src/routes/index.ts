@@ -10,4 +10,4 @@ const router = Router()
 router.use('/health', healthRoutes)
 router.use('/',injectCurrentUser, mediaRoutes)
 
-export { router as Routes }
+export { router as routes }

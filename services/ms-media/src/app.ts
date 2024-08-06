@@ -15,7 +15,7 @@ import cors from "cors";
 import express, { RequestHandler } from "express";
 
 import * as env from "./config/env";
-import { Routes } from "./routes";
+import { routes } from "./routes";
 import { errorRequestHandler } from "./routes/error-response-handler";
 
 const notFoundController: RequestHandler = () => {
@@ -36,7 +36,7 @@ app.use(
 // change secure to use ssl
 app.use(cookieSession({ signed: false, secure: env.NODE_ENV === Env.Production }));
 app.use(httpLogMiddleware);
-app.use("/api/media", Routes);
+app.use("/api/media", routes);
 app.all("*", notFoundController);
 app.use(errorRequestHandler);
 

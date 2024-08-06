@@ -1,11 +1,15 @@
 import { NotAuthorizedError, NotFoundError } from "@devops-premade/ms-common";
 
+import { MediaCreatedPublisher } from "../events/publishers/media-created-publisher";
+import { messageBusClient } from "../message-bus-client";
 import { Media } from "../models";
 import { MediaReqBody } from "../types";
 
 export const createMediaService = async (body: MediaReqBody, userId: string) => {
   const newMedia = new Media({ ...body, userId });
   await newMedia.save();
+
+  await new MediaCreatedPublisher(messageBusClient.channelWrapper).publish({ id: newMedia.id });
 
   return newMedia;
 };
