@@ -1,7 +1,7 @@
 import { RequestHandler } from "express";
 
 import * as env from "../config";
-import { Env, LevelType } from "../types/index";
+import { Env, LevelType } from "../enums";
 import { MORGAN_TAG } from "./config";
 import { getTag, isLogLevelProperty } from "./helpers";
 import { createHTTPLogMiddleware } from "./morgan";

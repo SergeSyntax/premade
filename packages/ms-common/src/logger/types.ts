@@ -1,6 +1,6 @@
 import winston from "winston";
 
-import { LevelType } from "../types";
+import { LevelType } from "../enums";
 import { CreateHTTPLogMiddleware } from "./morgan";
 
 type MessageHandler = (...unknown: unknown[]) => winston.Logger;

@@ -1,4 +1,4 @@
-import { LevelType } from "./enums";
+import { LevelType } from "../enums";
 
 interface LogEnvVars {
   CREATE_LOG_FILE?: string;
@@ -10,7 +10,11 @@ interface AuthEnvVars {
   JWT_SECRET: string;
 }
 
-export type CommonEnvVars = NodeJS.ProcessEnv & LogEnvVars & AuthEnvVars;
+export interface K8SEnvVars {
+  POD_NAME: string;
+}
+
+export type CommonEnvVars = NodeJS.ProcessEnv & LogEnvVars & AuthEnvVars & K8SEnvVars;
 
 export interface ServiceEnvVars {
   PORT: string;

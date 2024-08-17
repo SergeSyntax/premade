@@ -1,6 +1,6 @@
 import winston, { config } from "winston";
 
-import { LevelType } from "../types";
+import { LevelType } from "../enums";
 
 export const levels = Object.freeze<config.AbstractConfigSetLevels>({
   [LevelType.ERROR]: 0,

@@ -1,6 +1,6 @@
 import winston from "winston";
 
-import { LevelType } from "../types";
+import { LevelType } from "../enums";
 import { ALL_LOGS_TRANSPORTER, colors, ERROR_LOGS_TRANSPORTER, levels,TIMESTAMP_FORMAT } from "./config";
 import { formatLogMessage } from "./format";
 

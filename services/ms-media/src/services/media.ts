@@ -19,8 +19,6 @@ export const getMediaResourceService = async (mediaId: string) => {
 
   if (!media) throw new NotFoundError();
 
-  await new MediaUpdatedPublisher(messageBusClient.channelWrapper).publish({ id: media.id });
-
   return media;
 };
 
@@ -33,6 +31,8 @@ export const updateMediaService = async (mediaId: string, body: MediaReqBody, us
     // eslint-disable-next-line security/detect-object-injection
     media[attribute] = body[attribute];
   });
+
+  await new MediaUpdatedPublisher(messageBusClient.channelWrapper).publish({ id: media.id });
 
   await media.save();
 
