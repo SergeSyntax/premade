@@ -1,7 +1,9 @@
-import request from 'supertest';
+import { expect, it } from '@jest/globals';
 import { StatusCodes } from 'http-status-codes';
+import mongoose from 'mongoose';
+import request from 'supertest';
+
 import { app } from '../../src/app';
-import { expect, it } from '@devops-premade/ms-common/tests/utils';
 import { USER } from '../auth.mock';
 import { TestRoutes } from '../consts';
 
@@ -96,11 +98,12 @@ it('clears the cookie after signing out', async () => {
 });
 
 it('response with details about the current user', async () => {
-  const cookie = await global.login();
+  const userId = new mongoose.Types.ObjectId().toHexString();
+  const cookie = await global.login(userId);
 
   const response = await request(app).get(TestRoutes.CURRENT_USER).set('Cookie', cookie).send();
 
-  expect(response.body.user.email).toEqual(USER.email);
+  expect(response.body.user.id).toEqual(userId);
 });
 
 it('responds with null if not authenticated', async () => {

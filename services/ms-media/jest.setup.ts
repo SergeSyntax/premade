@@ -1,17 +1,19 @@
 import { Buffer } from "node:buffer";
 
-import { afterAll, beforeAll, beforeEach } from "@devops-premade/ms-common/tests/utils";
+import { afterAll, beforeAll, beforeEach, jest } from "@jest/globals";
+
+import { messageBusClient } from "./__mocks__/message-bus-client";
+
+jest.unstable_mockModule("./src/message-bus-client", () => ({
+  messageBusClient: messageBusClient,
+}));
+
 import { faker } from "@faker-js/faker";
-import { StatusCodes } from "http-status-codes";
 import jwt from "jsonwebtoken";
 import { MongoMemoryServer } from "mongodb-memory-server";
 import mongoose from "mongoose";
-import request from "supertest";
 
-import { app } from "./src/app";
 import { JWT_SECRET } from "./src/config";
-import { USER } from "./tests/auth.mock";
-import { TestRoutes } from "./tests/consts";
 
 declare global {
   // eslint-disable-next-line no-var
@@ -46,6 +48,7 @@ beforeAll(async () => {
 });
 
 beforeEach(async () => {
+  jest.clearAllMocks();
   const collections = await mongoose.connection.db.collections();
 
   for (const collection of collections) {

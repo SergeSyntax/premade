@@ -1,9 +1,10 @@
-import { describe, expect, it } from "@devops-premade/ms-common/tests/utils";
 import { faker } from "@faker-js/faker";
+import { describe, expect, it, jest } from "@jest/globals";
 import { StatusCodes } from "http-status-codes";
 import mongoose from "mongoose";
 import request from "supertest";
 
+import { messageBusClient } from "../../__mocks__/message-bus-client";
 import { app } from "../../src/app";
 import { Media } from "../../src/models";
 import { USER } from "../auth.mock";
@@ -42,6 +43,22 @@ describe("create media", () => {
 
     const response = await request(app).post(TestRoutes.MEDIA).set("Cookie", cookies).send({});
     expect(response.status).toEqual(StatusCodes.BAD_REQUEST);
+  });
+
+  it("publishes an event on media creation", async () => {
+    const title = faker.internet.domainName();
+    const cookies = global.login();
+
+    await request(app)
+      .post(TestRoutes.MEDIA)
+      .set("Cookie", cookies)
+      .send({
+        title,
+        description: faker.lorem.paragraph(1),
+      })
+      .expect(StatusCodes.CREATED);
+
+    expect(messageBusClient.channelWrapper.publish).toHaveBeenCalled();
   });
 
   it("creates a media with valid input", async () => {
@@ -182,7 +199,7 @@ describe("update media by id", () => {
       })
       .expect(StatusCodes.OK);
 
-      expect(response.body.media.title).toEqual(title);
-      expect(response.body.media.description).toEqual(description);
-    });
+    expect(response.body.media.title).toEqual(title);
+    expect(response.body.media.description).toEqual(description);
+  });
 });

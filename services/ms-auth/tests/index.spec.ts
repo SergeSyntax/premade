@@ -1,4 +1,4 @@
-import { describe, expect, it } from '@devops-premade/ms-common/tests/utils';
+import { describe, expect, it } from '@jest/globals';
 
 describe('auth', () => {
   it('should be configured', async () => {

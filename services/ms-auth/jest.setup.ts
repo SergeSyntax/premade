@@ -1,24 +1,38 @@
-import { MongoMemoryServer } from 'mongodb-memory-server';
-import mongoose from 'mongoose';
-import { app } from './src/app';
-import request from 'supertest';
-import { StatusCodes } from 'http-status-codes';
-import { beforeAll, beforeEach, afterAll } from '@devops-premade/ms-common/tests/utils';
-import { USER } from './tests/auth.mock';
-import { TestRoutes } from './tests/consts';
+import { faker } from "@faker-js/faker";
+import { afterAll, beforeAll, beforeEach, jest } from "@jest/globals";
+import { StatusCodes } from "http-status-codes";
+import jwt from "jsonwebtoken";
+import { MongoMemoryServer } from "mongodb-memory-server";
+import mongoose from "mongoose";
+import request from "supertest";
+
+import { app } from "./src/app";
+import { JWT_SECRET } from "./src/config";
+import { USER } from "./tests/auth.mock";
+import { TestRoutes } from "./tests/consts";
 
 declare global {
-  var login: () => Promise<string>;
+  // eslint-disable-next-line no-var
+  var login: (id?: mongoose.Types.ObjectId | string) => string[];
 }
 
-global.login = async () => {
-  const response = await request(app).post(TestRoutes.REGISTER).send({
-    email: USER.email,
-    password: USER.password,
-  }).expect(StatusCodes.CREATED);
-  
-  const cookie = (response?.get('Set-Cookie') as string[])[0];
-  return cookie;
+// Generate a Mongoose ObjectId
+const generateObjectId = () => {
+  return new mongoose.Types.ObjectId();
+};
+
+global.login = (id) => {
+  const payload = {
+    id: id ?? generateObjectId(),
+    email: faker.internet.email({ firstName: "test" }),
+  };
+
+  const token = jwt.sign(payload, JWT_SECRET);
+  const session = JSON.stringify({ jwt: token });
+
+  const base64 = Buffer.from(session).toString("base64");
+
+  return [`session=${base64}`];
 };
 
 let mongo: MongoMemoryServer;
@@ -30,9 +44,10 @@ beforeAll(async () => {
 });
 
 beforeEach(async () => {
+  jest.clearAllMocks();
   const collections = await mongoose.connection.db.collections();
 
-  for (let collection of collections) {
+  for (const collection of collections) {
     await collection.deleteMany({});
   }
 });

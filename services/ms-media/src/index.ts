@@ -1,5 +1,4 @@
 import { logger } from "@devops-premade/ms-common/src/logger";
-import mongoose from "mongoose";
 
 import { app } from "./app";
 import { PORT } from "./config";
