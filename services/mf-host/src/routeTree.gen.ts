@@ -23,6 +23,7 @@ import { Route as AuthLoginImport } from './routes/_auth/login'
 
 const AboutLazyImport = createFileRoute('/about')()
 const DashboardIndexLazyImport = createFileRoute('/_dashboard/')()
+const DashboardUploadLazyImport = createFileRoute('/_dashboard/upload')()
 
 // Create/Update Routes
 
@@ -46,6 +47,13 @@ const DashboardIndexLazyRoute = DashboardIndexLazyImport.update({
   getParentRoute: () => DashboardRoute,
 } as any).lazy(() =>
   import('./routes/_dashboard/index.lazy').then((d) => d.Route),
+)
+
+const DashboardUploadLazyRoute = DashboardUploadLazyImport.update({
+  path: '/upload',
+  getParentRoute: () => DashboardRoute,
+} as any).lazy(() =>
+  import('./routes/_dashboard/upload.lazy').then((d) => d.Route),
 )
 
 const AuthLogoutRoute = AuthLogoutImport.update({
@@ -109,6 +117,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthLogoutImport
       parentRoute: typeof rootRoute
     }
+    '/_dashboard/upload': {
+      id: '/_dashboard/upload'
+      path: '/upload'
+      fullPath: '/upload'
+      preLoaderRoute: typeof DashboardUploadLazyImport
+      parentRoute: typeof DashboardImport
+    }
     '/_dashboard/': {
       id: '/_dashboard/'
       path: '/'
@@ -123,7 +138,10 @@ declare module '@tanstack/react-router' {
 
 export const routeTree = rootRoute.addChildren({
   AuthRoute: AuthRoute.addChildren({ AuthLoginRoute, AuthRegisterRoute }),
-  DashboardRoute: DashboardRoute.addChildren({ DashboardIndexLazyRoute }),
+  DashboardRoute: DashboardRoute.addChildren({
+    DashboardUploadLazyRoute,
+    DashboardIndexLazyRoute,
+  }),
   AboutLazyRoute,
   AuthLogoutRoute,
 })
@@ -152,6 +170,7 @@ export const routeTree = rootRoute.addChildren({
     "/_dashboard": {
       "filePath": "_dashboard.tsx",
       "children": [
+        "/_dashboard/upload",
         "/_dashboard/"
       ]
     },
@@ -168,6 +187,10 @@ export const routeTree = rootRoute.addChildren({
     },
     "/auth/logout": {
       "filePath": "auth/logout.tsx"
+    },
+    "/_dashboard/upload": {
+      "filePath": "_dashboard/upload.lazy.tsx",
+      "parent": "/_dashboard"
     },
     "/_dashboard/": {
       "filePath": "_dashboard/index.lazy.tsx",

@@ -12,7 +12,8 @@ import { Divider, Grid } from "@mui/material";
 import { AuthButton } from "../components/AuthButton";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import { UserMenu } from "../components/UserMenu";
-
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import { Link } from "@tanstack/react-router";
 interface AppBarProps {
   currentUser?: User | null;
 }
@@ -79,6 +80,8 @@ export const AppBar: React.FC<AppBarProps> = ({ currentUser }) => {
               >
                 <Divider color="inherit" orientation="vertical" flexItem />
 
+                {/* here */}
+
                 <AuthButton sx={{ margin: "auto 12px" }} to="/login">
                   Log in
                 </AuthButton>
@@ -92,6 +95,23 @@ export const AppBar: React.FC<AppBarProps> = ({ currentUser }) => {
                 </AuthButton>
               </Box>
             )}
+            <Link
+              to="/upload"
+              style={{
+                color: "inherit",
+                marginLeft: "1rem",
+              }}
+            >
+              <IconButton
+                size="large"
+                aria-label="upload"
+                aria-controls="menu-appbar"
+                aria-haspopup="true"
+                color="inherit"
+              >
+                <AddCircleOutlineIcon />
+              </IconButton>
+            </Link>
             <IconButton
               size="large"
               aria-label="account of current user"
