@@ -32,6 +32,9 @@ importers:
       '@types/morgan':
         specifier: ^1.9.9
         version: 1.9.9
+      '@types/ms':
+        specifier: ^0.7.34
+        version: 0.7.34
       amqp-connection-manager:
         specifier: ^4.1.14
         version: 4.1.14(amqplib@0.10.4)
@@ -62,6 +65,9 @@ importers:
       morgan:
         specifier: ^1.10.0
         version: 1.10.0
+      ms:
+        specifier: ^2.1.3
+        version: 2.1.3
       tsc-alias:
         specifier: ^1.8.10
         version: 1.8.10
@@ -286,9 +292,6 @@ importers:
       dotenv:
         specifier: ^16.4.5
         version: 16.4.5
-      error-stack-parser:
-        specifier: ^2.1.4
-        version: 2.1.4
       express:
         specifier: ^4.19.2
         version: 4.19.2
@@ -456,9 +459,6 @@ importers:
       dotenv:
         specifier: ^16.4.5
         version: 16.4.5
-      error-stack-parser:
-        specifier: ^2.1.4
-        version: 2.1.4
       express:
         specifier: ^4.19.2
         version: 4.19.2
@@ -1958,6 +1958,9 @@ packages:
 
   '@types/morgan@1.9.9':
     resolution: {integrity: sha512-iRYSDKVaC6FkGSpEVVIvrRGw0DfJMiQzIn3qr2G5B3C//AWkulhXgaBd7tS9/J79GWSYMTHGs7PfI5b3Y8m+RQ==}
+
+  '@types/ms@0.7.34':
+    resolution: {integrity: sha512-nG96G3Wp6acyAgJqGasjODb+acrI7KltPiRxzHPXnP3NgI28bpQDRv53olbqGXbfcgF5aiiHmO3xpwEpS5Ld9g==}
 
   '@types/node@20.13.0':
     resolution: {integrity: sha512-FM6AOb3khNkNIXPnHFDYaHerSv8uN22C91z098AnGccVu+Pcdhi+pNUFDi0iLmPIsVE0JBD0KVS7mzUYt4nRzQ==}
@@ -7646,6 +7649,8 @@ snapshots:
   '@types/morgan@1.9.9':
     dependencies:
       '@types/node': 20.13.0
+
+  '@types/ms@0.7.34': {}
 
   '@types/node@20.13.0':
     dependencies:
