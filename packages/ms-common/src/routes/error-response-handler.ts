@@ -1,8 +1,9 @@
-import { CustomError } from "@devops-premade/ms-common";
-import { logger } from "@devops-premade/ms-common/src/logger";
 import ErrorStackParser from "error-stack-parser";
 import { ErrorRequestHandler } from "express";
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
+
+import { CustomError } from "../errors";
+import { logger } from "../logger";
 
 interface HttpError extends Error {
   status?: number;

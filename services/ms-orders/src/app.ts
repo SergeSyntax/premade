@@ -7,20 +7,14 @@ dotenv.config({
   path: ".env",
 });
 
-import { NotFoundError } from "@devops-premade/ms-common";
-import { Env } from "@devops-premade/ms-common";
+import { Env, errorRequestHandler, notFoundController } from "@devops-premade/ms-common";
 import { httpLogMiddleware } from "@devops-premade/ms-common/src/logger";
 import cookieSession from "cookie-session";
 import cors from "cors";
-import express, { RequestHandler } from "express";
+import express from "express";
 
 import * as env from "./config/env";
 import { routes } from "./routes";
-import { errorRequestHandler } from "./routes/error-response-handler";
-
-const notFoundController: RequestHandler = () => {
-  throw new NotFoundError();
-};
 
 const app = express();
 // traffic proxy through istio-ingress
