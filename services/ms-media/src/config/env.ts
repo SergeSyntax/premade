@@ -31,5 +31,10 @@ export const {
   RMQ_PORT = "5672",
   RMQ_VHOST = "/",
   RMQ_PROTOCOL = "amqp",
-  POD_NAME = 'media-deployment-6b97d4b9c-q5dmn'
+  POD_NAME = "media-deployment-6b97d4b9c-q5dmn",
+  // MinIO
+  MIO_ENDPOINT = "http://localhost:9000",
+  MIO_ACCESS_KEY = "bucket_key",
+  MIO_SECRET_KEY = "bucket_key",
+  MIO_BUCKET = "media-bucket",
 } = process.env as EnvVars;

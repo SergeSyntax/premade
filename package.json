@@ -11,7 +11,7 @@
     "postdev": "docker compose down",
     "clean": "nx reset &&  lerna run clean && lerna clean -y"
   },
-  "dependencies": {
+  "devDependencies": {
     "nx": "^19.1.1",
     "lerna": "^8.1.3"
   },

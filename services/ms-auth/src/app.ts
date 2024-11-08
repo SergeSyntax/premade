@@ -18,7 +18,7 @@ import cors from "cors";
 import express from "express";
 
 import * as env from "./config/env";
-import { Routes } from "./routes";
+import { routes } from "./routes";
 
 const app = express();
 // traffic proxy through istio-ingress
@@ -41,7 +41,7 @@ app.use(
   }),
 );
 app.use(httpLogMiddleware);
-app.use("/api/auth", Routes);
+app.use("/api/auth", routes);
 app.all("*", notFoundController);
 app.use(errorRequestHandler);
 

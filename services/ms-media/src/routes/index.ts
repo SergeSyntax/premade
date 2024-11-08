@@ -1,13 +1,15 @@
-import { injectCurrentUser } from '@devops-premade/ms-common'
-import { Router } from 'express'
+import { injectCurrentUser } from "@devops-premade/ms-common";
+import { Router } from "express";
 
-import { healthRoutes } from './health'
-import { mediaRoutes } from './media'
+import { healthRoutes } from "./health";
+import { mediaRoutes } from "./media";
+import { uploadRoutes } from "./uploads";
 
-const router = Router()
+const router = Router();
 
 // api/auth/health
-router.use('/health', healthRoutes)
-router.use('/',injectCurrentUser, mediaRoutes)
+router.use("/health", healthRoutes);
+router.use("/uploads", injectCurrentUser, uploadRoutes);
+router.use("/", injectCurrentUser, mediaRoutes);
 
-export { router as routes }
+export { router as routes };

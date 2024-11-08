@@ -5,7 +5,7 @@
 # Custom build generate output
 build
 services/auth/build
-cache/volumes
+docker/cache/volumes
 
 # Logs
 logs

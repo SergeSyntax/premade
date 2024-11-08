@@ -15,7 +15,7 @@ services:
       - RABBITMQ_ERL_COOKIE=secretcookie
       - RABBITMQ_MANAGEMENT_ALLOW_WEB_ACCESS=true
     volumes:
-      - ${CACHE_DIR:-./cache}/volumes/rabbitmq:/bitnami/rabbitmq
+      - ${CACHE_DIR:-./docker/cache/volumes}/rabbitmq:/bitnami/rabbitmq
     ports:
       - "15672:15672" # Management console
       - "5672:5672" # RabbitMQ port
@@ -39,7 +39,7 @@ services:
       MONGODB_EXTRA_USERNAMES: admin,admin,admin
       MONGODB_EXTRA_PASSWORDS: admin,admin,admin
     volumes:
-      - ${CACHE_DIR:-./cache}/volumes/mongodb:/bitnami/mongodb
+      - ${CACHE_DIR:-./docker/cache/volumes}/mongodb:/bitnami/mongodb
     ports:
       - "27017:27017" # MongoDB port
     user: "0:0"
@@ -77,10 +77,31 @@ services:
       - "9000:9000"
       - "9001:9001"
     volumes:
-      - ${CACHE_DIR:-./cache}/volumes/minio/data:/bitnami/minio/data
+      - ${CACHE_DIR:-./docker/cache/volumes}/minio/data:/bitnami/minio/data
     user: "0:0"
     healthcheck:
-      test: ['CMD', 'curl', '-f', 'http://localhost:9000/minio/health/live']
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
       interval: 30s
       timeout: 20s
       retries: 3
+
+  minio-client:
+    image: minio/mc
+    restart: on-failure
+    network_mode: host
+    environment:
+      CLIENT_NAME: "minio"
+      MINIO_ROOT_USER: ${MINIO_ACCESS_KEY:-minioadmin}
+      MINIO_ROOT_PASSWORD: ${MINIO_SECRET_KEY:-minioadmin}
+
+      MIO_ENDPOINT: "http://localhost:9000"
+      MIO_BUCKET: "media-bucket"
+      MIO_ACCESS_KEY: "bucket_key"
+      MIO_SECRET_KEY: "bucket_key"
+
+    depends_on:
+      - minio
+    volumes:
+      - ${CONFIG_DIR:-./docker/config}/minio/:/root/policies/
+      - ./docker/scripts/minio/entrypoint.sh:/entrypoint.sh
+    entrypoint: ["/bin/sh", "/entrypoint.sh"]

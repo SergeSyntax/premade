@@ -1,10 +1,11 @@
-import { beforeEach, describe, expect, it, jest } from '@jest/globals';
-import { createHTTPLogMiddleware } from '../../src/logger/morgan';
-import { CustomLogger } from '../../src/logger/types';
-import { Request, Response } from 'express';
-import { createWinstonLogger } from '../../src/logger/winston';
+import { beforeEach, describe, expect, it, jest } from "@jest/globals";
+import { Request, Response } from "express";
 
-describe('createHTTPLogMiddleware', () => {
+import { createHTTPLogMiddleware } from "../../src/logger/morgan";
+import { CustomLogger } from "../../src/logger/types";
+import { createWinstonLogger } from "../../src/logger/winston";
+
+describe("createHTTPLogMiddleware", () => {
   let logger: CustomLogger;
   const req = {
     headers: {},
@@ -19,13 +20,13 @@ describe('createHTTPLogMiddleware', () => {
     next.mockClear();
   });
 
-  it('should not throw an error when invoked with default arguments', () => {
+  it("should not throw an error when invoked with default arguments", () => {
     expect(() => {
       createHTTPLogMiddleware(logger, false);
     }).not.toThrow();
   });
 
-  it('should return a no-op middleware when disableMorgan is true', () => {
+  it("should return a no-op middleware when disableMorgan is true", () => {
     const middleware = createHTTPLogMiddleware(logger, true);
 
     middleware(req, res, next);
@@ -33,7 +34,7 @@ describe('createHTTPLogMiddleware', () => {
     expect(next).toHaveBeenCalled();
   });
 
-  it('should return a morgan middleware when disableMorgan is false', () => {
+  it("should return a morgan middleware when disableMorgan is false", () => {
     const middleware = createHTTPLogMiddleware(logger, false);
 
     expect(() => {
@@ -42,8 +43,8 @@ describe('createHTTPLogMiddleware', () => {
   });
 });
 
-describe('createWinstonLogger', () => {
-  it('should not throw an error when invoked with default arguments', () => {
+describe("createWinstonLogger", () => {
+  it("should not throw an error when invoked with default arguments", () => {
     expect(() => {
       createWinstonLogger({});
     }).not.toThrow();
