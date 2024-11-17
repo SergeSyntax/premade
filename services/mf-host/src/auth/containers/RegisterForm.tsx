@@ -10,7 +10,7 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import { Container } from "@mui/material";
-import { yupValidator } from "@tanstack/yup-form-adapter";
+import { yupValidator } from '@tanstack/yup-form-adapter'
 import { Copyright } from "../components/Copyright";
 import { useRegister } from "../hooks/useRegister";
 import { emailSchema, passwordSchema, textSchema } from "../schemas";
@@ -30,7 +30,7 @@ export const RegisterForm = () => {
       allowExtraEmails: false,
     },
     onSubmit: async ({ value }) => mutate(value),
-    validatorAdapter: yupValidator,
+    validatorAdapter: yupValidator(),
   });
 
   return (
