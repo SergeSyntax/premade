@@ -29,6 +29,7 @@ x-rabbitmq-plugin-volume: &rabbitmq-plugin-volume
 x-mongodb-common-env: &mongodb-common-env
   MONGODB_REPLICA_SET_KEY: replicasetkey123
   MONGODB_SYSTEM_LOG_VERBOSITY: "0"
+  MONGODB_EXTRA_FLAGS: "--bind_ip_all"
 
 x-mongodb-healthcheck: &mongodb-healthcheck
   test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
@@ -95,11 +96,12 @@ services:
   mongodb-primary:
     image: docker.io/bitnami/mongodb:8.0
     ports:
-      - "127.0.0.1:27017:27017"
+      - "27017:27017"
     healthcheck: *mongodb-healthcheck
+    network_mode: host
     environment:
       <<: *mongodb-common-env
-      MONGODB_ADVERTISED_HOSTNAME: mongodb-primary
+      MONGODB_ADVERTISED_HOSTNAME: localhost
       MONGODB_REPLICA_SET_MODE: primary
       MONGODB_ROOT_PASSWORD: password123
     volumes:
@@ -107,34 +109,45 @@ services:
 
   mongodb-secondary:
     image: docker.io/bitnami/mongodb:8.0
+    ports:
+      - "27018:27018"
     depends_on:
       - mongodb-primary
     healthcheck: *mongodb-healthcheck
+    network_mode: host
     environment:
       <<: *mongodb-common-env
-      MONGODB_ADVERTISED_HOSTNAME: mongodb-secondary
+      MONGODB_ADVERTISED_HOSTNAME: localhost
+      MONGODB_PORT_NUMBER: "27018"
+      MONGODB_ADVERTISED_PORT_NUMBER: "27018"
       MONGODB_REPLICA_SET_MODE: secondary
-      MONGODB_INITIAL_PRIMARY_HOST: mongodb-primary
+      MONGODB_INITIAL_PRIMARY_HOST: localhost
       MONGODB_INITIAL_PRIMARY_ROOT_PASSWORD: password123
 
   mongodb-arbiter:
     image: docker.io/bitnami/mongodb:8.0
+    ports:
+      - "27019:27019"
     healthcheck: *mongodb-healthcheck
+    network_mode: host
     depends_on:
       - mongodb-primary
     environment:
       <<: *mongodb-common-env
-      MONGODB_ADVERTISED_HOSTNAME: mongodb-arbiter
+      MONGODB_ADVERTISED_HOSTNAME: localhost
       MONGODB_REPLICA_SET_MODE: arbiter
-      MONGODB_INITIAL_PRIMARY_HOST: mongodb-primary
+      MONGODB_INITIAL_PRIMARY_HOST: localhost
       MONGODB_INITIAL_PRIMARY_ROOT_PASSWORD: password123
+      MONGODB_PORT_NUMBER: "27019"
+      MONGODB_ADVERTISED_PORT_NUMBER: "27019"
 
   mongo-express:
     image: mongo-express:1.0.2-18-alpine3.19
+    network_mode: host
     environment:
       <<: *mongodb-common-env
       ME_CONFIG_MONGODB_ENABLE_ADMIN: true
-      ME_CONFIG_MONGODB_SERVER: mongodb-primary
+      ME_CONFIG_MONGODB_SERVER: localhost
       ME_CONFIG_BASICAUTH_USERNAME: admin
       ME_CONFIG_BASICAUTH_PASSWORD: admin
 
