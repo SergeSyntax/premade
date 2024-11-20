@@ -3,8 +3,8 @@ import { MessageBusClient } from "@devops-premade/ms-common";
 import { POD_NAME, RMQ_HOST, RMQ_PASSWORD, RMQ_PORT, RMQ_PROTOCOL, RMQ_USERNAME } from "./config";
 
 export const messageBusClient = new MessageBusClient({
-  parsedHosts: RMQ_HOST,
-  parsedPorts: RMQ_PORT,
+  hostsEnv: RMQ_HOST,
+  portsEnv: RMQ_PORT,
   connectionName: POD_NAME,
   connectOptions: {
     username: RMQ_USERNAME,

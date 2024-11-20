@@ -1,4 +1,5 @@
 export * from "./controllers";
+export * from "./database";
 export * from "./enums";
 export * from "./errors";
 export * from "./events";

@@ -3,10 +3,10 @@ import { logger } from "@devops-premade/ms-common/src/logger";
 import { app } from "./app";
 import { PORT } from "./config";
 import { messageBusClient } from "./message-bus-client";
-import { connectMongoDB, disconnectMongoDB } from "./mongodb";
+import { mongodbClient } from "./mongodb-client";
 
 const handleTerm = async () => {
-  await disconnectMongoDB();
+  await mongodbClient.disconnect();
   await messageBusClient.disconnect();
   process.exit();
 };
@@ -14,7 +14,7 @@ const handleTerm = async () => {
 process.on("SIGTERM", handleTerm);
 process.on("SIGINT", handleTerm);
 
-await connectMongoDB();
+await mongodbClient.connect();
 await messageBusClient.connect();
 
 app.listen(PORT, () => logger.info(`Listening on port ${PORT}`));

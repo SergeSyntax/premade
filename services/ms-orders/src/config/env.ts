@@ -15,15 +15,16 @@ export * from "@devops-premade/ms-common/src/config/env";
 export const {
   PORT = "5002",
   // MongoDB
-  MONGO_USERNAME = "admin",
+  MONGO_USERNAME = "orders-user",
   MONGO_PASSWORD = "admin",
   MONGO_DB_NAME = "orders",
-  MONGO_PORT = "27017",
-  MONGO_HOST = "localhost",
+  MONGO_PORT = "27017, 27018, 27019",
+  MONGO_HOST = "localhost, localhost, localhost",
+  MONGO_REPLICA_SET = "replicaset",
   // RabbitMQ
   RMQ_USERNAME = "admin",
   RMQ_PASSWORD = "admin",
-  RMQ_HOST = "localhost",
+  RMQ_HOST = "localhost,localhost,localhost",
   RMQ_PORT = "5672,5673,5674",
   RMQ_VHOST = "/",
   RMQ_PROTOCOL = "amqp",

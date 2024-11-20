@@ -2,17 +2,16 @@ import amqp, { AmqpConnectionManager, Channel, ChannelWrapper } from "amqp-conne
 import { Message, Options } from "amqplib";
 
 import { logger } from "../logger";
+import { parseConnectionConfig } from "../utils";
 
 interface MessageBusClientOptions {
-  parsedHosts: string;
-  parsedPorts: string;
+  hostsEnv: string;
+  portsEnv: string;
   connectOptions: Options.Connect;
   connectionName: string;
   prefetch?: number;
   publishTimeout?: number;
 }
-
-const parseEnvVarArr = (str: string) => str.split(",").map((term) => term.trim());
 
 export class MessageBusClient {
   private _connection?: AmqpConnectionManager;
@@ -49,29 +48,19 @@ export class MessageBusClient {
 
   public async connect() {
     const {
-      parsedHosts,
-      parsedPorts,
+      hostsEnv,
+      portsEnv,
       connectOptions,
       connectionName,
       prefetch = 1,
       publishTimeout = 10000,
     } = this.options;
 
-    const hosts = parseEnvVarArr(parsedHosts);
-    const ports = parseEnvVarArr(parsedPorts);
+    const { hosts, ports } = parseConnectionConfig(hostsEnv, portsEnv, 'RabbitMQ');
 
-    const derivedHosts = ports.length === 1 ? Array(ports.length).fill(hosts[1]) : hosts;
-    const derivedPorts = hosts.length === 1 ? Array(hosts.length).fill(ports[1]) : ports;
-
-    if (derivedHosts.length !== derivedPorts.length) {
-      throw new Error(
-        `Configuration error: ${hosts.length} hosts were provided but only ${ports.length} ports. Ensure each host has a corresponding port.`,
-      );
-    }
-
-    const urls = derivedHosts.map((hostname, i) => ({
+    const urls = hosts.map((hostname, i) => ({
       hostname,
-      port: +derivedPorts[i],
+      port: +ports[i],
       ...connectOptions,
     }));
 

@@ -14,9 +14,9 @@ MONGODB_INITIAL_PRIMARY_ROOT_PASSWORD = _getenv(
 30000
 
 # users with passwords and databases to create
-MONGODB_EXTRA_USERNAMES = _getenv("MONGODB_EXTRA_USERNAMES", "orders,media,auth")
+MONGODB_EXTRA_USERNAMES = _getenv("MONGODB_EXTRA_USERNAMES", "orders-user,media-user,auth-user")
+MONGODB_EXTRA_DATABASES = _getenv("MONGODB_EXTRA_DATABASES", "orders,media,auth")
 MONGODB_EXTRA_PASSWORDS = _getenv("MONGODB_EXTRA_PASSWORDS", "admin,admin,admin")
-MONGODB_EXTRA_DATABASES = _getenv("MONGODB_EXTRA_DATABASES", "admin,admin,admin")
 
 SERVER_SELECTION_TIMEOUT_MS = _getenv(
     "SERVER_SELECTION_TIMEOUT_MS", "30000"
