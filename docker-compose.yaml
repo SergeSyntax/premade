@@ -165,6 +165,38 @@ services:
       timeout: 10s
       interval: 20s
       retries: 6
+
+  mongo-init-users:
+    build:
+      context: ./operations/mongo-init
+      dockerfile: Dockerfile
+    environment:
+      # Root credentials
+      MONGODB_INITIAL_PRIMARY_HOST: "localhost,localhost,localhost"
+      MONGODB_INITIAL_PRIMARY_PORT_NUMBER: "27017,27018,27019"
+      MONGODB_INITIAL_PRIMARY_ROOT_USER: "root"
+      MONGODB_INITIAL_PRIMARY_ROOT_PASSWORD: "password123"
+      # Extra users, passwords, and databases
+      MONGODB_EXTRA_USERNAMES: "orders,media,auth"
+      MONGODB_EXTRA_PASSWORDS: "admin,admin,admin"
+      MONGODB_EXTRA_DATABASES: "admin,admin,admin"
+      # Server selection timeout
+      SERVER_SELECTION_TIMEOUT_MS: "30000"
+    depends_on:
+      mongodb-primary:
+        condition: service_healthy
+        required: true
+        restart: true
+      mongodb-secondary:
+        condition: service_healthy
+        required: true
+        restart: true
+      mongodb-arbiter:
+        condition: service_healthy
+        required: true
+        restart: true
+    restart: "on-failure"
+    network_mode: "host"
   ##endregion
 
 volumes:
