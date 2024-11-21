@@ -38,8 +38,7 @@ def main():
     )
 
     for user in users:
-        is_exist = user_exists(client, user["database"], user["username"])
-        print(user, is_exist)
+        is_exist = user_exists(client, user["username"])
 
         if is_exist:
             logging.info(

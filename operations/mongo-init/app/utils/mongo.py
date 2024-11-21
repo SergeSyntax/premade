@@ -100,45 +100,44 @@ def create_user(
         raise RuntimeError("failed to create user.") from err
 
 
-def user_exists(client: MongoClient, database: str, username: str):
+def user_exists(client: MongoClient, username: str):
     """
-    Check if a specific user exists in the given MongoDB database.
+    Check if a specific user exists in the MongoDB instance.
 
-    This function queries the `system.users` collection to determine whether
-    a user with the specified username exists in the provided database. If
-    an error occurs during the operation (e.g., connectivity issues or database
-    errors), a RuntimeError is raised to signal a failure.
+    This function queries the `system.users` collection in the `admin` database
+    to determine whether a user with the specified username exists. If an error
+    occurs during the operation (e.g., connectivity issues or database errors),
+    a RuntimeError is raised to signal a failure.
 
     Parameters:
         client (MongoClient): The MongoDB client instance.
-        database (str): The name of the database to query.
         username (str): The username to check for existence.
 
     Returns:
-        bool: True if the user exists in the database, False otherwise.
+        bool: True if the user exists, False otherwise.
 
     Raises:
         RuntimeError: If an error occurs while querying the database.
 
     Logging:
         - DEBUG: Logs the user existence check.
-        - INFO: Logs whether the user exists and the document count.
+        - INFO: Logs whether the user exists.
         - ERROR: Logs any errors encountered during the operation, including
           stack trace information.
     """
     try:
-        logging.debug(f"Checking if user '{username}' exists in database '{database}'")
+        logging.debug(f"Checking if user '{username}' exists in the MongoDB instance.")
         db = client["admin"]
         user = db.get_collection("system.users").find_one({"user": username})
 
         if user is None:
-            logging.debug(f"User '{username}' does not exist in database '{database}'.")
+            logging.debug(f"User '{username}' does not exist.")
             return False
-        logging.debug(f"User '{username}' exists in database '{database}'.")
+        logging.debug(f"User '{username}' exists.")
         return True
 
     except Exception as err:
         logging.error(
-            f"Error checking user existence for '{username}' in database '{database}': {err}"
+            f"Error checking user existence for '{username}': {err}", exc_info=True
         )
-        raise err
+        raise
