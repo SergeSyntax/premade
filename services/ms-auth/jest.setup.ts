@@ -1,15 +1,10 @@
 import { faker } from "@faker-js/faker";
 import { afterAll, beforeAll, beforeEach, jest } from "@jest/globals";
-import { StatusCodes } from "http-status-codes";
 import jwt from "jsonwebtoken";
 import { MongoMemoryServer } from "mongodb-memory-server";
 import mongoose from "mongoose";
-import request from "supertest";
 
-import { app } from "./src/app";
 import { JWT_SECRET } from "./src/config";
-import { USER } from "./tests/auth.mock";
-import { TestRoutes } from "./tests/consts";
 
 declare global {
   // eslint-disable-next-line no-var

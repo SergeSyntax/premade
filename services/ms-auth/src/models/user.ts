@@ -26,7 +26,7 @@ const userSchema = new mongoose.Schema<UserAttrs>(
     },
     allowExtraEmails: {
       type: Boolean,
-      default: false
+      default: false,
     },
   },
   {
@@ -51,8 +51,9 @@ const userSchema = new mongoose.Schema<UserAttrs>(
 );
 
 userSchema.pre("save", async function (done) {
-  if (this.isModified("password"))
+  if (this.isModified("password")) {
     this.set("password", await Password.toHash(this.get("password")));
+  }
 
   done();
 });

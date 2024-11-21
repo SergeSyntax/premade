@@ -1,86 +1,261 @@
-version: "3.9"
-
 name: devops-premade
 
+########################
+##region RabbitMQ COMMON
+########################
+x-rabbitmq-common-env: &rabbitmq-common-env
+  RABBITMQ_USERNAME: admin
+  RABBITMQ_PASSWORD: admin
+  RABBITMQ_ERL_COOKIE: s3cr3tc00ki3
+  RABBITMQ_MANAGEMENT_ALLOW_WEB_ACCESS: "true"
+  RABBITMQ_LOGS: "-"
+
+x-rabbitmq-healthcheck: &rabbitmq-healthcheck
+  test: ["CMD", "rabbitmq-diagnostics", "ping"]
+  start_period: 10s
+  timeout: 20s
+  interval: 30s
+  retries: 5
+
+x-rabbitmq-plugin-volume: &rabbitmq-plugin-volume
+  type: bind
+  source: ${RABBITMQ_PLUGIN_DIR:-./docker/plugins/rabbitmq}/enabled_plugins.conf
+  target: /etc/rabbitmq/enabled_plugins
+##endregion
+
+########################
+##region MongoDB COMMON
+########################
+x-mongodb-common-env: &mongodb-common-env
+  MONGODB_REPLICA_SET_KEY: replicasetkey123
+  MONGODB_SYSTEM_LOG_VERBOSITY: "0"
+  MONGODB_EXTRA_FLAGS: "--bind_ip_all"
+
+x-mongodb-healthcheck: &mongodb-healthcheck
+  test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+  start_period: 30s
+  timeout: 10s
+  interval: 20s
+  retries: 6
+##endregion
+
 services:
-  rabbitmq:
-    image: bitnami/rabbitmq:3.13.3-debian-12-r0
-    network_mode: host
+  #################
+  ##region RabbitMQ
+  #################
+  stats:
+    image: docker.io/bitnami/rabbitmq:4.0
+    healthcheck: *rabbitmq-healthcheck
+    networks: ["rabbitmq_net"]
     environment:
-      - RABBITMQ_USERNAME=admin
-      - RABBITMQ_PASSWORD=admin
-      - RABBITMQ_MANAGEMENT_BIND_IP=0.0.0.0
-      - RABBITMQ_MANAGEMENT_PORT_NUMBER=15672
-      - RABBITMQ_NODE_PORT_NUMBER=5672
-      - RABBITMQ_ERL_COOKIE=secretcookie
-      - RABBITMQ_MANAGEMENT_ALLOW_WEB_ACCESS=true
-    volumes:
-      - ${CACHE_DIR:-./cache}/volumes/rabbitmq:/bitnami/rabbitmq
+      <<: *rabbitmq-common-env
+      RABBITMQ_NODE_TYPE: stats
+      RABBITMQ_NODE_NAME: rabbit@stats
     ports:
-      - "15672:15672" # Management console
-      - "5672:5672" # RabbitMQ port
-    user: "0:0"
-    healthcheck:
-      test: ["CMD", "rabbitmq-diagnostics", "status"]
-      interval: 30s
-      timeout: 20s
-      retries: 3
-  mongodb: # https://hub.docker.com/r/bitnami/mongodb
-    image: bitnami/mongodb:7.0.11-debian-12-r0
-    network_mode: host
-    environment:
-      MONGODB_ROOT_USER: admin
-      MONGODB_ROOT_PASSWORD: admin
-      MONGODB_DATABASE: admin
-      MONGODB_USERNAME: admin
-      MONGODB_PASSWORD: admin
-        - ALLOW_EMPTY_PASSWORD=no
-      MONGODB_EXTRA_DATABASES: auth,media,orders
-      MONGODB_EXTRA_USERNAMES: admin,admin,admin
-      MONGODB_EXTRA_PASSWORDS: admin,admin,admin
+      - "15672:15672"
+      - "5672:5672"
     volumes:
-      - ${CACHE_DIR:-./cache}/volumes/mongodb:/bitnami/mongodb
+      - <<: *rabbitmq-plugin-volume
+      - "rabbitmqstats_data:/bitnami/rabbitmq/mnesia"
+  queue-disc1:
+    image: docker.io/bitnami/rabbitmq:4.0
+    healthcheck: *rabbitmq-healthcheck
+    networks: ["rabbitmq_net"]
+    environment:
+      <<: *rabbitmq-common-env
+      RABBITMQ_NODE_TYPE: queue-disc
+      RABBITMQ_NODE_NAME: rabbit@queue-disc1
+      RABBITMQ_CLUSTER_NODE_NAME: rabbit@stats
+      RABBITMQ_MANAGEMENT_ALLOW_WEB_ACCESS: "true"
+    volumes:
+      - <<: *rabbitmq-plugin-volume
+      - "rabbitmqdisc1_data:/bitnami/rabbitmq/mnesia"
     ports:
-      - "27017:27017" # MongoDB port
-    user: "0:0"
-    healthcheck:
-      test: ["CMD", "mongo", "--eval", "db.adminCommand('ping')"]
-      interval: 30s
-      timeout: 20s
-      retries: 3
-  mongo-express: #
-    image: mongo-express:1.0.2-20-alpine3.19 # https://hub.docker.com/_/mongo-express
+      - "15673:15672"
+      - "5673:5672"
+  queue-ram1:
+    image: docker.io/bitnami/rabbitmq:4.0
+    healthcheck: *rabbitmq-healthcheck
+    networks: ["rabbitmq_net"]
+    environment:
+      <<: *rabbitmq-common-env
+      RABBITMQ_NODE_TYPE: queue-ram
+      RABBITMQ_NODE_NAME: rabbit@queue-ram1
+      RABBITMQ_CLUSTER_NODE_NAME: rabbit@stats
+    volumes:
+      - <<: *rabbitmq-plugin-volume
+      - "rabbitmqram1_data:/bitnami/rabbitmq/mnesia"
+    ports:
+      - "15674:15672"
+      - "5674:5672"
+  ##endregion
+
+  #################
+  ##region MongoDB
+  #################
+  mongodb-primary:
+    image: docker.io/bitnami/mongodb:8.0
+    ports:
+      - "27017:27017"
+    healthcheck: *mongodb-healthcheck
     network_mode: host
     environment:
-      ME_CONFIG_MONGODB_ADMINUSERNAME: admin
-      ME_CONFIG_MONGODB_ADMINPASSWORD: admin
+      <<: *mongodb-common-env
+      MONGODB_ADVERTISED_HOSTNAME: localhost
+      MONGODB_REPLICA_SET_MODE: primary
+      MONGODB_ROOT_PASSWORD: password123
+    volumes:
+      - "mongodb_master_data:/bitnami/mongodb"
+
+  mongodb-secondary:
+    image: docker.io/bitnami/mongodb:8.0
+    ports:
+      - "27018:27018"
+    depends_on:
+      - mongodb-primary
+    healthcheck: *mongodb-healthcheck
+    network_mode: host
+    environment:
+      <<: *mongodb-common-env
+      MONGODB_ADVERTISED_HOSTNAME: localhost
+      MONGODB_PORT_NUMBER: "27018"
+      MONGODB_ADVERTISED_PORT_NUMBER: "27018"
+      MONGODB_REPLICA_SET_MODE: secondary
+      MONGODB_INITIAL_PRIMARY_HOST: localhost
+      MONGODB_INITIAL_PRIMARY_ROOT_PASSWORD: password123
+
+  mongodb-arbiter:
+    image: docker.io/bitnami/mongodb:8.0
+    ports:
+      - "27019:27019"
+    healthcheck: *mongodb-healthcheck
+    network_mode: host
+    depends_on:
+      - mongodb-primary
+    environment:
+      <<: *mongodb-common-env
+      MONGODB_ADVERTISED_HOSTNAME: localhost
+      MONGODB_REPLICA_SET_MODE: arbiter
+      MONGODB_INITIAL_PRIMARY_HOST: localhost
+      MONGODB_INITIAL_PRIMARY_ROOT_PASSWORD: password123
+      MONGODB_PORT_NUMBER: "27019"
+      MONGODB_ADVERTISED_PORT_NUMBER: "27019"
+
+  mongo-express:
+    image: mongo-express:1.0.2-18-alpine3.19
+    network_mode: host
+    environment:
+      <<: *mongodb-common-env
+      ME_CONFIG_MONGODB_ENABLE_ADMIN: true
       ME_CONFIG_MONGODB_SERVER: localhost
       ME_CONFIG_BASICAUTH_USERNAME: admin
       ME_CONFIG_BASICAUTH_PASSWORD: admin
-      ME_CONFIG_MONGODB_ENABLE_ADMIN: true
+
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: password123
     ports:
-      - "8081:8081" # Mongo Express port
+      - "127.0.0.1:8081:8081"
     depends_on:
-      - mongodb
+      - mongodb-primary
+      - mongodb-secondary
+      - mongodb-arbiter
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8081"]
-      interval: 30s
-      timeout: 20s
-      retries: 3
-  minio: # https://hub.docker.com/r/bitnami/minio
-    image: bitnami/minio:2024.5.28-debian-12-r0
-    network_mode: host
+      test: ["CMD", "wget", "--spider", "http://localhost:8081/status"]
+      start_period: 30s
+      timeout: 10s
+      interval: 20s
+      retries: 6
+
+  mongo-init-users:
+    build:
+      context: ./operations/mongo-init
+      dockerfile: Dockerfile
     environment:
-      MINIO_ROOT_USER: ${MINIO_ACCESS_KEY:-minioadmin}
-      MINIO_ROOT_PASSWORD: ${MINIO_SECRET_KEY:-minioadmin}
-    ports:
-      - "9000:9000"
-      - "9001:9001"
-    volumes:
-      - ${CACHE_DIR:-./cache}/volumes/minio/data:/bitnami/minio/data
-    user: "0:0"
-    healthcheck:
-      test: ['CMD', 'curl', '-f', 'http://localhost:9000/minio/health/live']
-      interval: 30s
-      timeout: 20s
-      retries: 3
+      # Root credentials
+      MONGODB_INITIAL_PRIMARY_HOST: "localhost,localhost,localhost"
+      MONGODB_INITIAL_PRIMARY_PORT_NUMBER: "27017,27018,27019"
+      MONGODB_INITIAL_PRIMARY_ROOT_USER: "root"
+      MONGODB_INITIAL_PRIMARY_ROOT_PASSWORD: "password123"
+      # Extra users, passwords, and databases
+      MONGODB_EXTRA_USERNAMES: "orders-user,media-user,auth-user"
+      MONGODB_EXTRA_DATABASES: "orders,media,auth"
+      MONGODB_EXTRA_PASSWORDS: "admin,admin,admin"
+      # Server selection timeout
+      SERVER_SELECTION_TIMEOUT_MS: "30000"
+    depends_on:
+      mongodb-primary:
+        condition: service_healthy
+        required: true
+        restart: true
+      mongodb-secondary:
+        condition: service_healthy
+        required: true
+        restart: true
+      mongodb-arbiter:
+        condition: service_healthy
+        required: true
+        restart: true
+    restart: "on-failure"
+    network_mode: "host"
+  ##endregion
+
+  #################
+  ##region MongoDB
+  #################
+  # minio:
+  #   image: bitnami/minio:2024.5.28-debian-12-r0
+  #   network_mode: host
+  #   environment:
+  #     MINIO_ROOT_USER: ${MINIO_ACCESS_KEY:-minioadmin}
+  #     MINIO_ROOT_PASSWORD: ${MINIO_SECRET_KEY:-minioadmin}
+  #     MINIO_OPTS: "--console-address :9001 --debug"
+  #   ports:
+  #     - "9000:9000"
+  #     - "9001:9001"
+  #   volumes:
+  #     - minio_data:/bitnami/minio/data
+
+  # minio-client:
+  #   image: minio/mc
+  #   restart: on-failure
+  #   network_mode: host
+  #   environment:
+  #     CLIENT_NAME: "minio"
+  #     MINIO_ROOT_USER: ${MINIO_ACCESS_KEY:-minioadmin}
+  #     MINIO_ROOT_PASSWORD: ${MINIO_SECRET_KEY:-minioadmin}
+
+  #     MIO_ENDPOINT: "http://localhost:9000"
+  #     MIO_BUCKET: "media-bucket"
+  #     MIO_ACCESS_KEY: "bucket_key"
+  #     MIO_SECRET_KEY: "bucket_key"
+
+  #   depends_on:
+  #     - minio
+  #   volumes:
+  #     - ${CONFIG_DIR:-./docker/config}/minio/:/root/policies/
+  #     - ./docker/scripts/minio/entrypoint.sh:/entrypoint.sh
+  #   entrypoint: ["/bin/sh", "/entrypoint.sh"]
+  ##endregion
+
+
+volumes:
+  mongodb_master_data:
+    driver: local
+  rabbitmqstats_data:
+    driver: local
+  rabbitmqdisc1_data:
+    driver: local
+  rabbitmqram1_data:
+    driver: local
+  minio_data:
+    driver: local
+  minio_2_data:
+    driver: local
+  minio_3_data:
+    driver: local
+  minio_4_data:
+    driver: local
+
+networks:
+  rabbitmq_net:
+    driver: bridge

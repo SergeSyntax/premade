@@ -1,4 +1,3 @@
-
 /*
  * For a detailed explanation regarding each configuration property and type check, visit:
  * https://jestjs.io/docs/configuration
@@ -8,7 +7,7 @@
  * @type {import('ts-jest').JestConfigWithTsJest}
  */
 const jestConfig = {
-  extensionsToTreatAsEsm: ['.ts'],
+  extensionsToTreatAsEsm: [".ts"],
 
   // All imported modules in your tests should be mocked automatically
   // automock: false,
@@ -183,8 +182,8 @@ const jestConfig = {
   transform: {
     // '^.+\\.[tj]sx?$' to process js/ts with `ts-jest`
     // '^.+\\.m?[tj]sx?$' to process js/ts/mjs/mts with `ts-jest`
-    '^.+\\.tsx?$': [
-      'ts-jest',
+    "^.+\\.tsx?$": [
+      "ts-jest",
       {
         useESM: true,
       },

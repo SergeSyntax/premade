@@ -7,22 +7,18 @@ dotenv.config({
   path: ".env",
 });
 
-import "express-async-errors";
-
-import { NotFoundError } from "@devops-premade/ms-common";
-import { Env } from "@devops-premade/ms-common";
-import { httpLogMiddleware } from "@devops-premade/ms-common/src/logger";
+import {
+  Env,
+  errorRequestHandler,
+  httpLogMiddleware,
+  notFoundController,
+} from "@devops-premade/ms-common";
 import cookieSession from "cookie-session";
 import cors from "cors";
-import express, { RequestHandler } from "express";
+import express from "express";
 
 import * as env from "./config/env";
-import { Routes } from "./routes";
-import { errorRequestHandler } from "./routes/error-response-handler";
-
-const notFoundController: RequestHandler = () => {
-  throw new NotFoundError();
-};
+import { routes } from "./routes";
 
 const app = express();
 // traffic proxy through istio-ingress
@@ -36,9 +32,16 @@ app.use(
   }),
 );
 // change secure to use ssl
-app.use(cookieSession({ signed: false, secure: env.NODE_ENV === Env.Production }));
+app.use(
+  cookieSession({
+    // jwt is already encrypted and can't be tempered
+    signed: false,
+    // check that the user use https connection
+    secure: env.NODE_ENV === Env.Production,
+  }),
+);
 app.use(httpLogMiddleware);
-app.use("/api/auth", Routes);
+app.use("/api/auth", routes);
 app.all("*", notFoundController);
 app.use(errorRequestHandler);
 

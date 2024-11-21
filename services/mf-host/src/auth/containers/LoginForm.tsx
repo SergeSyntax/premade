@@ -11,7 +11,7 @@ import Container from "@mui/material/Container";
 import { Copyright } from "../components/Copyright";
 import { useForm } from "@tanstack/react-form";
 import { useLogin } from "../hooks";
-import { yupValidator } from "@tanstack/yup-form-adapter";
+import { yupValidator } from '@tanstack/yup-form-adapter'
 import { emailSchema, passwordSchema } from "../schemas";
 import TextField from "@/components/TextField";
 import { Link } from "@/components/link";
@@ -24,7 +24,7 @@ export const LoginForm = () => {
       password: "",
     },
     onSubmit: async ({ value }) => mutate(value),
-    validatorAdapter: yupValidator,
+    validatorAdapter: yupValidator(),
   });
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
