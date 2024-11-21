@@ -38,15 +38,15 @@ def generate_mongo_connection_strings(hosts: str = "", ports: str = "") -> list[
 
 
 def parse_mongo_users(
-    usernames: str = "", passwords: str = "", databases: str = ""
-) -> list[dict[Literal["username", "password", "database"], str]]:
+    databases: str = "", usernames: str = "", passwords: str = ""
+) -> list[dict[Literal["database", "username", "password"], str]]:
     """
     Parses MongoDB user details and validates input.
 
     Args:
+        databases (str): Comma-separated database names.
         usernames (str): Comma-separated usernames.
         passwords (str): Comma-separated passwords.
-        databases (str): Comma-separated database names.
 
     Raises:
         ValueError: If any of the required inputs are missing or invalid.
@@ -55,22 +55,20 @@ def parse_mongo_users(
         list[dict[Literal["username", "password", "database"], str]]:
         A list of dictionaries with fixed keys and string values.
     """
+    database_list = [d.strip() for d in databases.split(",") if d.strip()]
     username_list = [u.strip() for u in usernames.split(",") if u.strip()]
     password_list = [p.strip() for p in passwords.split(",") if p.strip()]
-    database_list = [d.strip() for d in databases.split(",") if d.strip()]
+    database_list_len = len(database_list)
     username_list_len = len(username_list)
     password_list_len = len(password_list)
-    database_list_len = len(database_list)
-
-    if not username_list_len:
-
-        raise ValueError("Usernames are required to create MongoDB users.")
-
-    if not password_list_len:
-        raise ValueError("Databases are required to create MongoDB users.")
 
     if not database_list_len:
         raise ValueError("Passwords are required to create MongoDB users.")
+    if not username_list_len:
+        raise ValueError("Usernames are required to create MongoDB users.")
+    if not password_list_len:
+        raise ValueError("Databases are required to create MongoDB users.")
+
     if username_list_len != password_list_len or username_list_len != database_list_len:
         raise ValueError(
             f"Mismatch in counts: usernames ({username_list_len}), passwords ({password_list_len}), "
@@ -78,8 +76,8 @@ def parse_mongo_users(
         )
 
     return [
-        {"username": username, "password": password, "database": database}
-        for username, password, database in zip(
-            username_list, password_list, database_list
+        {"database": database, "username": username, "password": password}
+        for database, username, password in zip(
+            database_list, username_list, password_list
         )
     ]

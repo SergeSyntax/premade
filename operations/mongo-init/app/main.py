@@ -32,13 +32,15 @@ def main():
     ensure_mongo_connection(client)
 
     users = parse_mongo_users(
+        env.MONGODB_EXTRA_DATABASES,
         env.MONGODB_EXTRA_USERNAMES,
         env.MONGODB_EXTRA_PASSWORDS,
-        env.MONGODB_EXTRA_DATABASES,
     )
 
     for user in users:
         is_exist = user_exists(client, user["database"], user["username"])
+        print(user, is_exist)
+
         if is_exist:
             logging.info(
                 f"User '{user['username']}' already exists in database '{user['database']}'. Skipping creation."

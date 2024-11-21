@@ -177,9 +177,9 @@ services:
       MONGODB_INITIAL_PRIMARY_ROOT_USER: "root"
       MONGODB_INITIAL_PRIMARY_ROOT_PASSWORD: "password123"
       # Extra users, passwords, and databases
-      MONGODB_EXTRA_USERNAMES: "orders,media,auth"
+      MONGODB_EXTRA_USERNAMES: "orders-user,media-user,auth-user"
+      MONGODB_EXTRA_DATABASES: "orders,media,auth"
       MONGODB_EXTRA_PASSWORDS: "admin,admin,admin"
-      MONGODB_EXTRA_DATABASES: "admin,admin,admin"
       # Server selection timeout
       SERVER_SELECTION_TIMEOUT_MS: "30000"
     depends_on:
@@ -199,21 +199,10 @@ services:
     network_mode: "host"
   ##endregion
 
-volumes:
-  mongodb_master_data:
-    driver: local
-  rabbitmqstats_data:
-    driver: local
-  rabbitmqdisc1_data:
-    driver: local
-  rabbitmqram1_data:
-    driver: local
-
-networks:
-  rabbitmq_net:
-    driver: bridge
-
-  # minio: # https://hub.docker.com/r/bitnami/minio
+  #################
+  ##region MongoDB
+  #################
+  # minio:
   #   image: bitnami/minio:2024.5.28-debian-12-r0
   #   network_mode: host
   #   environment:
@@ -224,13 +213,7 @@ networks:
   #     - "9000:9000"
   #     - "9001:9001"
   #   volumes:
-  #     - ${CACHE_DIR:-./docker/cache/volumes}/minio/data:/bitnami/minio/data
-  #   user: "0:0"
-  #   healthcheck:
-  #     test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
-  #     interval: 30s
-  #     timeout: 20s
-  #     retries: 3
+  #     - minio_data:/bitnami/minio/data
 
   # minio-client:
   #   image: minio/mc
@@ -252,3 +235,27 @@ networks:
   #     - ${CONFIG_DIR:-./docker/config}/minio/:/root/policies/
   #     - ./docker/scripts/minio/entrypoint.sh:/entrypoint.sh
   #   entrypoint: ["/bin/sh", "/entrypoint.sh"]
+  ##endregion
+
+
+volumes:
+  mongodb_master_data:
+    driver: local
+  rabbitmqstats_data:
+    driver: local
+  rabbitmqdisc1_data:
+    driver: local
+  rabbitmqram1_data:
+    driver: local
+  minio_data:
+    driver: local
+  minio_2_data:
+    driver: local
+  minio_3_data:
+    driver: local
+  minio_4_data:
+    driver: local
+
+networks:
+  rabbitmq_net:
+    driver: bridge

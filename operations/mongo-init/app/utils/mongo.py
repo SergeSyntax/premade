@@ -128,21 +128,17 @@ def user_exists(client: MongoClient, database: str, username: str):
     """
     try:
         logging.debug(f"Checking if user '{username}' exists in database '{database}'")
+        db = client["admin"]
+        user = db.get_collection("system.users").find_one({"user": username})
 
-        db = client[database]
-        collection = db["system.users"]
-        user_count = collection.count_documents({"user": username})
-        logging.debug(
-            f"User '{username}' exists: {bool(user_count)} (Count: {user_count})"
-        )
+        if user is None:
+            logging.debug(f"User '{username}' does not exist in database '{database}'.")
+            return False
+        logging.debug(f"User '{username}' exists in database '{database}'.")
+        return True
 
-        return bool(user_count)
     except Exception as err:
         logging.error(
-            f"Error while checking user '{username}' existence in database '{database}': {err}",
-            exc_info=True,
+            f"Error checking user existence for '{username}' in database '{database}': {err}"
         )
-        # Raise the exception to signal the failure to the main logic
-        raise RuntimeError(
-            f"Failed to check user '{username}' in database '{database}'"
-        ) from err
+        raise err
