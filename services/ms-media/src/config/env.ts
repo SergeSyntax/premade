@@ -35,7 +35,7 @@ export const {
   POD_NAME = "media-deployment-6b97d4b9c-q5dmn",
   // MinIO
   MIO_ENDPOINT = "http://localhost:9000",
-  MIO_ACCESS_KEY = "bucket_key",
-  MIO_SECRET_KEY = "bucket_key",
-  MIO_BUCKET = "media-bucket",
+  MIO_ACCESS_KEY = "fi6agQe0bYLFLT2BPSZ4",
+  MIO_SECRET_KEY = "qKaR1V0sbmhRSPdWG6BBEBtAcW0YswSC7BDO9sMo",
+  MIO_MEDIA_BUCKET = "media-bucket",
 } = process.env as EnvVars;

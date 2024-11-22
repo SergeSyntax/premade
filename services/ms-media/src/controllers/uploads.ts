@@ -17,6 +17,7 @@ import { getUploadUrl } from "../services/uploads";
 export const getUploadResourceController: RequestHandler = async (req, res) => {
   const uploadDetails = await getUploadUrl(
     (req.query?.fileType as string) ?? "",
+    (req.query?.checksum as string) ?? "",
     req.currentUser?.id,
   );
 

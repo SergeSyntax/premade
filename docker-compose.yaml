@@ -154,7 +154,7 @@ services:
       ME_CONFIG_MONGODB_ADMINUSERNAME: root
       ME_CONFIG_MONGODB_ADMINPASSWORD: password123
     ports:
-      - "127.0.0.1:8081:8081"
+      - "8081:8081"
     depends_on:
       - mongodb-primary
       - mongodb-secondary
@@ -200,43 +200,57 @@ services:
   ##endregion
 
   #################
-  ##region MongoDB
+  ##region MinIO
   #################
-  # minio:
-  #   image: bitnami/minio:2024.5.28-debian-12-r0
-  #   network_mode: host
-  #   environment:
-  #     MINIO_ROOT_USER: ${MINIO_ACCESS_KEY:-minioadmin}
-  #     MINIO_ROOT_PASSWORD: ${MINIO_SECRET_KEY:-minioadmin}
-  #     MINIO_OPTS: "--console-address :9001 --debug"
-  #   ports:
-  #     - "9000:9000"
-  #     - "9001:9001"
-  #   volumes:
-  #     - minio_data:/bitnami/minio/data
+  minio:
+    image: docker.io/bitnami/minio:2024
+    network_mode: "host"
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - "minio_data:/bitnami/minio/data"
+    healthcheck:
+      test: ["CMD", "curl", "-I", "http://localhost:9000/minio/health/live"]
+      start_period: 30s
+      timeout: 10s
+      interval: 20s
+      retries: 6
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+      BITNAMI_DEBUG: true
+      MINIO_DEFAULT_BUCKETS: media-bucket,thumbnail-bucket
+      # MINIO_DEFAULT_BUCKETS: media-bucket,thumbnail-bucket
+      #     MINIO_OPTS: "--console-address :9001 --debug"
+    #     MINIO_ROOT_USER: admin
+    #     MINIO_ROOT_PASSWORD: admin
 
-  # minio-client:
-  #   image: minio/mc
-  #   restart: on-failure
-  #   network_mode: host
-  #   environment:
-  #     CLIENT_NAME: "minio"
-  #     MINIO_ROOT_USER: ${MINIO_ACCESS_KEY:-minioadmin}
-  #     MINIO_ROOT_PASSWORD: ${MINIO_SECRET_KEY:-minioadmin}
-
-  #     MIO_ENDPOINT: "http://localhost:9000"
-  #     MIO_BUCKET: "media-bucket"
-  #     MIO_ACCESS_KEY: "bucket_key"
-  #     MIO_SECRET_KEY: "bucket_key"
-
-  #   depends_on:
-  #     - minio
-  #   volumes:
-  #     - ${CONFIG_DIR:-./docker/config}/minio/:/root/policies/
-  #     - ./docker/scripts/minio/entrypoint.sh:/entrypoint.sh
-  #   entrypoint: ["/bin/sh", "/entrypoint.sh"]
+  minio-client:
+    image: bitnami/minio-client:2024
+    restart: on-failure
+    network_mode: host
+    environment:
+      MINIO_SERVER_HOST: localhost
+      MINIO_SERVER_PORT_NUMBER: 9000
+      MINIO_SERVER_SCHEME: http
+      MINIO_SERVER_ROOT_USER: minioadmin
+      MINIO_SERVER_ROOT_PASSWORD: minioadmin
+      MINIO_BUCKET_USER: app_user
+      MINIO_BUCKET_PASSWORD: premade-pass
+      MINIO_ACCESS_KEY: fi6agQe0bYLFLT2BPSZ4
+      MINIO_SECRET_KEY: qKaR1V0sbmhRSPdWG6BBEBtAcW0YswSC7BDO9sMo
+    volumes:
+      - "./docker/scripts/minio:/app/scripts"
+      - "./docker/config/minio:/app/templates"
+      - "minio_data:/bitnami/minio/data"
+    entrypoint: ["/bin/bash", "/app/scripts/entrypoint.sh"]
+    depends_on:
+      minio:
+        condition: service_healthy
+        required: true
+        restart: true
   ##endregion
-
 
 volumes:
   mongodb_master_data:
@@ -248,12 +262,6 @@ volumes:
   rabbitmqram1_data:
     driver: local
   minio_data:
-    driver: local
-  minio_2_data:
-    driver: local
-  minio_3_data:
-    driver: local
-  minio_4_data:
     driver: local
 
 networks:
