@@ -32,8 +32,8 @@
   },
   "homepage": "https://github.com/SergeSyntax/premade#readme",
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.673.0",
-    "@aws-sdk/s3-request-presigner": "^3.673.0",
+    "@aws-sdk/client-s3": "^3.171.0",
+    "@aws-sdk/s3-request-presigner": "^3.171.0",
     "@devops-premade/ms-common": "workspace:*",
     "@types/cookie-session": "^2.0.49",
     "@types/cors": "^2.8.17",

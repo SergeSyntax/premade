@@ -6,10 +6,11 @@ interface UploadResponse {
   key: string;
 }
 
-export const getUploadUrl = (fileType: string) =>
+export const getUploadUrl = (fileType: string, checksum: string) =>
   mediaService.get<UploadResponse>("/uploads", {
     params: {
       fileType,
+      checksum,
     },
   });
 

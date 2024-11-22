@@ -19,7 +19,6 @@ import {
 import { getUploadUrl } from "@/auth/api/uploadUrl";
 import axios from "axios";
 import { UploadDropZoneContainer } from "@/components/UploadDropZoneContainer";
-import { useMutation } from "@tanstack/react-query";
 import DescriptionIcon from "@mui/icons-material/Description";
 import ImageIcon from "@mui/icons-material/Image";
 import VisibilityIcon from "@mui/icons-material/Visibility";
@@ -103,6 +102,14 @@ export const UploadSection: React.FC<{
   );
 };
 
+const getSHA256Hash = async (file: File): Promise<string> => {
+  const buffer = await file.arrayBuffer();
+  const hashBuffer = await crypto.subtle.digest("SHA-256", buffer);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  const binaryString = hashArray.map((byte) => String.fromCharCode(byte)).join("");
+  return btoa(binaryString); // Return base64-encoded hash
+};
+
 export const MediaUpload = () => {
   const form = useForm<MediaUploadValues>({
     defaultValues: {
@@ -115,24 +122,38 @@ export const MediaUpload = () => {
       currency: Currency.USD,
       visibility: Visibility.PUBLIC,
     },
-    onSubmit: async ({ value, formApi }) => {
+    onSubmit: async ({ value }) => {
       if (!value.video) return;
+      const { type } = value.video;
+      const checksum = await getSHA256Hash(value.video);
+      const {
+        data: { key, url },
+      } = await getUploadUrl(type, checksum);
+
+
+
+      // await axios.post("/api/media", {
+      //   title: "title",
+      //   describe: "desc",
+      //   url: key,
+      // });
+
+      // try {
+      console.log(key);
+
+      await axios.put(url, value.video, {
+        headers: {
+          "Content-Type": type,
+          "x-amz-checksum-sha256": checksum,
+          // "x-amz-server-side-encryption": "AES256", // Include this header
+        },
+      });
+      // } catch (error) {
+      //   console.log((error as AxiosError).message);
+      //   // 403 file is corrupted / wrong type of file
+      // }
     },
   });
-
-  const { mutate, data } = useMutation({
-    mutationFn: getUploadUrl,
-    // onSuccess: () => form.validateField(),
-    onError: () => {},
-  });
-
-  const uploadFile = async (url: string, file: File) => {
-    await axios.put(url, file, {
-      headers: {
-        "Content-Type": file.type,
-      },
-    });
-  };
 
   const videoField = form.useField({
     name: "video",
