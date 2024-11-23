@@ -6,4 +6,5 @@ export * from "./events";
 export * from "./logger";
 export * from "./middlewares";
 export * from "./routes";
+export * from "./storage";
 export * from "./types";

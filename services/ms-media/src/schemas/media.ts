@@ -1,11 +1,18 @@
 import Joi from "joi";
 
-import { MediaReqBody, MediaResourceReqQuery } from "../types";
+import { Currency, MediaReqBody, MediaResourceReqQuery, PaymentModels, Visibility } from "../types";
+import { enumeration, text } from "./common";
 
-const text = Joi.string().min(3).max(255);
 export const mediaBodySchema = Joi.object<MediaReqBody>({
   title: text.required(),
   description: text,
+  currency: enumeration(Currency),
+  isUploaded: Joi.bool(),
+  paymentModel: enumeration(PaymentModels),
+  price: Joi.number(),
+  scheduledDate: Joi.date(),
+  thumbnailUrl: text.required(),
+  visibility: enumeration(Visibility),
 });
 
 export const mediaResourceParamsSchema = Joi.object<MediaResourceReqQuery>({

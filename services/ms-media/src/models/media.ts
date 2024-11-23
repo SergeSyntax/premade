@@ -1,9 +1,18 @@
 import mongoose from "mongoose";
 
+import { Currency, PaymentModels, Visibility } from "../types";
+
 interface MediaAttrs {
   title: string;
   description?: string;
   userId: string;
+  visibility?: Visibility;
+  scheduledDate: Date;
+  thumbnailUrl: string;
+  paymentModel?: PaymentModels;
+  price: number;
+  currency?: Currency;
+  isUploaded: boolean;
 }
 
 const MediaSchema = new mongoose.Schema<MediaAttrs>(
@@ -17,8 +26,39 @@ const MediaSchema = new mongoose.Schema<MediaAttrs>(
     },
     userId: {
       type: String,
-      required: true
-    }
+      required: true,
+    },
+    visibility: {
+      type: Number,
+      enum: Visibility,
+      default: Visibility.PUBLIC,
+    },
+    scheduledDate: {
+      type: Date,
+      required: true,
+    },
+    thumbnailUrl: {
+      type: String,
+      required: true,
+    },
+    paymentModel: {
+      type: Number,
+      enum: PaymentModels,
+      default: PaymentModels.FREE,
+    },
+    price: {
+      type: Number,
+      default: 0,
+    },
+    currency: {
+      type: Number,
+      enum: Currency,
+      default: Currency.USD,
+    },
+    isUploaded: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,

@@ -1,4 +1,4 @@
-import { useDropzone } from "react-dropzone";
+import { DropzoneOptions, useDropzone } from "react-dropzone";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import {
@@ -16,8 +16,11 @@ import {
   Select,
   Typography,
 } from "@mui/material";
-import { getUploadUrl } from "@/auth/api/uploadUrl";
-import axios from "axios";
+import {
+  getThumbnailUploadUrl,
+  getVideoUploadUrl,
+  uploadPresignedURLFile,
+} from "@/auth/api/upload";
 import { UploadDropZoneContainer } from "@/components/UploadDropZoneContainer";
 import DescriptionIcon from "@mui/icons-material/Description";
 import ImageIcon from "@mui/icons-material/Image";
@@ -25,43 +28,20 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import ImageOutlinedIcon from "@mui/icons-material/ImageOutlined";
 import { grey } from "@mui/material/colors";
-import { useForm } from "@tanstack/react-form";
+import { FieldApi, useForm } from "@tanstack/react-form";
+import { z } from "zod";
+import { zodValidator } from "@tanstack/zod-form-adapter";
 
 import TextField from "@/components/TextField";
 import { RadioDescribedInput } from "@/components/RadioDescribedInput";
 import { formatNumberWithCommas } from "@/utils/formatNumberWithCommas";
 import { UploadInput } from "@/components/UploadInput";
-import { Currency, PaymentModels, Visibility } from "@/types/upload";
+import { Currency, PaymentModel, Visibility } from "@/types/upload";
 import { DateTimePicker } from "@mui/x-date-pickers";
 import { DateTime } from "luxon";
 
-interface MediaUploadValues {
-  video: null | File;
-  title: string;
-  description: string;
-  thumbnail: null | File;
-  paymentModel: PaymentModels;
-  price: string;
-  currency: Currency;
-  visibility: Visibility;
-  scheduledDate?: DateTime | null;
-}
-
-// const schema = Yup.object<MediaUploadValues>().shape({
-//   video: Yup.mixed().nullable().required("Video is required."),
-//   title: Yup.string().required("Title is required."),
-//   description: Yup.string().nullable(),
-//   thumbnail: Yup.mixed().nullable(),
-//   paymentModel: Yup.string().oneOf(["FREE", "PAID"]).required(),
-//   price: Yup.string().when("paymentModel", {
-//     is: "PAID",
-//     then: Yup.string().required("Price is required."),
-//     otherwise: Yup.string(),
-//   }),
-//   currency: Yup.string().required("Currency is required."),
-//   visibility: Yup.string().required("Visibility is required."),
-//   scheduledDate: Yup.date().nullable(),
-// });
+import { getSignUrlArgs } from "@/utils/uploads";
+import { createMedia } from "@/auth/api/media";
 
 export const UploadSection: React.FC<{
   icon?: React.ReactElement;
@@ -102,56 +82,65 @@ export const UploadSection: React.FC<{
   );
 };
 
-const getSHA256Hash = async (file: File): Promise<string> => {
-  const buffer = await file.arrayBuffer();
-  const hashBuffer = await crypto.subtle.digest("SHA-256", buffer);
-  const hashArray = Array.from(new Uint8Array(hashBuffer));
-  const binaryString = hashArray.map((byte) => String.fromCharCode(byte)).join("");
-  return btoa(binaryString); // Return base64-encoded hash
-};
+const dateTimeSchema = z.custom<DateTime | null>((val) => {
+  return DateTime.isDateTime(val);
+}, "Invalid DateTime object");
+
+const mediaSchema = z.object({
+  title: z.string().min(1).max(255),
+  description: z.string().optional(),
+  video: z.instanceof(File),
+  thumbnail: z.union([z.instanceof(File), z.null()]),
+  visibility: z.nativeEnum(Visibility),
+  paymentModel: z.nativeEnum(PaymentModel),
+  scheduledDate: dateTimeSchema,
+  currency: z.nativeEnum(Currency),
+  price: z.string().optional(),
+});
+type MediaSchema = z.infer<typeof mediaSchema>;
 
 export const MediaUpload = () => {
-  const form = useForm<MediaUploadValues>({
+  const form = useForm({
+    validatorAdapter: zodValidator(),
+    validators: {
+      onChange: mediaSchema,
+    },
     defaultValues: {
-      video: null,
       title: "",
       description: "",
       thumbnail: null,
-      paymentModel: PaymentModels.FREE,
-      price: "",
-      currency: Currency.USD,
       visibility: Visibility.PUBLIC,
-    },
+      paymentModel: PaymentModel.FREE,
+      currency: Currency.USD,
+      price: "",
+    } as MediaSchema,
     onSubmit: async ({ value }) => {
+      if (!value.thumbnail) return;
       if (!value.video) return;
-      const { type } = value.video;
-      const checksum = await getSHA256Hash(value.video);
+
+      const { video, thumbnail, price, scheduledDate, ...rest } = value;
+      const videoSignUrlArgs = await getSignUrlArgs(video);
+
       const {
-        data: { key, url },
-      } = await getUploadUrl(type, checksum);
+        data: { key: videoKey, url: videoUploadUrl },
+      } = await getVideoUploadUrl(videoSignUrlArgs);
 
+      const thumbnailSignUrlArgs = await getSignUrlArgs(thumbnail);
 
+      const {
+        data: { key: thumbnailKey, url: thumbnailURL },
+      } = await getThumbnailUploadUrl(thumbnailSignUrlArgs);
 
-      // await axios.post("/api/media", {
-      //   title: "title",
-      //   describe: "desc",
-      //   url: key,
-      // });
-
-      // try {
-      console.log(key);
-
-      await axios.put(url, value.video, {
-        headers: {
-          "Content-Type": type,
-          "x-amz-checksum-sha256": checksum,
-          // "x-amz-server-side-encryption": "AES256", // Include this header
-        },
+      await createMedia({
+        ...rest,
+        videoUrl: videoKey,
+        thumbnailUrl: thumbnailKey,
+        price: +price!,
+        scheduledDate: scheduledDate?.toJSDate(),
       });
-      // } catch (error) {
-      //   console.log((error as AxiosError).message);
-      //   // 403 file is corrupted / wrong type of file
-      // }
+
+      await uploadPresignedURLFile(videoUploadUrl, video, videoSignUrlArgs);
+      await uploadPresignedURLFile(thumbnailURL, thumbnail, thumbnailSignUrlArgs);
     },
   });
 
@@ -159,21 +148,21 @@ export const MediaUpload = () => {
     name: "video",
   });
 
-  const thumbnailField = form.useField({
-    name: "thumbnail",
-  });
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  type GenericField = FieldApi<any, any>;
+
+  const handleDropZone = (fieldApi: GenericField): DropzoneOptions["onDrop"] => {
+    return ([file], [rejection]) => {
+      fieldApi.handleChange(rejection?.file ?? file);
+      fieldApi.setErrorMap({
+        onChange: rejection?.errors?.at(0)?.message,
+      });
+    };
+  };
 
   const videoDropZoneProps = useDropzone({
-    onDrop: ([file], [rejection]) => {
-      videoField.setMeta((prev) => ({
-        ...prev,
-        errorMap: {
-          onChange: rejection?.errors?.at(0)?.message,
-        },
-      }));
-
-      videoField.handleChange(() => rejection?.file ?? file);
-    },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    onDrop: handleDropZone(videoField as unknown as GenericField),
     accept: {
       "video/mp4": [".mp4"],
       "video/mpeg": [".mpeg"],
@@ -183,17 +172,12 @@ export const MediaUpload = () => {
     maxSize: 16 * 1024 ** 3, // 16 GiB
   });
 
-  const thumbnailDropZoneProps = useDropzone({
-    onDrop: ([file], [rejection]) => {
-      thumbnailField.setMeta((prev) => ({
-        ...prev,
-        errorMap: {
-          onChange: rejection?.errors?.at(0)?.message,
-        },
-      }));
+  const thumbnailField = form.useField({
+    name: "thumbnail",
+  });
 
-      thumbnailField.handleChange(() => rejection?.file ?? file);
-    },
+  const thumbnailDropZoneProps = useDropzone({
+    onDrop: handleDropZone(thumbnailField as unknown as GenericField),
     accept: {
       "image/jpeg": [".jpg", ".jpeg"],
       "image/png": [".png"],
@@ -203,15 +187,15 @@ export const MediaUpload = () => {
     maxSize: 5 * 1024 ** 2, // 5 MiB
   });
 
-  const paymentModelField = form.useField({
-    name: "paymentModel",
-  });
-  const isPriceVisible = paymentModelField.state.value !== PaymentModels.FREE;
-
   const visibilityField = form.useField({
     name: "visibility",
   });
   const isScheduledDateVisible = visibilityField.state.value === Visibility.SCHEDULED;
+
+  const paymentModelField = form.useField({
+    name: "paymentModel",
+  });
+  const isPriceVisible = paymentModelField.state.value !== PaymentModel.FREE;
 
   return (
     <Container
@@ -362,21 +346,21 @@ export const MediaUpload = () => {
           onChange={(e) => paymentModelField.handleChange(+e.target.value)}
         >
           <RadioDescribedInput
-            value={PaymentModels.FREE}
+            value={PaymentModel.FREE}
             label="Free"
             description="Anyone can access the video for free."
             {...paymentModelField}
           />
 
           <RadioDescribedInput
-            value={PaymentModels.RENT}
+            value={PaymentModel.RENT}
             label="Rent"
             description="Viewers can rent the video for a limited time."
             {...paymentModelField}
           />
 
           <RadioDescribedInput
-            value={PaymentModels.PURCHASE}
+            value={PaymentModel.PURCHASE}
             label="Purchase"
             description="Viewers can buy the video to watch anytime."
             {...paymentModelField}
@@ -385,11 +369,11 @@ export const MediaUpload = () => {
 
         <Box
           sx={{
-            transition: "opacity 0.3s ease, height 0.3s ease",
-            opacity: isPriceVisible ? 1 : 0,
-            height: isPriceVisible ? "auto" : 0,
-            overflow: "hidden",
-          }}
+              transition: "opacity 0.3s ease, height 0.3s ease",
+              opacity: isPriceVisible ? 1 : 0,
+              height: isPriceVisible ? "auto" : 0,
+              overflow: "hidden",
+            }}
           marginTop={3}
           display="flex"
           justifyContent="start"

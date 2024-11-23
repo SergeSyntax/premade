@@ -38,4 +38,5 @@ export const {
   MIO_ACCESS_KEY = "fi6agQe0bYLFLT2BPSZ4",
   MIO_SECRET_KEY = "qKaR1V0sbmhRSPdWG6BBEBtAcW0YswSC7BDO9sMo",
   MIO_MEDIA_BUCKET = "media-bucket",
+  MIO_THUMBNAIL_BUCKET = "thumbnail-bucket",
 } = process.env as EnvVars;
