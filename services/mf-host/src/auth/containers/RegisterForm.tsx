@@ -1,8 +1,5 @@
-import { useForm } from "@tanstack/react-form";
-
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
-import TextField from "@/components/TextField";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import Grid from "@mui/material/Grid";
@@ -10,17 +7,37 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import { Container } from "@mui/material";
-import { yupValidator } from '@tanstack/yup-form-adapter'
 import { Copyright } from "../components/Copyright";
 import { useRegister } from "../hooks/useRegister";
 import { emailSchema, passwordSchema, textSchema } from "../schemas";
 import { Link } from "@/components/link";
 import { verifyEmail } from "../api/register";
+import { z } from "zod";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { TextField } from "@/components/inputs/TextField";
+
+const registerSchema = z
+  .object({
+    firstName: z.string().nonempty("First name is required"),
+    lastName: z.string().optional(),
+    email: z.string().email("Invalid email").toLowerCase(),
+    password: z.string().min(5, "Password must be at least 5 characters").max(255),
+    confirmPassword: z.string().min(5, "Password must be at least 5 characters").max(255),
+    allowExtraEmails: z.boolean().optional(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    path: ["confirmPassword"],
+    message: "Passwords do not match",
+  });
+
+export type RegisterSchema = z.infer<typeof registerSchema>;
 
 export const RegisterForm = () => {
   const { mutate } = useRegister();
 
-  const form = useForm({
+  const { formState, control, handleSubmit } = useForm({
+    resolver: zodResolver(registerSchema),
     defaultValues: {
       firstName: "",
       lastName: "",
@@ -29,9 +46,18 @@ export const RegisterForm = () => {
       confirmPassword: "",
       allowExtraEmails: false,
     },
-    onSubmit: async ({ value }) => mutate(value),
-    validatorAdapter: yupValidator(),
   });
+
+  const handleFormSubmit: SubmitHandler<RegisterSchema> = async (values) => mutate(values);
+
+  const { isSubmitting, isValid } = formState;
+  // const form = useForm({
+  //   defaultValues: {
+
+  //   },
+  //   onSubmit: async ({ value }) => mutate(value),
+  //   validatorAdapter: yupValidator(),
+  // });
 
   return (
     <Container component="main" maxWidth="xs">
@@ -50,38 +76,27 @@ export const RegisterForm = () => {
           Sign up
         </Typography>
       </Box>
-      <Box
-        component="form"
-        sx={{ mt: 3 }}
-        onSubmit={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          form.handleSubmit();
-        }}
-      >
+      <Box component="form" sx={{ mt: 3 }} onSubmit={handleSubmit(handleFormSubmit)}>
         <Grid container spacing={2}>
           <Grid item xs={12} sm={6}>
-            <form.Field
+            <Controller
+              control={control}
               name="firstName"
-              children={TextField}
-              validators={{
-                onChange: textSchema,
-              }}
+              render={(props) => <TextField fullWidth {...props} autoFocus />}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
-            <form.Field
+            <Controller
+              control={control}
               name="lastName"
-              children={TextField}
-              validators={{
-                onChange: textSchema,
-              }}
+              render={(props) => <TextField fullWidth {...props} />}
             />
           </Grid>
           <Grid item xs={12}>
-            <form.Field
+            <Controller
+              control={control}
               name="email"
-              children={TextField}
+              render={(props) => <TextField fullWidth {...props} />}
               asyncDebounceMs={300}
               validators={{
                 onChange: emailSchema,
@@ -97,48 +112,35 @@ export const RegisterForm = () => {
             />
           </Grid>
           <Grid item xs={12}>
-            <form.Field
+            <Controller
+              control={control}
               name="password"
-              children={(field) => (
-                <>
-                  <TextField {...field} inputProps={{ type: "password" }} />
-                </>
+              render={(props) => (
+                <TextField fullWidth {...props} slotProps={{ input: { type: "password" } }} />
               )}
-              validators={{
-                onChange: passwordSchema,
-              }}
             />
           </Grid>
           <Grid item xs={12}>
-            <form.Field
+            <Controller
+              control={control}
               name="confirmPassword"
-              children={(field) => (
-                <>
-                  <TextField {...field} inputProps={{ type: "password" }} />
-                </>
+              render={(field) => (
+                <TextField fullWidth {...field} slotProps={{ input: { type: "password" } }} />
               )}
-              validators={{
-                onChangeListenTo: ["password"],
-                onChange: passwordSchema,
-                onChangeAsync: ({ value, fieldApi }) => {
-                  if (value !== fieldApi.form.getFieldValue("password")) {
-                    return "Passwords do not match";
-                  }
-                },
-              }}
             />
           </Grid>
           <Grid item xs={12}>
-            <form.Field
+            <Controller
+              control={control}
               name="allowExtraEmails"
-              children={(field) => (
+              render={({ field, fieldState }) => (
                 <FormControlLabel
                   control={
                     <Checkbox
                       id={field.name}
-                      checked={field?.state?.value}
-                      onBlur={field.handleBlur}
-                      onChange={(e) => field.handleChange(e.target.checked)}
+                      checked={field.value}
+                      onBlur={field.onBlur}
+                      onChange={(e) => field.onChange(e.target.checked)}
                       value="allowExtraEmails"
                       color="primary"
                     />
@@ -149,23 +151,17 @@ export const RegisterForm = () => {
             />
           </Grid>
         </Grid>
-        <form.Subscribe
-          selector={({ canSubmit, isSubmitting }) => ({
-            canSubmit,
-            isSubmitting,
-          })}
-          children={({ canSubmit, isSubmitting }) => (
-            <Button
-              type="submit"
-              fullWidth
-              disabled={!canSubmit}
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
-              {isSubmitting ? "..." : "Sign Up"}
-            </Button>
-          )}
-        />
+
+        <Button
+          type="submit"
+          fullWidth
+          disabled={!isValid}
+          variant="contained"
+          sx={{ mt: 3, mb: 2 }}
+        >
+          {isSubmitting ? "..." : "Sign Up"}
+        </Button>
+
         <Grid container justifyContent="flex-end">
           <Grid item>
             <Link to="/login" variant="body2">

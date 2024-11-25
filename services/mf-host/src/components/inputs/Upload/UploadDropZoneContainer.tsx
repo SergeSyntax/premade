@@ -1,20 +1,27 @@
 import { Box, Typography } from "@mui/material";
-import { DropzoneState } from "react-dropzone";
+import { Accept, DropzoneOptions, useDropzone } from "react-dropzone";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
 type UploadDropZoneContainerProps = {
-  isDragActive: boolean;
-  getInputProps: DropzoneState["getInputProps"];
-  getRootProps: DropzoneState["getRootProps"];
+  onDrop: DropzoneOptions["onDrop"];
+  accept: Accept;
   children: React.ReactNode;
-} & Partial<DropzoneState>;
+} & Partial<DropzoneOptions>;
 
 export const UploadDropZoneContainer: React.FC<UploadDropZoneContainerProps> = ({
-  isDragActive,
-  getInputProps,
-  getRootProps,
+  onDrop,
   children,
+  maxFiles,
+  accept,
+  maxSize,
 }) => {
+  const { getInputProps, getRootProps, isDragActive } = useDropzone({
+    onDrop,
+    accept,
+    maxFiles: maxFiles ?? 1,
+    maxSize,
+  });
+
   return (
     <Box sx={{ position: "relative" }} {...getRootProps()}>
       <input {...getInputProps()} style={{ display: "none" }} />

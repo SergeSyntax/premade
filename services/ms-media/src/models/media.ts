@@ -7,7 +7,7 @@ interface MediaAttrs {
   description?: string;
   userId: string;
   visibility?: Visibility;
-  scheduledDate: Date;
+  scheduledDate?: Date;
   thumbnailUrl: string;
   paymentModel?: PaymentModels;
   price: number;
@@ -35,7 +35,6 @@ const MediaSchema = new mongoose.Schema<MediaAttrs>(
     },
     scheduledDate: {
       type: Date,
-      required: true,
     },
     thumbnailUrl: {
       type: String,

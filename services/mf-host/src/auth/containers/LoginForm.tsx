@@ -1,37 +1,44 @@
-import * as React from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
-import Grid from "@mui/material/Grid";
+import Grid from "@mui/material/Grid2";
 import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { Copyright } from "../components/Copyright";
-import { useForm } from "@tanstack/react-form";
 import { useLogin } from "../hooks";
-import { yupValidator } from '@tanstack/yup-form-adapter'
+import { yupValidator } from "@tanstack/yup-form-adapter";
 import { emailSchema, passwordSchema } from "../schemas";
-import TextField from "@/components/TextField";
 import { Link } from "@/components/link";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { TextField } from "@/components/inputs/TextField";
+
+const loginSchema = z.object({
+  email: z.string().email().toLowerCase(),
+  password: z.string().min(5).max(255),
+});
+
+export type LoginSchema = z.infer<typeof loginSchema>;
 
 export const LoginForm = () => {
   const { mutate } = useLogin();
-  const form = useForm({
+
+  const { control, handleSubmit, formState } = useForm<LoginSchema>({
+    resolver: zodResolver(loginSchema),
     defaultValues: {
       email: "",
       password: "",
     },
-    onSubmit: async ({ value }) => mutate(value),
-    validatorAdapter: yupValidator(),
+    mode: "all",
   });
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    event.stopPropagation();
-    form.handleSubmit();
-  };
+  const { isSubmitting, isValid } = formState;
+
+  const handleFormSubmit: SubmitHandler<LoginSchema> = async (values) => mutate(values);
 
   return (
     <Container component="main" maxWidth="xs">
@@ -49,67 +56,46 @@ export const LoginForm = () => {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
-          <form.Field
+        <Box
+          display="flex"
+          flexDirection="column"
+          gap={2}
+          component="form"
+          onSubmit={handleSubmit(handleFormSubmit)}
+          noValidate
+          sx={{ mt: 1 }}
+        >
+          <Controller
+            control={control}
             name="email"
-            children={(props) => (
-              <TextField
-                {...props}
-                inputProps={{
-                  autoFocus: true,
-                }}
-              />
-            )}
-            validators={{
-              onChange: emailSchema,
-            }}
+            render={(props) => <TextField {...props} autoFocus />}
           />
-
-          <form.Field
+          <Controller
+            control={control}
             name="password"
-            children={(field) => (
-              <>
-                <TextField
-                  {...field}
-                  inputProps={{
-                    type: "password",
-                  }}
-                />
-              </>
-            )}
-            validators={{
-              onChange: passwordSchema,
-            }}
+            render={(props) => <TextField {...props} slotProps={{ input: { type: "password" } }} />}
           />
           <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
             label="Remember me"
           />
-          <form.Subscribe
-          selector={({ canSubmit, isSubmitting }) => ({
-            canSubmit,
-            isSubmitting,
-          })}
-          children={({ canSubmit, isSubmitting }) => (
-            <Button
-              type="submit"
-              fullWidth
-              disabled={!canSubmit}
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
-              {isSubmitting ? "..." : "Sign In"}
-            </Button>
-          )}
-        />
-          <Grid container>
-            <Grid item xs>
+          <Button
+            type="submit"
+            fullWidth
+            disabled={!isValid}
+            variant="contained"
+            sx={{ mt: 3, mb: 2 }}
+          >
+            {isSubmitting ? "..." : "Sign In"}
+          </Button>
+          <Grid container spacing={2}>
+            <Grid size="auto">
               <Link href="#" variant="body2">
                 Forgot password?
               </Link>
             </Grid>
-            <Grid item>
-              <Link to="/register" variant="body2">
+            <Grid size="auto">
+              <Link href="/register" variant="body2">
                 {"Don't have an account? Sign Up"}
               </Link>
             </Grid>
