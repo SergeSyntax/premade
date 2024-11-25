@@ -1,11 +1,11 @@
-# `orders`
+# `donations`
 
 > TODO: description
 
 ## Usage
 
 ```
-const orders = require('orders');
+const donations = require('donations');
 
 // TODO: DEMONSTRATE API
 ```

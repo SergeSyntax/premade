@@ -1,9 +1,9 @@
 {
-  "name": "@devops-premade/ms-orders",
+  "name": "@devops-premade/ms-donations",
   "version": "1.0.0",
   "type": "module",
   "private": true,
-  "description": "The service in charge of the orders management",
+  "description": "The service in charge of the donations management",
   "keywords": [],
   "author": "SergeSyntax <serge.syntax@gmail.com>",
   "license": "ISC",

@@ -1,26 +1,10 @@
-export enum Currency {
-  USD,
-  EUR,
-  ILS,
-}
-
-export enum Visibility {
-  PUBLIC,
-  UNLISTED,
-  SCHEDULED,
-}
-
-export enum PaymentModels {
-  FREE,
-  RENT,
-  PURCHASE,
-}
+import { Currency, PaymentModels, Visibility } from "@devops-premade/ms-common/src/enums";
 
 export interface MediaReqBody {
   title: string;
   description?: string;
   visibility: Visibility;
-  scheduledDate: string;
+  scheduledDate: Date;
   thumbnailUrl: string;
   paymentModel: PaymentModels;
   price: number;

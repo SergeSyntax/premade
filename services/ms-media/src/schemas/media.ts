@@ -1,11 +1,12 @@
+import { Currency, PaymentModels, Visibility } from "@devops-premade/ms-common/src/enums";
 import Joi from "joi";
 
-import { Currency, MediaReqBody, MediaResourceReqQuery, PaymentModels, Visibility } from "../types";
+import { MediaReqBody, MediaResourceReqQuery } from "../types";
 import { enumeration, text } from "./common";
 
 export const mediaBodySchema = Joi.object<MediaReqBody>({
   title: text.required(),
-  description: Joi.string().empty(''),
+  description: Joi.string().empty(""),
   currency: enumeration(Currency),
   isUploaded: Joi.bool(),
   paymentModel: enumeration(PaymentModels),
@@ -17,9 +18,8 @@ export const mediaBodySchema = Joi.object<MediaReqBody>({
 
 export const mediaUpdateBodySchema = Joi.object<MediaReqBody>({
   title: text.optional(),
-  description: Joi.string().empty('').optional(),
+  description: Joi.string().empty("").optional(),
 });
-
 
 export const mediaResourceParamsSchema = Joi.object<MediaResourceReqQuery>({
   mediaId: text.required(),

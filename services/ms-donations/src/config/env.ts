@@ -29,4 +29,6 @@ export const {
   RMQ_VHOST = "/",
   RMQ_PROTOCOL = "amqp",
   POD_NAME = "orders-deployment-6b97d4b9c-q5dmn",
+  //
+  EXPIRATION_WINDOW_SECONDS = "" + 15 * 60,
 } = process.env as EnvVars;

@@ -12,7 +12,7 @@ import typescriptEslint from "typescript-eslint";
 
 // https://www.youtube.com/watch?v=MvnTwjAjhic
 // https://github.com/michey85/react-starter/blob/master/eslint.config.js
-/** @type {import('eslint').Linter.FlatConfig[]} */
+/** @type {import('eslint').Linter.Config[]} */
 export default [
   { languageOptions: { globals: globals.node } },
   pluginJs.configs.recommended,
