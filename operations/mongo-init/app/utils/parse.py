@@ -1,6 +1,5 @@
 from typing import Literal
 
-
 def generate_mongo_connection_strings(hosts: str = "", ports: str = "") -> list[str]:
     """
     Generates MongoDB connection strings for given hosts and ports.

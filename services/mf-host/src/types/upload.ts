@@ -1,3 +1,5 @@
+import { DateTime } from "luxon";
+
 export enum Currency {
   USD,
   EUR,
@@ -10,8 +12,20 @@ export enum Visibility {
   SCHEDULED,
 }
 
-export enum PaymentModels {
+export enum PaymentModel {
   FREE,
   RENT,
   PURCHASE,
+}
+
+export interface MediaUploadValues {
+  video: File;
+  title: string;
+  description: string;
+  thumbnail: File;
+  paymentModel: PaymentModel;
+  price: number;
+  currency: Currency;
+  visibility: Visibility;
+  scheduledDate?: DateTime;
 }

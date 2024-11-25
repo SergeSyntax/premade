@@ -1,18 +1,18 @@
-import globals from "globals";
 import pluginJs from "@eslint/js";
-import typescriptEslint from "typescript-eslint";
 import eslintConfigPrettier from "eslint-config-prettier";
 import importXPlugin from "eslint-plugin-import-x";
+import jestPlugin from "eslint-plugin-jest";
 import nodePlugin from "eslint-plugin-n";
 import * as regexpPlugin from "eslint-plugin-regexp";
-import jestPlugin from "eslint-plugin-jest";
-import eslintPluginYml from "eslint-plugin-yml";
 import pluginSecurity from "eslint-plugin-security";
 import simpleImportSort from "eslint-plugin-simple-import-sort";
+import eslintPluginYml from "eslint-plugin-yml";
+import globals from "globals";
+import typescriptEslint from "typescript-eslint";
 
 // https://www.youtube.com/watch?v=MvnTwjAjhic
 // https://github.com/michey85/react-starter/blob/master/eslint.config.js
-/** @type {import('eslint').Linter.FlatConfig[]} */
+/** @type {import('eslint').Linter.Config[]} */
 export default [
   { languageOptions: { globals: globals.node } },
   pluginJs.configs.recommended,
@@ -38,7 +38,10 @@ export default [
     rules: {
       "simple-import-sort/imports": "error",
       "simple-import-sort/exports": "error",
-      "@typescript-eslint/no-unused-vars": "off",
+      "@typescript-eslint/no-unused-vars": [
+        "warn",
+        { varsIgnorePattern: "^_", argsIgnorePattern: "^_" }, // Ignore vars and args starting with `_`
+      ],
     },
   },
   {

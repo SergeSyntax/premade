@@ -1,31 +1,27 @@
-import { NotFoundError } from "@devops-premade/ms-common";
 import { RequestHandler } from "express";
+import * as core from "express-serve-static-core";
 import { StatusCodes } from "http-status-codes";
+import { ParsedQs } from "qs";
 
-import { getUploadUrl } from "../services/uploads";
+import { getThumbnailUploadUrl, getVideoUploadUrl } from "../services/uploads";
+import { UploadRequestQuery, UploadResponse } from "../types/uploads";
 
-// export const createMediaController: RequestHandler = async (req, res) => {
-//   const media = await createMediaService(req.body, req.currentUser!.id);
-//   res.status(StatusCodes.CREATED).send({ media });
-// };
+type UploadRequestHandler = RequestHandler<
+  core.ParamsDictionary,
+  UploadResponse,
+  null,
+  ParsedQs & UploadRequestQuery
+>;
 
-// export const updateMediaController: RequestHandler = async (req, res) => {
-//   const media = await updateMediaService(req.params.mediaId, req.body, req.currentUser!.id);
-//   res.status(StatusCodes.OK).send({ media });
-// };
-
-export const getUploadResourceController: RequestHandler = async (req, res) => {
-  const uploadDetails = await getUploadUrl(
-    (req.query?.fileType as string) ?? "",
-    (req.query?.checksum as string) ?? "",
-    req.currentUser?.id,
-  );
+export const getVideoUploadResourceController: UploadRequestHandler = async (req, res) => {
+  req.query;
+  const uploadDetails = await getVideoUploadUrl(req.query, req.currentUser?.id);
 
   res.status(StatusCodes.OK).send(uploadDetails);
 };
 
-// export const getMediaResourceListController: RequestHandler = async (req, res) => {
-//   const medias = await getMediaResourceListService();
+export const getThumbnailUploadResourceController: UploadRequestHandler = async (req, res) => {
+  const uploadDetails = await getThumbnailUploadUrl(req.query, req.currentUser?.id);
 
-//   res.status(StatusCodes.OK).send({ medias });
-// };
+  res.status(StatusCodes.OK).send(uploadDetails);
+};

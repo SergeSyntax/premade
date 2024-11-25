@@ -1,35 +1,67 @@
-import { ChecksumAlgorithm, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { ValidationError } from "@devops-premade/ms-common";
+import mime from "mime";
 import { v4 as uuid } from "uuid";
 
-import { MIO_ACCESS_KEY, MIO_ENDPOINT, MIO_MEDIA_BUCKET, MIO_SECRET_KEY } from "../config";
+import { MIO_MEDIA_BUCKET, MIO_THUMBNAIL_BUCKET } from "../config";
+import { storageClient } from "../storage-client";
+import { UploadRequestQuery, UploadResponse } from "../types/uploads";
 
-const s3client = new S3Client({
-  region: "IGNORE",
-  endpoint: MIO_ENDPOINT,
-  credentials: {
-    accessKeyId: MIO_ACCESS_KEY,
-    secretAccessKey: MIO_SECRET_KEY,
-  },
-  forcePathStyle: true,
-});
+const HOUR = 3600; // seconds
+const IMAGE_EXPIRE_IN = 1 * HOUR; // 1 hour
+const VIDEO_EXPIRE_IN = 12 * HOUR; // 12 hours in seconds
 
-export const getUploadUrl = async (fileType: string, checksum: string, userId?: string) => {
-  const bucketFileName = uuid();
-  const fileExt = fileType.substring(fileType.indexOf("/") + 1);
+const validateContentType = (typePrefix: "video" | "image", contentType: string | null) => {
+  if (!contentType || !contentType.includes(typePrefix)) {
+    throw new ValidationError(
+      "fileType",
+      `Invalid fileType. Only ${typePrefix} MIME types are allowed.`,
+    );
+  }
 
-  const key = `${userId}/${bucketFileName}.${fileExt}`;
+  return contentType;
+};
 
-  const command = new PutObjectCommand({
-    Bucket: MIO_MEDIA_BUCKET,
-    Key: key,
-    ContentType: "video/mp4",
-    ChecksumAlgorithm: ChecksumAlgorithm.SHA256,
-    ChecksumSHA256: checksum,
-    // ServerSideEncryption: "AES256", you can't use that feature without a vault to manage the keys... https://min.io/docs/minio/linux/administration/server-side-encryption/server-side-encryption-sse-kms.html
-  });
+const parseFileExt = (fileType: string) => {
+  const fileTypeParts = fileType.split("/");
+  return fileTypeParts[fileTypeParts.length - 1];
+};
 
-  const url = await getSignedUrl(s3client, command, { expiresIn: 36000 });
+export const getVideoUploadUrl = async (
+  { checksum, fileType }: UploadRequestQuery,
+  userId?: string,
+): Promise<UploadResponse> => {
+  const fileExt = parseFileExt(fileType);
+  const contentType = validateContentType("video", mime.getType(fileExt));
+
+  const key = `${userId}/${uuid()}.${fileExt}`;
+
+  const url = await storageClient.getPutObjectSignedUrl(
+    MIO_MEDIA_BUCKET,
+    contentType,
+    key,
+    checksum,
+    VIDEO_EXPIRE_IN,
+  );
+
+  return { url, key };
+};
+
+export const getThumbnailUploadUrl = async (
+  { checksum, fileType }: UploadRequestQuery,
+  userId?: string,
+): Promise<UploadResponse> => {
+  const fileExt = parseFileExt(fileType);
+
+  const contentType = validateContentType("image", mime.getType(fileExt));
+  const key = `${userId}/${uuid()}.${fileExt}`;
+
+  const url = await storageClient.getPutObjectSignedUrl(
+    MIO_THUMBNAIL_BUCKET,
+    contentType,
+    key,
+    checksum,
+    IMAGE_EXPIRE_IN,
+  );
 
   return { url, key };
 };

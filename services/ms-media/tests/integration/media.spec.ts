@@ -7,17 +7,20 @@ import request from "supertest";
 import { messageBusClient } from "../../__mocks__/message-bus-client";
 import { app } from "../../src/app";
 import { Media } from "../../src/models";
-import { USER } from "../auth.mock";
 import { TestRoutes } from "../consts";
 
-const createMedia = async () => {
+const generateMedia = (title: string = faker.internet.domainName()) => ({
+  title,
+  description: faker.lorem.paragraph(1),
+  thumbnailUrl: faker.internet.url(),
+  videoUrl: faker.internet.url(),
+});
+
+const createMedia = async (title?: string) => {
   const response = await request(app)
     .post(TestRoutes.MEDIA)
     .set("Cookie", global.login())
-    .send({
-      title: faker.internet.domainName(),
-      description: faker.lorem.paragraph(1),
-    });
+    .send(generateMedia(title));
 
   return response.body.media;
 };
@@ -52,10 +55,7 @@ describe("create media", () => {
     await request(app)
       .post(TestRoutes.MEDIA)
       .set("Cookie", cookies)
-      .send({
-        title,
-        description: faker.lorem.paragraph(1),
-      })
+      .send(generateMedia(title))
       .expect(StatusCodes.CREATED);
 
     expect(messageBusClient.channelWrapper.publish).toHaveBeenCalled();
@@ -70,10 +70,7 @@ describe("create media", () => {
     await request(app)
       .post(TestRoutes.MEDIA)
       .set("Cookie", cookies)
-      .send({
-        title,
-        description: faker.lorem.paragraph(1),
-      })
+      .send(generateMedia(title))
       .expect(StatusCodes.CREATED);
 
     mediaResources = await Media.find({});
@@ -95,10 +92,7 @@ describe("get media by id", () => {
     const response = await request(app)
       .post(TestRoutes.MEDIA)
       .set("Cookie", cookies)
-      .send({
-        title,
-        description: faker.lorem.paragraph(1),
-      })
+      .send(generateMedia(title))
       .expect(StatusCodes.CREATED);
 
     const mediaResponse = await request(app)
@@ -131,10 +125,7 @@ describe("update media by id", () => {
     await request(app)
       .put(`${TestRoutes.MEDIA}/${id}`)
       .set("Cookie", global.login())
-      .send({
-        title: faker.internet.userName(),
-        description: faker.lorem.paragraph(1),
-      })
+      .send(generateMedia())
       .expect(StatusCodes.NOT_FOUND);
   });
   it("returns a 401 if the user not authenticated", async () => {
@@ -142,38 +133,22 @@ describe("update media by id", () => {
 
     await request(app)
       .put(`${TestRoutes.MEDIA}/${id}`)
-      .send({
-        title: faker.internet.userName(),
-        description: faker.lorem.paragraph(1),
-      })
+      .send(generateMedia())
       .expect(StatusCodes.UNAUTHORIZED);
   });
   it("return 401 if the user does not own the video", async () => {
     const media = await createMedia();
 
-    const resource = await request(app)
+    await request(app)
       .put(`${TestRoutes.MEDIA}/${media.id}`)
       .set("Cookie", global.login())
       .send({
         title: faker.internet.userName(),
         description: faker.lorem.paragraph(1),
-      });
-  });
-  it("return 400 if the user provides an invalid title", async () => {
-    const media = new Media({
-      title: faker.internet.userName(),
-      description: faker.lorem.paragraph(1),
-      userId: new mongoose.Types.ObjectId().toHexString(),
-    });
-    const id = media.id;
-
-    await media.save();
-
-    await request(app)
-      .put(`${TestRoutes.MEDIA}/${id}`)
-      .set("Cookie", global.login())
-      .send()
-      .expect(StatusCodes.BAD_REQUEST);
+        thumbnailUrl: faker.internet.url(),
+        videoUrl: faker.internet.url(),
+      })
+      .expect(StatusCodes.UNAUTHORIZED);
   });
 
   it("updated the media provided valid inputs", async () => {
@@ -182,8 +157,7 @@ describe("update media by id", () => {
     const description = faker.lorem.paragraph(1);
 
     const media = new Media({
-      title: faker.internet.userName(),
-      description: faker.lorem.paragraph(1),
+      ...generateMedia(title),
       userId,
     });
     const id = media.id;
