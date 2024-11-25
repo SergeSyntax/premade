@@ -1,5 +1,5 @@
-import amqp, { AmqpConnectionManager, Channel, ChannelWrapper } from "amqp-connection-manager";
-import { Message, Options } from "amqplib";
+import amqp, { AmqpConnectionManager, ChannelWrapper } from "amqp-connection-manager";
+import { Channel,Message, Options } from "amqplib";
 
 import { logger } from "../logger";
 import { parseConnectionConfig } from "../utils";
@@ -56,7 +56,7 @@ export class MessageBusClient {
       publishTimeout = 10000,
     } = this.options;
 
-    const { hosts, ports } = parseConnectionConfig(hostsEnv, portsEnv, 'RabbitMQ');
+    const { hosts, ports } = parseConnectionConfig(hostsEnv, portsEnv, "RabbitMQ");
 
     const urls = hosts.map((hostname, i) => ({
       hostname,

@@ -15,6 +15,12 @@ export const mediaBodySchema = Joi.object<MediaReqBody>({
   visibility: enumeration(Visibility),
 });
 
+export const mediaUpdateBodySchema = Joi.object<MediaReqBody>({
+  title: text.optional(),
+  description: Joi.string().empty('').optional(),
+});
+
+
 export const mediaResourceParamsSchema = Joi.object<MediaResourceReqQuery>({
   mediaId: text.required(),
 });

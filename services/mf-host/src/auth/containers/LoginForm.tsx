@@ -9,8 +9,6 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { Copyright } from "../components/Copyright";
 import { useLogin } from "../hooks";
-import { yupValidator } from "@tanstack/yup-form-adapter";
-import { emailSchema, passwordSchema } from "../schemas";
 import { Link } from "@/components/link";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";

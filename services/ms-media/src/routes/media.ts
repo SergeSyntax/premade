@@ -7,7 +7,7 @@ import {
   getMediaResourceListController,
   updateMediaController,
 } from "../controllers/media";
-import { mediaBodySchema, mediaResourceParamsSchema } from "../schemas";
+import { mediaBodySchema, mediaResourceParamsSchema, mediaUpdateBodySchema } from "../schemas";
 
 const router = Router();
 
@@ -30,7 +30,7 @@ router.put(
   "/:mediaId",
   requireAuth,
   validateRequest(ReqAttr.PARAMS, mediaResourceParamsSchema),
-  validateRequest(ReqAttr.BODY, mediaBodySchema),
+  validateRequest(ReqAttr.BODY, mediaUpdateBodySchema),
   updateMediaController,
 );
 

@@ -9,13 +9,14 @@ import Typography from "@mui/material/Typography";
 import { Container } from "@mui/material";
 import { Copyright } from "../components/Copyright";
 import { useRegister } from "../hooks/useRegister";
-import { emailSchema, passwordSchema, textSchema } from "../schemas";
 import { Link } from "@/components/link";
 import { verifyEmail } from "../api/register";
 import { z } from "zod";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { TextField } from "@/components/inputs/TextField";
+import debounce from "lodash.debounce";
+import { useEffect } from "react";
 
 const registerSchema = z
   .object({
@@ -36,7 +37,7 @@ export type RegisterSchema = z.infer<typeof registerSchema>;
 export const RegisterForm = () => {
   const { mutate } = useRegister();
 
-  const { formState, control, handleSubmit } = useForm({
+  const { formState, control, handleSubmit, setError, clearErrors, watch } = useForm({
     resolver: zodResolver(registerSchema),
     defaultValues: {
       firstName: "",
@@ -46,11 +47,31 @@ export const RegisterForm = () => {
       confirmPassword: "",
       allowExtraEmails: false,
     },
+    mode: "all",
   });
 
   const handleFormSubmit: SubmitHandler<RegisterSchema> = async (values) => mutate(values);
 
   const { isSubmitting, isValid } = formState;
+
+  // Debounced email validation
+  const validateEmail = debounce(async (email: string) => {
+    if (!email) return;
+
+    const errorMessage = await verifyEmail(email);
+    if (errorMessage) {
+      setError("email", { type: "manual", message: errorMessage });
+    } else {
+      clearErrors("email");
+    }
+  }, 300);
+
+  const email = watch("email");
+
+  useEffect(() => {
+    if (isValid) validateEmail(email);
+    return validateEmail.cancel;
+  }, [email, isValid]);
   // const form = useForm({
   //   defaultValues: {
 
@@ -97,17 +118,8 @@ export const RegisterForm = () => {
               control={control}
               name="email"
               render={(props) => <TextField fullWidth {...props} />}
-              asyncDebounceMs={300}
-              validators={{
-                onChange: emailSchema,
-                onChangeAsync: async ({ value }) => {
-                  if (value) {
-                    const errorMessage = await verifyEmail(value);
-                    console.log("errorMessage", errorMessage);
-
-                    if (errorMessage) return errorMessage;
-                  }
-                },
+              rules={{
+                validate: async (_value) => "test",
               }}
             />
           </Grid>
@@ -133,7 +145,7 @@ export const RegisterForm = () => {
             <Controller
               control={control}
               name="allowExtraEmails"
-              render={({ field, fieldState }) => (
+              render={({ field }) => (
                 <FormControlLabel
                   control={
                     <Checkbox
