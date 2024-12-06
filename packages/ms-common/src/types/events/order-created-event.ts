@@ -1,12 +1,12 @@
-import { OrderStatus } from "../../enums";
+import { DonationStatus } from "../../enums";
 import { Subjects } from "../../events";
 
-export interface OrderCreatedEvent {
-  subject: Subjects.ORDER_CREATED;
+export interface DonationCreatedEvent {
+  subject: Subjects.DONATION_CREATED;
   data: {
     id: string;
     version: number;
-    status: OrderStatus;
+    status: DonationStatus;
     userId: string;
     expiresAt: Date;
     media: {

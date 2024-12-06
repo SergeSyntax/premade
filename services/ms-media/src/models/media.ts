@@ -1,7 +1,6 @@
 import { Currency, PaymentModels, Visibility } from "@devops-premade/ms-common";
 import mongoose from "mongoose";
 
-
 interface MediaAttrs {
   title: string;
   description?: string;
@@ -30,7 +29,7 @@ const MediaSchema = new mongoose.Schema<MediaAttrs>(
     },
     visibility: {
       type: Number,
-      enum: Object.values(Visibility),
+      enum: Visibility,
       default: Visibility.PUBLIC,
     },
     scheduledDate: {
@@ -42,7 +41,7 @@ const MediaSchema = new mongoose.Schema<MediaAttrs>(
     },
     paymentModel: {
       type: Number,
-      enum: Object.values(PaymentModels),
+      enum: PaymentModels,
       default: PaymentModels.FREE,
     },
     price: {
@@ -51,7 +50,7 @@ const MediaSchema = new mongoose.Schema<MediaAttrs>(
     },
     currency: {
       type: Number,
-      enum: Object.values(Currency),
+      enum: Currency,
       default: Currency.USD,
     },
     isUploaded: {

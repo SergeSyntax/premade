@@ -1,7 +1,7 @@
 import { Subjects } from "../../events";
 
-export interface OrderCancelledEvent {
-  subject: Subjects.ORDER_CANCELLED;
+export interface DonationCancelledEvent {
+  subject: Subjects.DONATION_CANCELLED;
   data: {
     id: string;
     version: number;

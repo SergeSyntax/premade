@@ -29,11 +29,11 @@ describe("create media", () => {
   it("has a route handler listening to /api/media for post requests", async () => {
     const response = await request(app).post(TestRoutes.MEDIA).send({});
 
-    expect(response.status).not.toEqual(404);
+    expect(response.status).not.toEqual(StatusCodes.NOT_FOUND);
   });
 
   it("can only be accessed if the user is signed in", async () => {
-    await request(app).post(TestRoutes.MEDIA).send({}).expect(401);
+    await request(app).post(TestRoutes.MEDIA).send({}).expect(StatusCodes.UNAUTHORIZED);
 
     const cookies = global.login();
 
@@ -82,7 +82,7 @@ describe("create media", () => {
 describe("get media by id", () => {
   it("returns a 404 if the media is not found", async () => {
     const id = new mongoose.Types.ObjectId().toHexString();
-    await request(app).get(`${TestRoutes.MEDIA}/${id}`).send().expect(404);
+    await request(app).get(`${TestRoutes.MEDIA}/${id}`).send().expect(StatusCodes.NOT_FOUND);
   });
 
   it("returns the media if the media is found", async () => {

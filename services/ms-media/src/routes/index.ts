@@ -12,4 +12,4 @@ router.use("/health", healthRoutes);
 router.use("/uploads", injectCurrentUser, uploadRoutes);
 router.use("/", injectCurrentUser, mediaRoutes);
 
-export { router };
+export { router as routes };

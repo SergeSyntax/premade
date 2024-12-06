@@ -6,7 +6,6 @@ import { readyService } from "../services";
 export const readyController: RequestHandler = async (_req, res) => {
   try {
     await readyService();
-
     res.sendStatus(StatusCodes.OK);
   } catch (error) {
     res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
