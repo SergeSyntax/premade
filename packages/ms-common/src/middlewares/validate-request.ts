@@ -1,7 +1,7 @@
 import { RequestHandler } from "express";
 import Joi, { ValidationError } from "joi";
 
-import { RequestValidationError } from "../errors";
+import { BadRequestError, RequestValidationError } from "../errors";
 
 enum ReqAttr {
   BODY = "body",
@@ -23,7 +23,9 @@ const validateRequest =
       req[requestAttribute] = validated;
       next();
     } catch (err) {
-      if ((err as ValidationError).isJoi) {
+      if (err instanceof BadRequestError) {
+        return next(err);
+      } else if ((err as ValidationError).isJoi) {
         return next(new RequestValidationError(err as ValidationError));
       }
 

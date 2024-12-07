@@ -8,7 +8,7 @@ export interface DonationCreatedEvent {
     version: number;
     status: DonationStatus;
     userId: string;
-    expiresAt: Date;
+    expiresAt: string;
     media: {
       id: string;
       price: number;

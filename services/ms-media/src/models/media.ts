@@ -5,12 +5,12 @@ interface MediaAttrs {
   title: string;
   description?: string;
   userId: string;
-  visibility?: Visibility;
+  visibility: Visibility;
   scheduledDate?: Date;
   thumbnailUrl: string;
-  paymentModel?: PaymentModels;
+  paymentModel: PaymentModels;
   price: number;
-  currency?: Currency;
+  currency: Currency;
   isUploaded: boolean;
 }
 

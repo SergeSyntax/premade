@@ -36,7 +36,7 @@ export const createDonationService = async (body: DonationReqBody, userId: strin
     version: donation.version,
     status: donation.status,
     userId: donation.userId,
-    expiresAt: donation.expiresAt,
+    expiresAt: donation.expiresAt.toISOString(),
     media: {
       id: media.id,
       price: media.price,
