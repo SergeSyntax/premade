@@ -1,10 +1,6 @@
 import { Currency, PaymentModels, Visibility } from "@devops-premade/ms-common/src/enums";
 import mongoose, { Document, Model } from "mongoose";
 
-interface Event {
-  id: string;
-  version: number;
-}
 export interface MediaDoc extends Document {
   title: string;
   price: number;
@@ -15,6 +11,11 @@ export interface MediaDoc extends Document {
   version: number;
 
   canBuy(): boolean;
+}
+
+interface Event {
+  id: string;
+  version: number;
 }
 
 interface MediaModel extends Model<MediaDoc> {
