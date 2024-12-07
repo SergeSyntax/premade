@@ -17,6 +17,7 @@ export const createMediaService = async (body: MediaReqBody, userId: string) => 
     paymentModel: media.paymentModel!,
     visibility: media.visibility!,
     scheduledDate: media.scheduledDate?.toISOString(),
+    version: media.version,
   });
 
   return media;
@@ -48,6 +49,7 @@ export const updateMediaService = async (mediaId: string, body: MediaReqBody, us
     paymentModel: media.paymentModel!,
     visibility: media.visibility!,
     scheduledDate: media.scheduledDate?.toISOString(),
+    version: media.version,
   });
 
   await media.save();

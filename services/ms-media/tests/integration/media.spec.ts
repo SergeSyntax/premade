@@ -8,13 +8,7 @@ import { messageBusClient } from "../../__mocks__/message-bus-client";
 import { app } from "../../src/app";
 import { Media } from "../../src/models";
 import { TestRoutes } from "../consts";
-
-const generateMedia = (title: string = faker.internet.domainName()) => ({
-  title,
-  description: faker.lorem.paragraph(1),
-  thumbnailUrl: faker.internet.url(),
-  videoUrl: faker.internet.url(),
-});
+import { generateMedia } from "../utils/media";
 
 const createMedia = async (title?: string) => {
   const response = await request(app)

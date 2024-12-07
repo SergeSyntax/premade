@@ -1,7 +1,7 @@
 import { RequestHandler } from "express";
 import Joi, { ValidationError } from "joi";
 
-import { BadRequestError, RequestValidationError } from "../errors";
+import { RequestValidationError } from "../errors";
 
 enum ReqAttr {
   BODY = "body",

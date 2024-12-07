@@ -12,6 +12,7 @@ interface MediaAttrs {
   price: number;
   currency: Currency;
   isUploaded: boolean;
+  version: number;
 }
 
 const MediaSchema = new mongoose.Schema<MediaAttrs>(
@@ -60,6 +61,8 @@ const MediaSchema = new mongoose.Schema<MediaAttrs>(
   },
   {
     timestamps: true,
+    optimisticConcurrency: true,
+    versionKey: "version",
     toObject: {
       transform(_doc, ret, _options) {
         ret.id = ret._id;

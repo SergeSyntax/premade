@@ -4,12 +4,12 @@ import mongoose, { Document } from "mongoose";
 export interface MediaDoc extends Document {
   title: string;
   price: number;
-  version: number;
   paymentModel: PaymentModels;
   currency: Currency;
   visibility?: Visibility;
   scheduledDate?: Date;
-
+  version: number;
+  
   canBuy(): boolean;
 }
 
