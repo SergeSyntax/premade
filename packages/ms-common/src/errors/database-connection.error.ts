@@ -1,5 +1,4 @@
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
-import { ValidationError } from "joi";
 
 import { CustomError } from "./custom.error";
 

@@ -5,6 +5,7 @@ import * as env from "../config";
 import { NotAuthorizedError } from "../errors";
 import { logger } from "../logger";
 
+// TODO: need to update the payload.
 interface UserPayload {
   id: string;
   email: string;
