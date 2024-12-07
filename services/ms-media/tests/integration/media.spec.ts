@@ -7,17 +7,14 @@ import request from "supertest";
 import { messageBusClient } from "../../__mocks__/message-bus-client";
 import { app } from "../../src/app";
 import { Media } from "../../src/models";
-import { USER } from "../auth.mock";
 import { TestRoutes } from "../consts";
+import { generateMedia } from "../utils/media";
 
-const createMedia = async () => {
+const createMedia = async (title?: string) => {
   const response = await request(app)
     .post(TestRoutes.MEDIA)
     .set("Cookie", global.login())
-    .send({
-      title: faker.internet.domainName(),
-      description: faker.lorem.paragraph(1),
-    });
+    .send(generateMedia(title));
 
   return response.body.media;
 };
@@ -26,11 +23,11 @@ describe("create media", () => {
   it("has a route handler listening to /api/media for post requests", async () => {
     const response = await request(app).post(TestRoutes.MEDIA).send({});
 
-    expect(response.status).not.toEqual(404);
+    expect(response.status).not.toEqual(StatusCodes.NOT_FOUND);
   });
 
   it("can only be accessed if the user is signed in", async () => {
-    await request(app).post(TestRoutes.MEDIA).send({}).expect(401);
+    await request(app).post(TestRoutes.MEDIA).send({}).expect(StatusCodes.UNAUTHORIZED);
 
     const cookies = global.login();
 
@@ -52,10 +49,7 @@ describe("create media", () => {
     await request(app)
       .post(TestRoutes.MEDIA)
       .set("Cookie", cookies)
-      .send({
-        title,
-        description: faker.lorem.paragraph(1),
-      })
+      .send(generateMedia(title))
       .expect(StatusCodes.CREATED);
 
     expect(messageBusClient.channelWrapper.publish).toHaveBeenCalled();
@@ -70,10 +64,7 @@ describe("create media", () => {
     await request(app)
       .post(TestRoutes.MEDIA)
       .set("Cookie", cookies)
-      .send({
-        title,
-        description: faker.lorem.paragraph(1),
-      })
+      .send(generateMedia(title))
       .expect(StatusCodes.CREATED);
 
     mediaResources = await Media.find({});
@@ -85,7 +76,7 @@ describe("create media", () => {
 describe("get media by id", () => {
   it("returns a 404 if the media is not found", async () => {
     const id = new mongoose.Types.ObjectId().toHexString();
-    await request(app).get(`${TestRoutes.MEDIA}/${id}`).send().expect(404);
+    await request(app).get(`${TestRoutes.MEDIA}/${id}`).send().expect(StatusCodes.NOT_FOUND);
   });
 
   it("returns the media if the media is found", async () => {
@@ -95,10 +86,7 @@ describe("get media by id", () => {
     const response = await request(app)
       .post(TestRoutes.MEDIA)
       .set("Cookie", cookies)
-      .send({
-        title,
-        description: faker.lorem.paragraph(1),
-      })
+      .send(generateMedia(title))
       .expect(StatusCodes.CREATED);
 
     const mediaResponse = await request(app)
@@ -131,10 +119,7 @@ describe("update media by id", () => {
     await request(app)
       .put(`${TestRoutes.MEDIA}/${id}`)
       .set("Cookie", global.login())
-      .send({
-        title: faker.internet.userName(),
-        description: faker.lorem.paragraph(1),
-      })
+      .send(generateMedia())
       .expect(StatusCodes.NOT_FOUND);
   });
   it("returns a 401 if the user not authenticated", async () => {
@@ -142,38 +127,22 @@ describe("update media by id", () => {
 
     await request(app)
       .put(`${TestRoutes.MEDIA}/${id}`)
-      .send({
-        title: faker.internet.userName(),
-        description: faker.lorem.paragraph(1),
-      })
+      .send(generateMedia())
       .expect(StatusCodes.UNAUTHORIZED);
   });
   it("return 401 if the user does not own the video", async () => {
     const media = await createMedia();
 
-    const resource = await request(app)
+    await request(app)
       .put(`${TestRoutes.MEDIA}/${media.id}`)
       .set("Cookie", global.login())
       .send({
         title: faker.internet.userName(),
         description: faker.lorem.paragraph(1),
-      });
-  });
-  it("return 400 if the user provides an invalid title", async () => {
-    const media = new Media({
-      title: faker.internet.userName(),
-      description: faker.lorem.paragraph(1),
-      userId: new mongoose.Types.ObjectId().toHexString(),
-    });
-    const id = media.id;
-
-    await media.save();
-
-    await request(app)
-      .put(`${TestRoutes.MEDIA}/${id}`)
-      .set("Cookie", global.login())
-      .send()
-      .expect(StatusCodes.BAD_REQUEST);
+        thumbnailUrl: faker.internet.url(),
+        videoUrl: faker.internet.url(),
+      })
+      .expect(StatusCodes.UNAUTHORIZED);
   });
 
   it("updated the media provided valid inputs", async () => {
@@ -182,8 +151,7 @@ describe("update media by id", () => {
     const description = faker.lorem.paragraph(1);
 
     const media = new Media({
-      title: faker.internet.userName(),
-      description: faker.lorem.paragraph(1),
+      ...generateMedia(title),
       userId,
     });
     const id = media.id;

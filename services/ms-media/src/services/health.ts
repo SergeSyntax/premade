@@ -1,11 +1,12 @@
-import { logger } from '@devops-premade/ms-common/src/logger';
-import mongoose from 'mongoose';
+import { logger } from "@devops-premade/ms-common/src/logger";
 
-export const mongoConnectionCheck = async() => {
+import { mongodbClient } from "../mongodb-client";
+
+export const readyService = async () => {
   try {
-    return mongoose.connection.db.admin().ping()
+    return mongodbClient.ping();
   } catch (err) {
-    logger.error('mongo connection check failed')
-    throw err
+    logger.error("mongo connection check failed");
+    throw err;
   }
-}
+};

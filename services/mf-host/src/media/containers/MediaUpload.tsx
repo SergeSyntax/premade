@@ -1,434 +1,351 @@
-import { useDropzone } from "react-dropzone";
+import { DropzoneOptions } from "react-dropzone";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import {
   Box,
   Button,
-  Card,
   Checkbox,
   Container,
-  FormControl,
   FormControlLabel,
   FormHelperText,
-  FormLabel,
   MenuItem,
   RadioGroup,
   Select,
-  Typography,
 } from "@mui/material";
-import { getUploadUrl } from "@/auth/api/uploadUrl";
-import axios from "axios";
-import { UploadDropZoneContainer } from "@/components/UploadDropZoneContainer";
 import DescriptionIcon from "@mui/icons-material/Description";
 import ImageIcon from "@mui/icons-material/Image";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import ImageOutlinedIcon from "@mui/icons-material/ImageOutlined";
 import { grey } from "@mui/material/colors";
-import { useForm } from "@tanstack/react-form";
-
-import TextField from "@/components/TextField";
+import {
+  Controller,
+  useForm,
+  SubmitHandler,
+  UseFormSetValue,
+  UseFormSetError,
+} from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { RadioDescribedInput } from "@/components/RadioDescribedInput";
-import { formatNumberWithCommas } from "@/utils/formatNumberWithCommas";
-import { UploadInput } from "@/components/UploadInput";
-import { Currency, PaymentModels, Visibility } from "@/types/upload";
+import { Currency, PaymentModel, Visibility } from "@/types/upload";
 import { DateTimePicker } from "@mui/x-date-pickers";
-import { DateTime } from "luxon";
 
-interface MediaUploadValues {
-  video: null | File;
-  title: string;
-  description: string;
-  thumbnail: null | File;
-  paymentModel: PaymentModels;
-  price: string;
-  currency: Currency;
-  visibility: Visibility;
-  scheduledDate?: DateTime | null;
-}
+import { UploadInput } from "@/components/inputs/Upload/UploadInput";
+import { UploadDropZoneContainer } from "@/components/inputs/Upload/UploadDropZoneContainer";
+import { mediaSchema } from "@/schemas/mediaSchema";
+import { MediaSchema } from "@/auth/types/media";
+import { LadledSection } from "@/components/layout/LadledSection";
+import {
+  ACCEPT_IMAGE_TYPES,
+  ACCEPT_VIDEO_TYPES,
+  THUMBNAIL_MAX_SIZE,
+  VIDEO_MAX_SIZE,
+} from "@/config/upload";
+import { TextField } from "@/components/inputs/TextField";
+import { formatNumberWithCommas } from "@/utils/formatNumberWithCommas";
+import { getSignUrlArgs } from "@/utils/uploads";
+import {
+  getThumbnailUploadUrl,
+  getVideoUploadUrl,
+  uploadPresignedURLFile,
+} from "@/auth/api/upload";
+import { createMedia } from "@/auth/api/media";
 
-// const schema = Yup.object<MediaUploadValues>().shape({
-//   video: Yup.mixed().nullable().required("Video is required."),
-//   title: Yup.string().required("Title is required."),
-//   description: Yup.string().nullable(),
-//   thumbnail: Yup.mixed().nullable(),
-//   paymentModel: Yup.string().oneOf(["FREE", "PAID"]).required(),
-//   price: Yup.string().when("paymentModel", {
-//     is: "PAID",
-//     then: Yup.string().required("Price is required."),
-//     otherwise: Yup.string(),
-//   }),
-//   currency: Yup.string().required("Currency is required."),
-//   visibility: Yup.string().required("Visibility is required."),
-//   scheduledDate: Yup.date().nullable(),
-// });
-
-export const UploadSection: React.FC<{
-  icon?: React.ReactElement;
-  title: string;
-  actions?: React.ReactNode;
-  children: React.ReactNode;
-  htmlFor?: string;
-}> = ({ actions, children, icon, title, htmlFor }) => {
-  return (
-    <Box marginTop={2}>
-      <Box paddingBottom=".4rem" border="none" display="flex" justifyContent="space-between">
-        <FormLabel
-          sx={{ display: "flex", alignItems: "center", paddingLeft: `${icon ? 0 : 1.54}rem` }}
-          htmlFor={htmlFor}
-        >
-          {icon && (
-            <Typography component="span" fontSize={16} marginRight={1.5}>
-              {icon}
-            </Typography>
-          )}
-          <Typography component="span" variant="subtitle1" textTransform="capitalize">
-            {title}
-          </Typography>
-        </FormLabel>
-        <Box>{actions}</Box>
-      </Box>
-      <Card>
-        <FormControl
-          sx={{
-            display: "flex",
-            padding: 2,
-          }}
-        >
-          {children}
-        </FormControl>
-      </Card>
-    </Box>
-  );
-};
-
-const getSHA256Hash = async (file: File): Promise<string> => {
-  const buffer = await file.arrayBuffer();
-  const hashBuffer = await crypto.subtle.digest("SHA-256", buffer);
-  const hashArray = Array.from(new Uint8Array(hashBuffer));
-  const binaryString = hashArray.map((byte) => String.fromCharCode(byte)).join("");
-  return btoa(binaryString); // Return base64-encoded hash
-};
+const handleDropZone =
+  (
+    key: keyof MediaSchema,
+    setValue: UseFormSetValue<MediaSchema>,
+    setError: UseFormSetError<MediaSchema>,
+  ): DropzoneOptions["onDrop"] =>
+  ([file], [rejection]) => {
+    setValue(key, rejection?.file ?? file);
+    setError(key, {
+      message: rejection?.errors?.at(0)?.message,
+      type: "onChange",
+    });
+  };
 
 export const MediaUpload = () => {
-  const form = useForm<MediaUploadValues>({
+  const { control, handleSubmit, setError, setValue } = useForm<MediaSchema>({
+    resolver: zodResolver(mediaSchema),
     defaultValues: {
-      video: null,
       title: "",
       description: "",
-      thumbnail: null,
-      paymentModel: PaymentModels.FREE,
-      price: "",
+      visibility: Visibility.SCHEDULED,
+      paymentModel: PaymentModel.PURCHASE,
       currency: Currency.USD,
-      visibility: Visibility.PUBLIC,
+      price: "",
     },
-    onSubmit: async ({ value }) => {
-      if (!value.video) return;
-      const { type } = value.video;
-      const checksum = await getSHA256Hash(value.video);
-      const {
-        data: { key, url },
-      } = await getUploadUrl(type, checksum);
-
-
-
-      // await axios.post("/api/media", {
-      //   title: "title",
-      //   describe: "desc",
-      //   url: key,
-      // });
-
-      // try {
-      console.log(key);
-
-      await axios.put(url, value.video, {
-        headers: {
-          "Content-Type": type,
-          "x-amz-checksum-sha256": checksum,
-          // "x-amz-server-side-encryption": "AES256", // Include this header
-        },
-      });
-      // } catch (error) {
-      //   console.log((error as AxiosError).message);
-      //   // 403 file is corrupted / wrong type of file
-      // }
-    },
+    mode: "all",
   });
 
-  const videoField = form.useField({
-    name: "video",
-  });
+  const handleFormSubmit: SubmitHandler<MediaSchema> = async (values) => {
+    const { video, thumbnail, price, scheduledDate, ...rest } = values;
+    const videoSignUrlArgs = await getSignUrlArgs(video);
+    const thumbnailSignUrlArgs = await getSignUrlArgs(thumbnail);
 
-  const thumbnailField = form.useField({
-    name: "thumbnail",
-  });
+    const {
+      data: { key: videoKey, url: videoUploadUrl },
+    } = await getVideoUploadUrl(videoSignUrlArgs);
+    const {
+      data: { key: thumbnailKey, url: thumbnailURL },
+    } = await getThumbnailUploadUrl(thumbnailSignUrlArgs);
 
-  const videoDropZoneProps = useDropzone({
-    onDrop: ([file], [rejection]) => {
-      videoField.setMeta((prev) => ({
-        ...prev,
-        errorMap: {
-          onChange: rejection?.errors?.at(0)?.message,
-        },
-      }));
-
-      videoField.handleChange(() => rejection?.file ?? file);
-    },
-    accept: {
-      "video/mp4": [".mp4"],
-      "video/mpeg": [".mpeg"],
-      "video/webm": [".webm"],
-    },
-    maxFiles: 1,
-    maxSize: 16 * 1024 ** 3, // 16 GiB
-  });
-
-  const thumbnailDropZoneProps = useDropzone({
-    onDrop: ([file], [rejection]) => {
-      thumbnailField.setMeta((prev) => ({
-        ...prev,
-        errorMap: {
-          onChange: rejection?.errors?.at(0)?.message,
-        },
-      }));
-
-      thumbnailField.handleChange(() => rejection?.file ?? file);
-    },
-    accept: {
-      "image/jpeg": [".jpg", ".jpeg"],
-      "image/png": [".png"],
-      "image/webp": [".webp"],
-    },
-    maxFiles: 1,
-    maxSize: 5 * 1024 ** 2, // 5 MiB
-  });
-
-  const paymentModelField = form.useField({
-    name: "paymentModel",
-  });
-  const isPriceVisible = paymentModelField.state.value !== PaymentModels.FREE;
-
-  const visibilityField = form.useField({
-    name: "visibility",
-  });
-  const isScheduledDateVisible = visibilityField.state.value === Visibility.SCHEDULED;
+    
+    await createMedia({
+      ...rest,
+      videoUrl: videoKey,
+      thumbnailUrl: thumbnailKey,
+      price: +price!,
+      scheduledDate: scheduledDate?.toJSDate(),
+    });
+    
+    await uploadPresignedURLFile(thumbnailURL, thumbnail, thumbnailSignUrlArgs);
+    await uploadPresignedURLFile(videoUploadUrl, video, videoSignUrlArgs);
+  };
 
   return (
-    <Container
-      maxWidth="md"
-      component="form"
-      onSubmit={(e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        void form.handleSubmit();
-      }}
-    >
-      <UploadDropZoneContainer {...videoDropZoneProps}>
-        <UploadSection
-          title="Upload file"
-          htmlFor={videoField.name}
-          icon={<CloudUploadIcon />}
-          actions={
-            <Button
-              onClick={(e) => e.stopPropagation()}
-              variant="contained"
-              size="small"
-              startIcon={<RefreshIcon />}
+    <Container maxWidth="md" component="form" onSubmit={handleSubmit(handleFormSubmit)}>
+      <Controller
+        name="video"
+        control={control}
+        render={({ field, fieldState, formState }) => (
+          <UploadDropZoneContainer
+            accept={ACCEPT_VIDEO_TYPES}
+            maxSize={VIDEO_MAX_SIZE}
+            onDrop={handleDropZone(field.name, setValue, setError)}
+          >
+            <LadledSection
+              title="Upload file"
+              icon={<CloudUploadIcon />}
+              actions={
+                <Button
+                  onClick={(e) => e.stopPropagation()}
+                  variant="contained"
+                  size="small"
+                  startIcon={<RefreshIcon />}
+                >
+                  Reset
+                </Button>
+              }
             >
-              Reset
-            </Button>
-          }
-        >
-          <UploadInput
-            {...videoField}
-            helperText="For video content, use MP4s in H264/AAC format and a friendly bitrate (under 8 Mbps)."
-          />
-
-          <form.Field
-            name="title"
-            children={(props) => (
-              <TextField
-                inputProps={{
-                  style: {
-                    marginTop: "1rem",
-                  },
-                }}
-                {...props}
-                handleClick={(e) => e.stopPropagation()}
-              />
-            )}
-          />
-        </UploadSection>
-      </UploadDropZoneContainer>
-
-      <UploadSection htmlFor="description" title="description" icon={<DescriptionIcon />}>
-        <form.Field
-          name="description"
-          children={(props) => (
-            <TextField {...props} minRows={2} maxRows={15} multiline omitLabel />
-          )}
-        />
-      </UploadSection>
-
-      <UploadDropZoneContainer {...thumbnailDropZoneProps}>
-        <UploadSection htmlFor={videoField.name} title="thumbnail" icon={<ImageIcon />}>
-          <Box display="flex" minHeight={256} gap={2}>
-            <Box
-              display="flex"
-              justifyContent="center"
-              alignItems="center"
-              flex={2}
-              fontSize={40}
-              sx={{ background: grey["200"] }}
-            >
-              {thumbnailField.state.value ? (
-                <img
-                  src={
-                    thumbnailField.state.value && URL.createObjectURL(thumbnailField.state.value)
-                  }
-                  alt="Thumbnail Preview"
-                  style={{ maxWidth: "100%", maxHeight: "100%" }}
-                />
-              ) : (
-                <ImageOutlinedIcon />
-              )}
-            </Box>
-            <Box flex={3}>
               <UploadInput
-                {...thumbnailField}
-                helperText="Use JPEG, PNG, or WEBP formats, with a maximum size of 5MB."
+                field={field}
+                fieldState={fieldState}
+                formState={formState}
+                helperText="For video content, use MP4s in H264/AAC format and a friendly bitrate (under 8 Mbps)."
+              />
+
+              <Box onClick={(e) => e.stopPropagation()} paddingTop="3rem">
+                <Controller
+                  control={control}
+                  name="title"
+                  render={(props) => <TextField {...props} />}
+                />
+              </Box>
+            </LadledSection>
+          </UploadDropZoneContainer>
+        )}
+      />
+
+      <LadledSection htmlFor="description" title="description" icon={<DescriptionIcon />}>
+        <Controller
+          control={control}
+          name="description"
+          render={(props) => <TextField {...props} minRows={2} maxRows={15} omitLabel />}
+        />
+      </LadledSection>
+
+      <Controller
+        name="thumbnail"
+        control={control}
+        render={({ field, fieldState, formState }) => (
+          <UploadDropZoneContainer
+            onDrop={handleDropZone("thumbnail", setValue, setError)}
+            accept={ACCEPT_IMAGE_TYPES}
+            maxSize={THUMBNAIL_MAX_SIZE}
+          >
+            <LadledSection title={field.name} icon={<ImageIcon />}>
+              <Box display="flex" minHeight={256} gap={2}>
+                <Box
+                  display="flex"
+                  justifyContent="center"
+                  alignItems="center"
+                  flex={2}
+                  fontSize={40}
+                  sx={{ background: grey["200"] }}
+                >
+                  {field.value ? (
+                    <img
+                      src={field.value && URL.createObjectURL(field.value)}
+                      alt="Thumbnail Preview"
+                      style={{ maxWidth: "100%", maxHeight: "100%" }}
+                    />
+                  ) : (
+                    <ImageOutlinedIcon />
+                  )}
+                </Box>
+                <Box flex={3}>
+                  <UploadInput
+                    field={field}
+                    fieldState={fieldState}
+                    formState={formState}
+                    helperText="Use JPEG, PNG, or WEBP formats, with a maximum size of 5MB."
+                  />
+                </Box>
+              </Box>
+            </LadledSection>
+          </UploadDropZoneContainer>
+        )}
+      />
+      <Controller
+        control={control}
+        name="visibility"
+        render={({ field }) => (
+          <LadledSection title="Visibility" icon={<VisibilityIcon />}>
+            <RadioGroup
+              value={field.value}
+              onChange={(e) => field.onChange(+e.target.value)}
+              defaultValue="public"
+              name="visibility-radio-buttons-group"
+            >
+              <RadioDescribedInput
+                value={Visibility.PUBLIC}
+                label="Public"
+                description="Anyone can watch the video right away."
+              />
+
+              <RadioDescribedInput
+                value={Visibility.UNLISTED}
+                label="Unlisted"
+                description="Only people with the link can watch the video."
+              />
+
+              <RadioDescribedInput
+                value={Visibility.SCHEDULED}
+                label="Scheduled"
+                description="The video will be available at a specific date and time."
+              />
+            </RadioGroup>
+
+            <Box
+              sx={{
+                transition: "opacity 0.3s ease, height 0.3s ease",
+                opacity: field.value === Visibility.SCHEDULED ? 1 : 0,
+                height: field.value === Visibility.SCHEDULED ? "auto" : 0,
+                overflow: "hidden",
+              }}
+              marginTop={3}
+              display="flex"
+              justifyContent="start"
+              alignItems="start"
+            >
+              <Controller
+                control={control}
+                name="scheduledDate"
+                render={({ field, fieldState }) => (
+                  <DateTimePicker
+                    defaultValue={field.value}
+                    onChange={(value) => field.onChange(value)}
+                    format="dd/MM/yyyy HH:mm"
+                    slotProps={{
+                      textField: {
+                        error: !!fieldState.error?.message,
+                        helperText: fieldState.error?.message,
+                      },
+                    }}
+                  />
+                )}
               />
             </Box>
-          </Box>
-        </UploadSection>
-      </UploadDropZoneContainer>
-
-      <UploadSection title="Visibility" icon={<VisibilityIcon />}>
-        <RadioGroup
-          value={visibilityField.state.value}
-          onChange={(e) => visibilityField.handleChange(+e.target.value)}
-          defaultValue="public"
-          name="visibility-radio-buttons-group"
-        >
-          <RadioDescribedInput
-            value={Visibility.PUBLIC}
-            label="Public"
-            description="Anyone can watch the video right away."
-          />
-
-          <RadioDescribedInput
-            value={Visibility.UNLISTED}
-            label="Unlisted"
-            description="Only people with the link can watch the video."
-          />
-
-          <RadioDescribedInput
-            value={Visibility.SCHEDULED}
-            label="Scheduled"
-            description="The video will be available at a specific date and time."
-          />
-        </RadioGroup>
-
-        <Box
-          sx={{
-            transition: "opacity 0.3s ease, height 0.3s ease",
-            opacity: isScheduledDateVisible ? 1 : 0,
-            height: isScheduledDateVisible ? "auto" : 0,
-            overflow: "hidden",
-          }}
-          marginTop={3}
-          display="flex"
-          justifyContent="start"
-          alignItems="start"
-        >
-          <form.Field
-            name="scheduledDate"
-            children={(props) => (
-              <DateTimePicker
-                defaultValue={props.state.value}
-                onChange={(value) => props.handleChange(value)}
-                format="dd/MM/yyyy HH:mm"
+          </LadledSection>
+        )}
+      />
+      <Controller
+        control={control}
+        name="paymentModel"
+        render={({ field }) => (
+          <LadledSection title="price" icon={<MonetizationOnIcon />}>
+            <RadioGroup
+              value={field.value}
+              aria-labelledby="cost-radiogroup"
+              name="cost"
+              onChange={(e) => {
+                if (+e.target.value === PaymentModel.FREE) {
+                  setValue("price", "");
+                }
+                field.onChange(+e.target.value);
+              }}
+            >
+              <RadioDescribedInput
+                value={PaymentModel.FREE}
+                label="Free"
+                description="Anyone can access the video for free."
               />
-            )}
-          />
-        </Box>
-      </UploadSection>
 
-      <UploadSection title="Price" icon={<MonetizationOnIcon />}>
-        <RadioGroup
-          value={paymentModelField.state.value}
-          aria-labelledby="cost-radiogroup"
-          name="cost"
-          onChange={(e) => paymentModelField.handleChange(+e.target.value)}
-        >
-          <RadioDescribedInput
-            value={PaymentModels.FREE}
-            label="Free"
-            description="Anyone can access the video for free."
-            {...paymentModelField}
-          />
-
-          <RadioDescribedInput
-            value={PaymentModels.RENT}
-            label="Rent"
-            description="Viewers can rent the video for a limited time."
-            {...paymentModelField}
-          />
-
-          <RadioDescribedInput
-            value={PaymentModels.PURCHASE}
-            label="Purchase"
-            description="Viewers can buy the video to watch anytime."
-            {...paymentModelField}
-          />
-        </RadioGroup>
-
-        <Box
-          sx={{
-            transition: "opacity 0.3s ease, height 0.3s ease",
-            opacity: isPriceVisible ? 1 : 0,
-            height: isPriceVisible ? "auto" : 0,
-            overflow: "hidden",
-          }}
-          marginTop={3}
-          display="flex"
-          justifyContent="start"
-          alignItems="start"
-        >
-          <form.Field
-            name="price"
-            children={(props) => (
-              <TextField
-                {...props}
-                inputProps={{
-                  style: {
-                    maxWidth: "20ch",
-                  },
-                }}
-                handleChange={(value) => props.handleChange(formatNumberWithCommas(value))}
+              <RadioDescribedInput
+                value={PaymentModel.RENT}
+                label="Rent"
+                description="Viewers can rent the video for a limited time."
               />
-            )}
-          />
 
-          <form.Field
-            name="currency"
-            children={(props) => (
-              <Select
-                onChange={(e) => props.handleChange(+e.target.value)}
-                id="outlined-number"
-                value={props.state.value}
-                sx={{ marginLeft: "1rem" }}
-              >
-                <MenuItem value={Currency.USD}>USD</MenuItem>
-                <MenuItem value={Currency.EUR}>EUR</MenuItem>
-                <MenuItem value={Currency.ILS}>ILS</MenuItem>
-              </Select>
-            )}
-          />
-        </Box>
-      </UploadSection>
+              <RadioDescribedInput
+                value={PaymentModel.PURCHASE}
+                label="Purchase"
+                description="Viewers can buy the video to watch anytime."
+              />
+            </RadioGroup>
+            <Box
+              sx={{
+                transition: "opacity 0.3s ease, height 0.3s ease",
+                opacity: field.value !== PaymentModel.FREE ? 1 : 0,
+                height: field.value !== PaymentModel.FREE ? "auto" : 0,
+                overflow: "hidden",
+              }}
+              marginTop={1}
+              paddingTop={1}
+              display="flex"
+              justifyContent="start"
+              alignItems="start"
+            >
+              <Controller
+                control={control}
+                name="price"
+                render={(props) => (
+                  <TextField
+                    {...props}
+                    onChange={({ target }) =>
+                      props.field.onChange(formatNumberWithCommas(target.value))
+                    }
+                    sx={{
+                      maxWidth: "20ch",
+                    }}
+                  />
+                )}
+              />
 
-      <UploadSection title="Content Restrictions" icon={<VisibilityIcon />}>
+              <Controller
+                control={control}
+                name="currency"
+                render={({ field }) => (
+                  <Select
+                    onChange={(e) => field.onChange(+e.target.value)}
+                    id="outlined-number"
+                    value={field.value}
+                    sx={{ marginLeft: "1rem" }}
+                  >
+                    <MenuItem value={Currency.USD}>USD</MenuItem>
+                    <MenuItem value={Currency.EUR}>EUR</MenuItem>
+                    <MenuItem value={Currency.ILS}>ILS</MenuItem>
+                  </Select>
+                )}
+              />
+            </Box>
+          </LadledSection>
+        )}
+      />
+
+      <LadledSection title="Content Restrictions" icon={<VisibilityIcon />}>
         <Box sx={{ marginBottom: 2 }}>
           <FormControlLabel control={<Checkbox />} label="Disable Tipping and Boosting" />
           <FormHelperText sx={{ marginLeft: "32px" }}>
@@ -473,8 +390,7 @@ export const MediaUpload = () => {
             Only dislikes for comments will be hidden.
           </FormHelperText>
         </Box>
-      </UploadSection>
-
+      </LadledSection>
       <Box width="100%" textAlign="center" margin="4rem 0">
         <Button variant="contained" type="submit">
           Upload

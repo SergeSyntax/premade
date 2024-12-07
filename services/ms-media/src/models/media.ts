@@ -1,9 +1,18 @@
+import { Currency, PaymentModels, Visibility } from "@devops-premade/ms-common";
 import mongoose from "mongoose";
 
 interface MediaAttrs {
   title: string;
   description?: string;
   userId: string;
+  visibility: Visibility;
+  scheduledDate?: Date;
+  thumbnailUrl: string;
+  paymentModel: PaymentModels;
+  price: number;
+  currency: Currency;
+  isUploaded: boolean;
+  version: number;
 }
 
 const MediaSchema = new mongoose.Schema<MediaAttrs>(
@@ -17,11 +26,43 @@ const MediaSchema = new mongoose.Schema<MediaAttrs>(
     },
     userId: {
       type: String,
-      required: true
-    }
+      required: true,
+    },
+    visibility: {
+      type: Number,
+      enum: Visibility,
+      default: Visibility.PUBLIC,
+    },
+    scheduledDate: {
+      type: Date,
+    },
+    thumbnailUrl: {
+      type: String,
+      required: true,
+    },
+    paymentModel: {
+      type: Number,
+      enum: PaymentModels,
+      default: PaymentModels.FREE,
+    },
+    price: {
+      type: Number,
+      default: 0,
+    },
+    currency: {
+      type: Number,
+      enum: Currency,
+      default: Currency.USD,
+    },
+    isUploaded: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,
+    optimisticConcurrency: true,
+    versionKey: "version",
     toObject: {
       transform(_doc, ret, _options) {
         ret.id = ret._id;

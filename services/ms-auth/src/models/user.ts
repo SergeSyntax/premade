@@ -31,6 +31,8 @@ const userSchema = new mongoose.Schema<UserAttrs>(
   },
   {
     timestamps: true,
+    optimisticConcurrency: true,
+    versionKey: "version",
     toObject: {
       transform(_doc, ret, _options) {
         ret.id = ret._id;

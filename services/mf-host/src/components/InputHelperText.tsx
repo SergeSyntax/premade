@@ -1,18 +1,18 @@
 import { FormHelperText, LinearProgress } from "@mui/material";
-import { FieldMeta } from "@tanstack/react-form";
+import { ControllerFieldState } from "react-hook-form";
 
 interface InputHelperTextProps {
-  meta: FieldMeta;
+  state: ControllerFieldState;
   children: React.ReactNode; // ReactNode is more appropriate for the children prop
 }
 
-export const InputHelperText: React.FC<InputHelperTextProps> = ({ meta, children }) => {
-  if (meta?.isValidating) return <LinearProgress color="success" />;
+export const InputHelperText: React.FC<InputHelperTextProps> = ({ state, children }) => {
+  if (state.isValidating) return <LinearProgress color="success" />;
 
   // Destructure props here
   return (
-    <FormHelperText error={Boolean(meta?.errors.length)}>
-      {meta?.errors.length ? meta.errors.at(0) : children || <br />}
+    <FormHelperText error={Boolean(state.error?.message)}>
+      {state.error?.message ? state.error?.message : children || <br />}
     </FormHelperText>
   );
 };

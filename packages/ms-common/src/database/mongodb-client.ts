@@ -42,4 +42,8 @@ export class MongoDBClient {
       logger.error("Mongoose: Error during disconnection.", error);
     }
   }
+
+  ping() {
+    return mongoose.connection.db?.admin().ping();
+  }
 }

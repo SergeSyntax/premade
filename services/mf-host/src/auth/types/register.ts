@@ -1,10 +1,10 @@
 export interface RegisterPayload {
   firstName: string;
-  lastName: string;
+  lastName?: string;
   email: string;
   password: string;
   confirmPassword: string;
-  allowExtraEmails: boolean;
+  allowExtraEmails?: boolean;
 }
 
 export interface RegisterResponse {

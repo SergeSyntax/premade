@@ -9,8 +9,6 @@ enum ReqAttr {
   QUERY = "query",
 }
 
-// TODO: don't like this solution but I don't want env nested in packages so
-// that a work around for now
 const validateRequest =
   (requestAttribute: ReqAttr, schema: Joi.ObjectSchema<unknown>): RequestHandler =>
   async (req, _res, next) => {

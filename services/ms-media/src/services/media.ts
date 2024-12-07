@@ -9,7 +9,16 @@ export const createMediaService = async (body: MediaReqBody, userId: string) => 
   const media = new Media({ ...body, userId });
   await media.save();
 
-  await new MediaCreatedPublisher(messageBusClient.channelWrapper).publish({ id: media.id });
+  await new MediaCreatedPublisher(messageBusClient.channelWrapper).publish({
+    id: media.id,
+    title: media.title,
+    price: media.price,
+    currency: media.currency!,
+    paymentModel: media.paymentModel!,
+    visibility: media.visibility!,
+    scheduledDate: media.scheduledDate?.toISOString(),
+    version: media.version,
+  });
 
   return media;
 };
@@ -32,7 +41,16 @@ export const updateMediaService = async (mediaId: string, body: MediaReqBody, us
     media[attribute] = body[attribute];
   });
 
-  await new MediaUpdatedPublisher(messageBusClient.channelWrapper).publish({ id: media.id });
+  await new MediaUpdatedPublisher(messageBusClient.channelWrapper).publish({
+    id: media.id,
+    title: media.title,
+    price: media.price,
+    currency: media.currency!,
+    paymentModel: media.paymentModel!,
+    visibility: media.visibility!,
+    scheduledDate: media.scheduledDate?.toISOString(),
+    version: media.version,
+  });
 
   await media.save();
 
