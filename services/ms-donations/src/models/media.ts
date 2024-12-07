@@ -1,6 +1,10 @@
 import { Currency, PaymentModels, Visibility } from "@devops-premade/ms-common/src/enums";
-import mongoose, { Document } from "mongoose";
+import mongoose, { Document, Model } from "mongoose";
 
+interface Event {
+  id: string;
+  version: number;
+}
 export interface MediaDoc extends Document {
   title: string;
   price: number;
@@ -9,8 +13,31 @@ export interface MediaDoc extends Document {
   visibility?: Visibility;
   scheduledDate?: Date;
   version: number;
-  
+
   canBuy(): boolean;
+}
+
+interface MediaModel extends Model<MediaDoc> {
+  /**
+   * Retrieves a Media document based on the event ID and its prior version.
+   *
+   * This method ensures synchronization between the donation service and
+   * the services managing the primary media table by checking for the
+   * document state before updates.
+   *
+   * @param {Event} event - The event object containing the ID and current version.
+   * @returns {Promise<MediaDoc | null>} - The Media document if found, or null.
+   *
+   * @example
+   * const event = { id: "123", version: 3 };
+   * const media = await Media.findByEvent(event);
+   * if (media) {
+   *   console.log(`Found Media: ${media.title}`);
+   * } else {
+   *   console.log("No Media found.");
+   * }
+   */
+  findByEvent(event: Event): Promise<MediaDoc | null>;
 }
 
 const mediaSchema = new mongoose.Schema<MediaDoc>(
@@ -72,6 +99,13 @@ mediaSchema.methods.canBuy = function () {
   return isVisible && isEvaluated;
 };
 
-const Media = mongoose.model("Media", mediaSchema);
+mediaSchema.statics.findByEvent = async function (event: Event) {
+  return Media.findOne({
+    _id: event.id,
+    version: event.version - 1,
+  });
+};
+
+const Media = mongoose.model<MediaDoc, MediaModel>("Media", mediaSchema);
 
 export { Media };

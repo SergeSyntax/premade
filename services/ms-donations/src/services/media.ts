@@ -18,10 +18,7 @@ export async function onMediaCreatedService(data: MediaCreatedEvent["data"], _ms
 }
 
 export async function onMediaUpdatedService(data: MediaUpdatedEvent["data"], _msg: ConsumeMessage) {
-  const media = await Media.findById({
-    _id: data.id,
-    version: data.version - 1,
-  });
+  const media = await Media.findByEvent(data);
 
   if (!media) throw new Error("Media not found");
 

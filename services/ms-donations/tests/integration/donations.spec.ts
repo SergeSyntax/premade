@@ -320,7 +320,6 @@ describe("donation cancelled by id", () => {
     expect(fetchedDonation.donation.status).toBe(DonationStatus.CANCELLED);
 
 
-    expect(messageBusClient.channelWrapper.publish).not.toHaveBeenCalled()
-
+    expect(messageBusClient.channelWrapper.publish).toHaveBeenCalled()
   });
 });
