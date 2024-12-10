@@ -12,6 +12,7 @@ import { TestRoutes } from "../consts";
 
 const buildMediaItems = async () => {
   const media = new Media({
+    _id: new mongoose.Types.ObjectId().toHexString(),
     title: faker.company.name(),
     price: faker.number.int({ max: 200, min: 100 }),
     currency: Currency.USD,
@@ -39,6 +40,7 @@ describe("donations create", () => {
   it("return an error if you can't donate to the media", async () => {
     const userId = new mongoose.Types.ObjectId();
     const media = new Media({
+      _id: new mongoose.Types.ObjectId().toHexString(),
       title: "test",
       price: 20,
       currency: Currency.USD,

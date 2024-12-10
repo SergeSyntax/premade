@@ -11,6 +11,7 @@ export interface MediaUpdatedEvent {
     paymentModel: PaymentModels;
     visibility: Visibility;
     scheduledDate?: string;
+    userId: string;
     version: number;
   };
 }

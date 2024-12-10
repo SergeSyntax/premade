@@ -172,7 +172,7 @@ export abstract class Listener<T extends EventStructure> {
       await this.onMessage(parsedData, msg);
       this.client.ack(msg); // Acknowledge the message upon successful processing
     } catch (error) {
-      logger.error(`Error handling message from queue '${queueName}':`, error);
+      logger.debug(`Error handling message from queue '${queueName}':`, error);
       this.client.nack(msg, false, true); // Negative acknowledge to retry the message
     }
   };
