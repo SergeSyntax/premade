@@ -2,7 +2,7 @@ import { logger } from "@devops-premade/ms-common/src/logger";
 
 import { app } from "./app";
 import { PORT } from "./config";
-import { MediaCreatedListener, MediaUpdatedListener } from "./events";
+import { ExpirationCompleteListener, MediaCreatedListener, MediaUpdatedListener } from "./events";
 import { messageBusClient } from "./message-bus-client";
 import { mongodbClient } from "./mongodb-client";
 
@@ -20,5 +20,6 @@ await messageBusClient.connect();
 
 await new MediaCreatedListener(messageBusClient.channelWrapper).listen();
 await new MediaUpdatedListener(messageBusClient.channelWrapper).listen();
+await new ExpirationCompleteListener(messageBusClient.channelWrapper).listen();
 
 app.listen(PORT, () => logger.info(`Listening on port ${PORT}`));

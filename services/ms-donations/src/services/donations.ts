@@ -1,6 +1,8 @@
 import {
   BadRequestError,
+  ConsumeMessage,
   DonationStatus,
+  ExpirationCompleteEvent,
   NotAuthorizedError,
   NotFoundError,
 } from "@devops-premade/ms-common";
@@ -67,6 +69,28 @@ export const cancelDonationService = async (donationId: string, userId: string) 
     id: donation.id,
     version: donation.version,
     userId,
+    media: {
+      id: donation.media.id,
+    },
+  });
+};
+
+export const onExpirationComplete = async (
+  data: ExpirationCompleteEvent["data"],
+  _msg: ConsumeMessage,
+) => {
+  const donation = await Donation.findById(data.donationId).populate("media");
+
+  if (!donation) throw new Error("Donation not found");
+
+  donation.set({ status: DonationStatus.CANCELLED });
+
+  await donation.save();
+
+  await new DonationCancelledPublisher(messageBusClient.channelWrapper).publish({
+    id: donation.id,
+    version: donation.version,
+    userId: donation.userId,
     media: {
       id: donation.media.id,
     },

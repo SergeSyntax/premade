@@ -1,4 +1,5 @@
 import Joi from "joi";
+
 import { LoginReqBody } from "../types";
 
 const text = Joi.string().min(3).max(255);
