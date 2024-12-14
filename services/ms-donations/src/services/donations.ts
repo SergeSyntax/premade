@@ -65,9 +65,10 @@ export const cancelDonationService = async (donationId: string, userId: string) 
 
   await new DonationCancelledPublisher(messageBusClient.channelWrapper).publish({
     id: donation.id,
+    version: donation.version,
+    userId,
     media: {
       id: donation.media.id,
     },
-    version: donation.version,
   });
 };

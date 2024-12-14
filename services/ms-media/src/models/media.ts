@@ -12,6 +12,7 @@ interface MediaAttrs {
   price: number;
   currency: Currency;
   isUploaded: boolean;
+  donationInProgress: boolean;
   version: number;
 }
 
@@ -58,6 +59,10 @@ const MediaSchema = new mongoose.Schema<MediaAttrs>(
       type: Boolean,
       default: false,
     },
+    donationInProgress: {
+      type: Boolean,
+      default: false,
+    }
   },
   {
     timestamps: true,

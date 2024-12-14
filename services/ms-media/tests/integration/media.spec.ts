@@ -170,4 +170,54 @@ describe("update media by id", () => {
     expect(response.body.media.title).toEqual(title);
     expect(response.body.media.description).toEqual(description);
   });
+
+  it("publish an update event on update rest", async () => {
+    const userId = new mongoose.Types.ObjectId().toHexString();
+    const title = faker.internet.userName();
+    const description = faker.lorem.paragraph(1);
+
+    const media = new Media({
+      ...generateMedia(title),
+      userId,
+    });
+    const id = media.id;
+
+    await media.save();
+
+    await request(app)
+      .put(`${TestRoutes.MEDIA}/${id}`)
+      .set("Cookie", global.login(userId))
+      .send({
+        title,
+        description,
+      })
+      .expect(StatusCodes.OK);
+
+    expect(messageBusClient.channelWrapper.publish).toHaveBeenCalled();
+
+  });
+
+  it("reject updates if the media is reserved", async () => {
+    const userId = new mongoose.Types.ObjectId().toHexString();
+    const title = faker.internet.userName();
+    const description = faker.lorem.paragraph(1);
+
+    const media = new Media({
+      ...generateMedia(title),
+      donationInProgress: true,
+      userId,
+    });
+    const id = media.id;
+
+    await media.save();
+
+    await request(app)
+      .put(`${TestRoutes.MEDIA}/${id}`)
+      .set("Cookie", global.login(userId))
+      .send({
+        title,
+        description,
+      })
+      .expect(StatusCodes.BAD_REQUEST);
+  })
 });

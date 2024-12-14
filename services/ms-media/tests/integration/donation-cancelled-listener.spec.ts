@@ -1,25 +1,35 @@
-import { Currency, MediaCreatedEvent, PaymentModels, Visibility } from "@devops-premade/ms-common";
+import { DonationCancelledEvent } from "@devops-premade/ms-common";
 import { faker } from "@faker-js/faker";
 import { describe, expect, it, jest } from "@jest/globals";
 import mongoose from "mongoose";
 
-import { MediaCreatedListener } from "../../src/events";
+import { DonationCancelledListener } from "../../src/events/listeners";
 import { messageBusClient } from "../../src/message-bus-client";
 import { Media } from "../../src/models";
+import { generateMedia } from "../utils/media";
 
-describe("MediaCreatedListener", () => {
+describe("DonationCancelledListener", () => {
   const setup = async () => {
-    const listener = new MediaCreatedListener(messageBusClient.channelWrapper);
+    const listener = new DonationCancelledListener(messageBusClient.channelWrapper);
 
-    const data: MediaCreatedEvent["data"] = {
+    const userId = new mongoose.Types.ObjectId().toHexString();
+    const title = faker.company.name();
+
+    const media = new Media({
+      ...generateMedia(title),
+      userId,
+      donationInProgress: true,
+    });
+
+    await media.save();
+
+    const data: DonationCancelledEvent["data"] = {
       id: new mongoose.Types.ObjectId().toHexString(),
-      title: faker.company.name(),
-      price: faker.number.int({ max: 200, min: 100 }),
-      currency: Currency.USD,
-      visibility: Visibility.PUBLIC,
-      paymentModel: PaymentModels.PURCHASE,
-      userId: new mongoose.Types.ObjectId().toHexString(),
       version: 0,
+      userId,
+      media: {
+        id: media.id,
+      },
     };
 
     const msg = {
@@ -30,24 +40,26 @@ describe("MediaCreatedListener", () => {
       properties: {} as any,
     };
 
-    return { listener, data, msg };
+    return { listener, data, msg, media };
   };
 
   it("calls the onMessage handler with the correct data", async () => {
-    const { listener, data, msg } = await setup();
+    const { listener, data, msg, media } = await setup();
 
     const onMessageMock = jest.spyOn(listener, "onMessage");
+    expect(media?.donationInProgress).toBe(true);
 
     await listener.handleMessage(msg);
 
     expect(onMessageMock).toHaveBeenCalledTimes(1);
     expect(onMessageMock).toHaveBeenCalledWith(data, msg);
 
-    const media = await Media.findById(data.id);
+    const updatedMedia = await Media.findById(data.media.id);
+    expect(updatedMedia).toBeDefined();
+    expect(updatedMedia?.donationInProgress).toBe(false);
+    expect(messageBusClient.channelWrapper.publish).toHaveBeenCalled();
 
-    expect(media).toBeDefined();
-    expect(media?.title).toBe(data.title);
-    expect(media?.price).toBe(data.price);
+    //     expect(media?.price).toBe(data.price);
   });
 
   it("acks the message on successful processing", async () => {

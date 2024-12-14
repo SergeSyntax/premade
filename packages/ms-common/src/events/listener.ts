@@ -75,7 +75,7 @@ export abstract class Listener<T extends EventStructure> {
    * Creates an instance of Listener.
    * @param client - The channel wrapper for managing AMQP connections.
    */
-  constructor(private client: ChannelWrapper) {}
+  constructor(protected client: ChannelWrapper) {}
 
   get queueName() {
     return `q.${this.subject}.${this.group}`;
