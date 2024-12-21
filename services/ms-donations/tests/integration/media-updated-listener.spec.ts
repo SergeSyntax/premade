@@ -32,8 +32,10 @@ describe("MediaUpdatedListener", () => {
       visibility: Visibility.PUBLIC,
       paymentModel: PaymentModels.PURCHASE,
       version: 1,
+      scheduledDate: new Date().toISOString(),
+      donationInProgress: false,
       userId,
-      ...mesgPayload
+      ...mesgPayload,
     };
 
     const msg = {

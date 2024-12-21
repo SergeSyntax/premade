@@ -13,7 +13,7 @@ type EnvVars = CommonEnvVars & ServiceEnvVars & MongoEnvVars & RMQEnvVars;
 export * from "@devops-premade/ms-common/src/config/env";
 
 export const {
-  PORT = "5002",
+  PORT = "5003",
   SERVICE_NAME = "ms-expiration",
   // RabbitMQ
   RMQ_USERNAME = "admin",

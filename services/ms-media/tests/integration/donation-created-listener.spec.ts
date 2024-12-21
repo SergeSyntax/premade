@@ -39,6 +39,7 @@ describe("DonationCreatedListener", () => {
       media: {
         id: media.id,
         price: media.price,
+        currency: media.currency,
       },
     };
 
@@ -58,38 +59,39 @@ describe("DonationCreatedListener", () => {
 
     const onMessageMock = jest.spyOn(listener, "onMessage");
     expect(media?.donationInProgress).toBe(false);
-    
+
     await listener.handleMessage(msg);
-    
+
     expect(onMessageMock).toHaveBeenCalledTimes(1);
     expect(onMessageMock).toHaveBeenCalledWith(data, msg);
-    
+
     const updatedMedia = await Media.findById(data.media.id);
     expect(updatedMedia).toBeDefined();
     expect(updatedMedia?.donationInProgress).toBe(true);
     expect(messageBusClient.channelWrapper.publish).toHaveBeenCalled();
 
-    const mediaUpdatedData = (messageBusClient.channelWrapper.publish as jest.Mock).mock.calls[0][2] as MediaUpdatedEvent['data']
+    const mediaUpdatedData = (messageBusClient.channelWrapper.publish as jest.Mock).mock
+      .calls[0][2] as MediaUpdatedEvent["data"];
 
     expect(mediaUpdatedData.id).toEqual(data.media.id);
     expect(mediaUpdatedData.price).toEqual(data.media.price);
   });
-  
-    it("acks the message on successful processing", async () => {
-      const { listener, msg } = await setup();
 
-      await listener.handleMessage(msg);
+  it("acks the message on successful processing", async () => {
+    const { listener, msg } = await setup();
 
-      expect(messageBusClient.channelWrapper.ack).toHaveBeenCalledWith(msg);
-    });
+    await listener.handleMessage(msg);
 
-    it("nacks the message on error", async () => {
-      const { listener, msg } = await setup();
+    expect(messageBusClient.channelWrapper.ack).toHaveBeenCalledWith(msg);
+  });
 
-      jest.spyOn(listener, "onMessage").mockRejectedValueOnce(new Error("Test error"));
+  it("nacks the message on error", async () => {
+    const { listener, msg } = await setup();
 
-      await listener.handleMessage(msg);
+    jest.spyOn(listener, "onMessage").mockRejectedValueOnce(new Error("Test error"));
 
-      expect(messageBusClient.channelWrapper.nack).toHaveBeenCalledWith(msg, false, true);
-    });
+    await listener.handleMessage(msg);
+
+    expect(messageBusClient.channelWrapper.nack).toHaveBeenCalledWith(msg, false, true);
+  });
 });

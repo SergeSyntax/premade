@@ -62,7 +62,7 @@ const mediaSchema = new mongoose.Schema<MediaDoc>(
       default: 0,
     },
     currency: {
-      type: Number,
+      type: String,
       enum: Currency,
     },
     visibility: {

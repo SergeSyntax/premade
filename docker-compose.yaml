@@ -192,9 +192,9 @@ services:
       MONGODB_INITIAL_PRIMARY_ROOT_USER: "root"
       MONGODB_INITIAL_PRIMARY_ROOT_PASSWORD: "password123"
       # Extra users, passwords, and databases
-      MONGODB_EXTRA_USERNAMES: "donations-user,media-user,auth-user"
-      MONGODB_EXTRA_DATABASES: "donations,media,auth"
-      MONGODB_EXTRA_PASSWORDS: "admin,admin,admin"
+      MONGODB_EXTRA_USERNAMES: "payments-user,donations-user,media-user,auth-user"
+      MONGODB_EXTRA_DATABASES: "payments,donations,media,auth"
+      MONGODB_EXTRA_PASSWORDS: "admin,admin,admin,admin"
       # Server selection timeout
       SERVER_SELECTION_TIMEOUT_MS: "30000"
     depends_on:

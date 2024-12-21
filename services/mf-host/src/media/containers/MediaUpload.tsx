@@ -336,7 +336,6 @@ export const MediaUpload = () => {
                   >
                     <MenuItem value={Currency.USD}>USD</MenuItem>
                     <MenuItem value={Currency.EUR}>EUR</MenuItem>
-                    <MenuItem value={Currency.ILS}>ILS</MenuItem>
                   </Select>
                 )}
               />

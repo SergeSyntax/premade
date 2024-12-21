@@ -7,7 +7,7 @@ dotenv.config({
   path: ".env",
 });
 
-import { NotFoundError } from "@devops-premade/ms-common";
+import { errorRequestHandler, NotFoundError } from "@devops-premade/ms-common";
 import { Env } from "@devops-premade/ms-common";
 import { httpLogMiddleware } from "@devops-premade/ms-common/src/logger";
 import cookieSession from "cookie-session";
@@ -16,7 +16,6 @@ import express, { RequestHandler } from "express";
 
 import * as env from "./config/env";
 import { routes } from "./routes";
-import { errorRequestHandler } from "./routes/error-response-handler";
 
 const notFoundController: RequestHandler = () => {
   throw new NotFoundError();

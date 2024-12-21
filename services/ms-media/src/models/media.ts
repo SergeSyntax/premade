@@ -51,7 +51,7 @@ const MediaSchema = new mongoose.Schema<MediaAttrs>(
       default: 0,
     },
     currency: {
-      type: Number,
+      type: String,
       enum: Currency,
       default: Currency.USD,
     },
@@ -62,7 +62,7 @@ const MediaSchema = new mongoose.Schema<MediaAttrs>(
     donationInProgress: {
       type: Boolean,
       default: false,
-    }
+    },
   },
   {
     timestamps: true,

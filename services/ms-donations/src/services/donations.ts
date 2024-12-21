@@ -42,6 +42,7 @@ export const createDonationService = async (body: DonationReqBody, userId: strin
     media: {
       id: media.id,
       price: media.price,
+      currency: media.currency,
     },
   });
 

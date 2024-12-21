@@ -1,4 +1,8 @@
-import { ConsumeMessage, DonationCancelledEvent, DonationCreatedEvent } from "@devops-premade/ms-common";
+import {
+  ConsumeMessage,
+  DonationCancelledEvent,
+  DonationCreatedEvent,
+} from "@devops-premade/ms-common";
 
 import { Media } from "../models";
 
@@ -17,11 +21,7 @@ export const onDonationCreatedService = async (
   return media;
 };
 
-
-export const onDonationCancelledService = async (
-  data: DonationCancelledEvent["data"],
-  _msg: ConsumeMessage,
-) => {
+export const onDonationCancelledService = async (data: DonationCancelledEvent["data"]) => {
   const media = await Media.findById(data.media.id);
 
   if (!media) throw new Error("no media found");

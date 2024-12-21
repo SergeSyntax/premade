@@ -35,7 +35,8 @@ export const getMediaResourceService = async (mediaId: string) => {
 export const updateMediaService = async (mediaId: string, body: MediaReqBody, userId: string) => {
   const media = await getMediaResourceService(mediaId);
 
-  if (media.donationInProgress) throw new BadRequestError('Cannot edit a media in donation progress');
+  if (media.donationInProgress)
+    throw new BadRequestError("Cannot edit a media in donation progress");
 
   if (media.userId !== userId) throw new NotAuthorizedError();
 
