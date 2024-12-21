@@ -4,7 +4,7 @@ import { StatusCodes } from "http-status-codes";
 import { createPaymentService } from "../services";
 
 export const createPaymentController: RequestHandler = async (req, res) => {
-  await createPaymentService(req.body, req.currentUser!.id);
+  const paymentId = await createPaymentService(req.body, req.currentUser!.id);
 
-  res.sendStatus(StatusCodes.CREATED);
+  res.status(StatusCodes.CREATED).json({ id: paymentId });
 };

@@ -7,6 +7,8 @@ import request from "supertest";
 import { app } from "../../src/app";
 import { Donation } from "../../src/models";
 import { stripe } from "../../__mocks__/stripe";
+import { Payment } from "../../src/models/payment";
+import { messageBusClient } from "../../src/message-bus-client";
 
 describe("payment create", () => {
   const createDonation = (attrs: { status?: DonationStatus; version?: number } = {}) =>
@@ -67,5 +69,13 @@ describe("payment create", () => {
       currency: donation.currency,
       source: "tok_visa",
     });
+
+    const payment = await Payment.findOne({
+      donationId: donation.id,
+    });
+
+    expect(payment).not.toBeNull();
+
+    expect(messageBusClient.channelWrapper.publish).toHaveBeenCalled()
   });
 });

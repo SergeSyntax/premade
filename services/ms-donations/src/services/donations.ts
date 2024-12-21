@@ -97,3 +97,15 @@ export const onExpirationComplete = async (
     },
   });
 };
+
+export const onPaymentCreatedService = async (donationId: string) => {
+  const donation = await Donation.findById(donationId);
+
+  if (!donation) throw new Error("Order not found");
+
+  donation.set({
+    status: DonationStatus.COMPLETE,
+  });
+
+  await donation.save();
+};

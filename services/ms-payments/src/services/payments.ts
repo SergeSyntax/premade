@@ -7,8 +7,11 @@ import {
 } from "@devops-premade/ms-common";
 
 import { Donation } from "../models";
+import { Payment } from "../models/payment";
 import { stripe } from "../stripe";
 import { PaymentReqBody } from "../types";
+import { PaymentCreatedPublisher } from "../events/publishers";
+import { messageBusClient } from "../message-bus-client";
 
 export const createPaymentService = async (payload: PaymentReqBody, userId: string) => {
   const donation = await Donation.findById(payload.donationId);
@@ -20,9 +23,24 @@ export const createPaymentService = async (payload: PaymentReqBody, userId: stri
 
   // docs: https://docs.stripe.com/api/charges/create
 
-  await stripe.charges.create({
+  const { id: stripeId } = await stripe.charges.create({
     amount: +donation.price * 100,
     currency: donation.currency,
     source: payload.token,
   });
+
+  const payment = new Payment({
+    donationId: donation.id,
+    stripeId,
+  });
+
+  await payment.save();
+
+  await new PaymentCreatedPublisher(messageBusClient.channelWrapper).publish({
+    id: payment.id,
+    stripeId: payment.stripeId,
+    donationId: payment.donationId,
+  });
+
+  return payment.id;
 };

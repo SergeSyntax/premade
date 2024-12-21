@@ -26,6 +26,7 @@ export const onDonationCancelledService = async (data: DonationCancelledEvent["d
   });
 
   if (!donation) throw new Error("no donation found");
+  if (donation.status === DonationStatus.COMPLETE) return;
 
   donation.set({ status: DonationStatus.CANCELLED });
 

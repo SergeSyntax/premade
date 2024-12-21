@@ -3,5 +3,6 @@ export enum Subjects {
   MEDIA_UPDATED = "media.updated",
   DONATION_CREATED = "donation.created",
   DONATION_CANCELLED = "donation.cancelled",
-  EXPIRATION_COMPLETE = "expiration.complete"
+  EXPIRATION_COMPLETE = "expiration.complete",
+  PAYMENT_CREATED = "payment.created",
 }
