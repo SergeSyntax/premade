@@ -1,6 +1,8 @@
 import {
   BadRequestError,
+  ConsumeMessage,
   DonationStatus,
+  ExpirationCompleteEvent,
   NotAuthorizedError,
   NotFoundError,
 } from "@devops-premade/ms-common";
@@ -40,6 +42,7 @@ export const createDonationService = async (body: DonationReqBody, userId: strin
     media: {
       id: media.id,
       price: media.price,
+      currency: media.currency,
     },
   });
 
@@ -65,9 +68,44 @@ export const cancelDonationService = async (donationId: string, userId: string) 
 
   await new DonationCancelledPublisher(messageBusClient.channelWrapper).publish({
     id: donation.id,
+    version: donation.version,
+    userId,
     media: {
       id: donation.media.id,
     },
-    version: donation.version,
   });
+};
+
+export const onExpirationComplete = async (
+  data: ExpirationCompleteEvent["data"],
+  _msg: ConsumeMessage,
+) => {
+  const donation = await Donation.findById(data.donationId).populate("media");
+
+  if (!donation) throw new Error("Donation not found");
+
+  donation.set({ status: DonationStatus.CANCELLED });
+
+  await donation.save();
+
+  await new DonationCancelledPublisher(messageBusClient.channelWrapper).publish({
+    id: donation.id,
+    version: donation.version,
+    userId: donation.userId,
+    media: {
+      id: donation.media.id,
+    },
+  });
+};
+
+export const onPaymentCreatedService = async (donationId: string) => {
+  const donation = await Donation.findById(donationId);
+
+  if (!donation) throw new Error("Order not found");
+
+  donation.set({
+    status: DonationStatus.COMPLETE,
+  });
+
+  await donation.save();
 };

@@ -1,4 +1,4 @@
-import { DonationStatus } from "../../enums";
+import { Currency, DonationStatus } from "../../enums";
 import { Subjects } from "../../events";
 
 export interface DonationCreatedEvent {
@@ -12,6 +12,7 @@ export interface DonationCreatedEvent {
     media: {
       id: string;
       price: number;
+      currency: Currency;
     };
   };
 }

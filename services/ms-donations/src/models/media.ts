@@ -2,13 +2,14 @@ import { Currency, PaymentModels, Visibility } from "@devops-premade/ms-common/s
 import mongoose, { Document, Model } from "mongoose";
 
 export interface MediaDoc extends Document {
+  _id: mongoose.Schema.Types.ObjectId
+  version: number;
   title: string;
   price: number;
   paymentModel: PaymentModels;
   currency: Currency;
   visibility?: Visibility;
   scheduledDate?: Date;
-  version: number;
 
   canBuy(): boolean;
 }
@@ -43,6 +44,10 @@ interface MediaModel extends Model<MediaDoc> {
 
 const mediaSchema = new mongoose.Schema<MediaDoc>(
   {
+    _id: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true, // Make _id explicitly required
+    },
     title: {
       type: String,
       required: true,
@@ -57,7 +62,7 @@ const mediaSchema = new mongoose.Schema<MediaDoc>(
       default: 0,
     },
     currency: {
-      type: Number,
+      type: String,
       enum: Currency,
     },
     visibility: {
@@ -72,6 +77,7 @@ const mediaSchema = new mongoose.Schema<MediaDoc>(
     timestamps: true,
     optimisticConcurrency: true,
     versionKey: "version",
+    _id: false,
     toObject: {
       transform(_doc, ret, _options) {
         ret.id = ret._id;

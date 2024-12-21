@@ -11,6 +11,8 @@ export interface MediaUpdatedEvent {
     paymentModel: PaymentModels;
     visibility: Visibility;
     scheduledDate?: string;
+    donationInProgress: boolean;
+    userId: string;
     version: number;
   };
 }

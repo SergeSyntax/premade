@@ -1,4 +1,4 @@
-import { NotAuthorizedError, NotFoundError } from "@devops-premade/ms-common";
+import { BadRequestError, NotAuthorizedError, NotFoundError } from "@devops-premade/ms-common";
 
 import { MediaCreatedPublisher, MediaUpdatedPublisher } from "../events/publishers";
 import { messageBusClient } from "../message-bus-client";
@@ -18,6 +18,7 @@ export const createMediaService = async (body: MediaReqBody, userId: string) => 
     visibility: media.visibility!,
     scheduledDate: media.scheduledDate?.toISOString(),
     version: media.version,
+    userId,
   });
 
   return media;
@@ -34,6 +35,9 @@ export const getMediaResourceService = async (mediaId: string) => {
 export const updateMediaService = async (mediaId: string, body: MediaReqBody, userId: string) => {
   const media = await getMediaResourceService(mediaId);
 
+  if (media.donationInProgress)
+    throw new BadRequestError("Cannot edit a media in donation progress");
+
   if (media.userId !== userId) throw new NotAuthorizedError();
 
   Object.keys(body).forEach((attribute) => {
@@ -49,7 +53,9 @@ export const updateMediaService = async (mediaId: string, body: MediaReqBody, us
     paymentModel: media.paymentModel!,
     visibility: media.visibility!,
     scheduledDate: media.scheduledDate?.toISOString(),
+    donationInProgress: media.donationInProgress,
     version: media.version,
+    userId,
   });
 
   await media.save();

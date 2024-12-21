@@ -5,9 +5,8 @@ export enum PaymentModels {
 }
 
 export enum Currency {
-  USD,
-  EUR,
-  ILS,
+  USD = "usd",
+  EUR = "eur",
 }
 
 export enum Visibility {

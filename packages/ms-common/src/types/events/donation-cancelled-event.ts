@@ -5,6 +5,7 @@ export interface DonationCancelledEvent {
   data: {
     id: string;
     version: number;
+    userId: string;
     media: {
       id: string;
     };

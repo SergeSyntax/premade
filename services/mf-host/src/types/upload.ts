@@ -1,9 +1,8 @@
 import { DateTime } from "luxon";
 
 export enum Currency {
-  USD,
-  EUR,
-  ILS,
+  USD = "usd",
+  EUR = "eur",
 }
 
 export enum Visibility {

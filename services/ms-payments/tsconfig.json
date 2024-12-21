@@ -1,0 +1,8 @@
+{
+  "extends": "@devops-premade/ms-common/tsconfig.json",
+  "compilerOptions": {
+    "declaration": false,
+    "outDir": "./build"
+  },
+  "include": ["./src", "../../test.js"]
+}

@@ -1,0 +1,53 @@
+{
+  "name": "@devops-premade/ms-expiration",
+  "version": "1.0.0",
+  "type": "module",
+  "private": true,
+  "description": "The service in charge of the expiration management",
+  "keywords": [],
+  "author": "SergeSyntax <serge.syntax@gmail.com>",
+  "license": "ISC",
+  "main": "build/index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "files": [
+    "build"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SergeSyntax/premade.git"
+  },
+  "scripts": {
+    "clean": "rimraf build logs",
+    "format": "prettier --write src/**/*.{js,ts,tsx,json}",
+    "lint": "eslint src/**/*.{ts,tsx}",
+    "test": "cross-env NODE_ENV=test LOG_LEVEL=info NODE_OPTIONS=--experimental-vm-modules node --no-warnings ./node_modules/jest/bin/jest.js",
+    "build": "tsc && tsc-alias -p tsconfig.json",
+    "start": "node .",
+    "dev": "nodemon"
+  },
+  "bugs": {
+    "url": "https://github.com/SergeSyntax/premade/issues"
+  },
+  "homepage": "https://github.com/SergeSyntax/premade#readme",
+  "dependencies": {
+    "@devops-premade/ms-common": "workspace:*",
+    "@types/node": "^20.13.0",
+    "bullmq": "^5.34.1",
+    "dotenv": "^16.4.5",
+    "joi": "^17.13.1",
+    "tsc-alias": "^1.8.10",
+    "typescript": "^5.4.5"
+  },
+  "devDependencies": {
+    "@faker-js/faker": "^8.4.1",
+    "@jest/globals": "^29.7.0",
+    "cross-env": "^7.0.3",
+    "jest": "^29.7.0",
+    "nodemon": "^3.1.2",
+    "rimraf": "^6.0.1",
+    "ts-node": "^10.9.2"
+  },
+  "prettier": "@devops-premade/ms-common/prettier.config.mjs"
+}

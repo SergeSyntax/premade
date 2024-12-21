@@ -37,7 +37,7 @@ export abstract class Publisher<T extends EventStructure> {
    * Creates an instance of Publisher.
    * @param client - The channel wrapper for managing AMQP connections.
    */
-  constructor(private client: ChannelWrapper) {
+  constructor(protected client: ChannelWrapper) {
     if (Publisher.instance) {
       return Publisher.instance as Publisher<T>;
     } else {

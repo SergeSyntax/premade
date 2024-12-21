@@ -1,9 +1,5 @@
 import { CommonEnvVars, MongoEnvVars, ServiceEnvVars } from "@devops-premade/ms-common/src/types";
 
-interface K8SEnvVars {
-  POD_NAME: string;
-}
-
 export interface RMQEnvVars {
   RMQ_USERNAME: string;
   RMQ_PASSWORD: string;
@@ -18,6 +14,7 @@ export * from "@devops-premade/ms-common/src/config/env";
 
 export const {
   PORT = "5001",
+  SERVICE_NAME = "ms-media",
   // MongoDB
   MONGO_USERNAME = "media-user",
   MONGO_PASSWORD = "admin",
