@@ -24,10 +24,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{matrix.packages.node-version}}
-          cache: "npm"
+          cache: "pnpm"
 
       - name: Install dependencies
-        working-directory: ${{ matrix.packages.folder }}
         run: pnpm install
 
       - name: Run tests
