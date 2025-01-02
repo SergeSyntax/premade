@@ -32,11 +32,11 @@ jobs:
         run: pnpm install
 
       - name: Run Lint
-        working-directory: ${{ matrix.package.folder }}
+        working-directory: ${{ matrix.packages.folder }}
         run: pnpm lint
 
       - name: Build TypeScript
-        working-directory: ${{ matrix.package.folder }}
+        working-directory: ${{ matrix.packages.folder }}
         run: pnpm build
 
       - name: Run tests
