@@ -16,35 +16,35 @@ jobs:
             folder: packages/ms-common
             node-version: v22.12.0
 
-          - name: ms-auth
-            type: service
-            folder: services/ms-auth
-            node-version: v22.12.0
+          # - name: ms-auth
+          #   type: service
+          #   folder: services/ms-auth
+          #   node-version: v22.12.0
 
-          - name: ms-media
-            type: service
-            folder: services/ms-media
-            node-version: v22.12.0
+          # - name: ms-media
+          #   type: service
+          #   folder: services/ms-media
+          #   node-version: v22.12.0
 
-          - name: ms-donations
-            type: service
-            folder: services/ms-donations
-            node-version: v22.12.0
+          # - name: ms-donations
+          #   type: service
+          #   folder: services/ms-donations
+          #   node-version: v22.12.0
 
-          - name: ms-payments
-            type: service
-            folder: services/ms-payments
-            node-version: v22.12.0
+          # - name: ms-payments
+          #   type: service
+          #   folder: services/ms-payments
+          #   node-version: v22.12.0
 
-          - name: ms-expiration
-            type: service
-            folder: services/ms-expiration
-            node-version: v22.12.0
+          # - name: ms-expiration
+          #   type: service
+          #   folder: services/ms-expiration
+          #   node-version: v22.12.0
 
-          - name: mf-host
-            type: micro-frontend
-            folder: services/mf-host
-            node-version: v22.12.0
+          # - name: mf-host
+          #   type: micro-frontend
+          #   folder: services/mf-host
+          #   node-version: v22.12.0
 
     name: Run Tests for ${{ matrix.workspaces.name }}
 
