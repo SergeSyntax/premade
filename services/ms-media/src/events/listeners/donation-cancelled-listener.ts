@@ -2,7 +2,7 @@ import {
   DonationCancelledEvent,
   Listener,
   Subjects,
-} from "@devops-premade/ms-common";
+} from "@media-premade/ms-common";
 
 import { SERVICE_NAME } from "../../config";
 import { onDonationCancelledService } from "../../services/donations";

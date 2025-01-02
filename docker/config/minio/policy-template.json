@@ -12,7 +12,12 @@
       "Resource": [
         "arn:aws:s3:::${BUCKET_NAME}/*",
         "arn:aws:s3:::${BUCKET_NAME}"
-      ]
+      ],
+      "Condition": {
+        "StringLike": {
+          "aws:Referer": "http://localhost:3000/*"
+        }
+      }
     }
   ]
 }

@@ -1,5 +1,5 @@
 {
-  "name": "@devops-premade/ms-expiration",
+  "name": "@media-premade/ms-expiration",
   "version": "1.0.0",
   "type": "module",
   "private": true,
@@ -32,7 +32,7 @@
   },
   "homepage": "https://github.com/SergeSyntax/premade#readme",
   "dependencies": {
-    "@devops-premade/ms-common": "workspace:*",
+    "@media-premade/ms-common": "workspace:*",
     "@types/node": "^20.13.0",
     "bullmq": "^5.34.1",
     "dotenv": "^16.4.5",
@@ -49,5 +49,5 @@
     "rimraf": "^6.0.1",
     "ts-node": "^10.9.2"
   },
-  "prettier": "@devops-premade/ms-common/prettier.config.mjs"
+  "prettier": "@media-premade/ms-common/prettier.config.mjs"
 }

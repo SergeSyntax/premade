@@ -1,4 +1,4 @@
-name: devops-premade
+name: media-premade
 
 ########################
 ##region RabbitMQ COMMON
@@ -236,6 +236,7 @@ services:
       MINIO_ROOT_PASSWORD: minioadmin
       BITNAMI_DEBUG: true
       MINIO_DEFAULT_BUCKETS: media-bucket,thumbnail-bucket
+      MINIO_API_CORS_ALLOW_ORIGIN: http://localhost:3000
       # MINIO_DEFAULT_BUCKETS: media-bucket,thumbnail-bucket
       #     MINIO_OPTS: "--console-address :9001 --debug"
     #     MINIO_ROOT_USER: admin

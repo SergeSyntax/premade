@@ -1,4 +1,4 @@
-import { BadRequestError } from "@devops-premade/ms-common";
+import { BadRequestError } from "@media-premade/ms-common";
 
 import { User } from "../models/user";
 import { LoginReqBody, RegisterReqBody } from "../types";

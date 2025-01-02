@@ -1,5 +1,5 @@
-import { PaymentCreatedEvent } from "@devops-premade/ms-common";
 import { describe, expect, it, jest } from "@jest/globals";
+import { PaymentCreatedEvent } from "@media-premade/ms-common";
 import mongoose from "mongoose";
 
 import { PaymentCreatedListener } from "../../src/events";

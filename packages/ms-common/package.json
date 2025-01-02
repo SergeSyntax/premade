@@ -1,5 +1,5 @@
 {
-  "name": "@devops-premade/ms-common",
+  "name": "@media-premade/ms-common",
   "version": "1.0.4",
   "type": "module",
   "private": false,
@@ -33,6 +33,10 @@
   },
   "bugs": {
     "url": "https://github.com/SergeSyntax/premade/issues"
+  },
+  "engines": {
+    "node": ">=22.12.0",
+    "pnpm": ">=9.1.4"
   },
   "homepage": "https://github.com/SergeSyntax/premade#readme",
   "dependencies": {

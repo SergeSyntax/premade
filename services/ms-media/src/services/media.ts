@@ -1,4 +1,4 @@
-import { BadRequestError, NotAuthorizedError, NotFoundError } from "@devops-premade/ms-common";
+import { BadRequestError, NotAuthorizedError, NotFoundError } from "@media-premade/ms-common";
 
 import { MIO_MEDIA_BUCKET, MIO_THUMBNAIL_BUCKET } from "../config";
 import { IMAGE_EXPIRE_IN, VIDEO_EXPIRE_IN } from "../config/const";

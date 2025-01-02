@@ -1,4 +1,4 @@
-import { MessageBusClient } from "@devops-premade/ms-common";
+import { MessageBusClient } from "@media-premade/ms-common";
 
 import { POD_NAME, RMQ_HOST, RMQ_PASSWORD, RMQ_PORT, RMQ_PROTOCOL, RMQ_USERNAME } from "./config";
 

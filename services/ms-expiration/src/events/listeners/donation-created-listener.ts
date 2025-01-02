@@ -3,7 +3,7 @@ import {
   DonationCreatedEvent,
   Listener,
   Subjects,
-} from "@devops-premade/ms-common";
+} from "@media-premade/ms-common";
 
 import { SERVICE_NAME } from "../../config";
 import { expirationQueue } from "../../queues/expieration-queue";

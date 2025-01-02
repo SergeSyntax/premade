@@ -1,6 +1,6 @@
-import { Currency, DonationStatus, PaymentModels, Visibility } from "@devops-premade/ms-common";
 import { faker } from "@faker-js/faker";
 import { describe, expect, it, jest } from "@jest/globals";
+import { Currency, DonationStatus, PaymentModels, Visibility } from "@media-premade/ms-common";
 import { StatusCodes } from "http-status-codes";
 import mongoose from "mongoose";
 import request from "supertest";

@@ -1,4 +1,4 @@
-import { Listener, PaymentCreatedEvent, Subjects } from "@devops-premade/ms-common";
+import { Listener, PaymentCreatedEvent, Subjects } from "@media-premade/ms-common";
 
 import { SERVICE_NAME } from "../../config";
 import { onPaymentCreatedService } from "../../services";

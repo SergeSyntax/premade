@@ -1,4 +1,4 @@
-import { DonationStatus } from "@devops-premade/ms-common";
+import { DonationStatus } from "@media-premade/ms-common";
 import mongoose, { Document } from "mongoose";
 
 import { MediaDoc } from "./media";

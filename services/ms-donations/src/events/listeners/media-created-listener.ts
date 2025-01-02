@@ -1,4 +1,4 @@
-import { Listener, MediaCreatedEvent, Subjects } from "@devops-premade/ms-common";
+import { Listener, MediaCreatedEvent, Subjects } from "@media-premade/ms-common";
 
 import { SERVICE_NAME } from "../../config";
 import { onMediaCreatedService } from "../../services/media";

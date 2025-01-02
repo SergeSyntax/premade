@@ -1,4 +1,4 @@
-import { ReqAttr, validateRequest } from "@devops-premade/ms-common";
+import { ReqAttr, validateRequest } from "@media-premade/ms-common";
 import { Router } from "express";
 
 import {

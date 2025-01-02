@@ -1,4 +1,4 @@
-import { ExpirationCompleteEvent, Listener, Subjects } from "@devops-premade/ms-common";
+import { ExpirationCompleteEvent, Listener, Subjects } from "@media-premade/ms-common";
 
 import { SERVICE_NAME } from "../../config";
 import { onExpirationComplete } from "../../services";

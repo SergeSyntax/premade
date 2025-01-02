@@ -1,4 +1,4 @@
-import { injectCurrentUser } from "@devops-premade/ms-common";
+import { injectCurrentUser } from "@media-premade/ms-common";
 import { Router } from "express";
 
 import { healthRoutes } from "./health";

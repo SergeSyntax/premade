@@ -1,4 +1,4 @@
-import { MongoDBClient } from "@devops-premade/ms-common";
+import { MongoDBClient } from "@media-premade/ms-common";
 
 import {
   MONGO_DB_NAME,

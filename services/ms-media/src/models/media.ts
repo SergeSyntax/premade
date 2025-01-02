@@ -1,4 +1,4 @@
-import { Currency, PaymentModels, Visibility } from "@devops-premade/ms-common";
+import { Currency, PaymentModels, Visibility } from "@media-premade/ms-common";
 import mongoose from "mongoose";
 
 interface MediaAttrs {

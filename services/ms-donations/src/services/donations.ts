@@ -6,7 +6,7 @@ import {
   logger,
   NotAuthorizedError,
   NotFoundError,
-} from "@devops-premade/ms-common";
+} from "@media-premade/ms-common";
 
 import { EXPIRATION_WINDOW_SECONDS } from "../config";
 import { DonationCancelledPublisher, DonationCreatedPublisher } from "../events/publishers";

@@ -304,7 +304,7 @@ importers:
 
   services/ms-auth:
     dependencies:
-      '@devops-premade/ms-common':
+      '@media-premade/ms-common':
         specifier: workspace:*
         version: link:../../packages/ms-common
       cookie-session:
@@ -386,7 +386,7 @@ importers:
 
   services/ms-donations:
     dependencies:
-      '@devops-premade/ms-common':
+      '@media-premade/ms-common':
         specifier: workspace:*
         version: link:../../packages/ms-common
       '@types/cookie-session':
@@ -468,7 +468,7 @@ importers:
 
   services/ms-expiration:
     dependencies:
-      '@devops-premade/ms-common':
+      '@media-premade/ms-common':
         specifier: workspace:*
         version: link:../../packages/ms-common
       '@types/node':
@@ -520,7 +520,7 @@ importers:
       '@aws-sdk/s3-request-presigner':
         specifier: ^3.699.0
         version: 3.699.0
-      '@devops-premade/ms-common':
+      '@media-premade/ms-common':
         specifier: workspace:*
         version: link:../../packages/ms-common
       '@types/cookie-session':
@@ -638,7 +638,7 @@ importers:
 
   services/ms-payments:
     dependencies:
-      '@devops-premade/ms-common':
+      '@media-premade/ms-common':
         specifier: workspace:*
         version: link:../../packages/ms-common
       '@types/cookie-session':

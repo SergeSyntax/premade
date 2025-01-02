@@ -1,10 +1,9 @@
 import {
   BadRequestError,
-  Currency,
   DonationStatus,
   NotAuthorizedError,
   NotFoundError,
-} from "@devops-premade/ms-common";
+} from "@media-premade/ms-common";
 
 import { PaymentCreatedPublisher } from "../events/publishers";
 import { messageBusClient } from "../message-bus-client";

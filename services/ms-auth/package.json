@@ -1,5 +1,5 @@
 {
-  "name": "@devops-premade/ms-auth",
+  "name": "@media-premade/ms-auth",
   "version": "1.0.0",
   "type": "module",
   "private": true,
@@ -32,7 +32,7 @@
   },
   "homepage": "https://github.com/SergeSyntax/premade#readme",
   "dependencies": {
-    "@devops-premade/ms-common": "workspace:*",
+    "@media-premade/ms-common": "workspace:*",
     "cookie-session": "^2.1.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
@@ -61,5 +61,5 @@
     "ts-node": "^10.9.2",
     "typescript": "^5.4.5"
   },
-  "prettier": "@devops-premade/ms-common/prettier.config.mjs"
+  "prettier": "@media-premade/ms-common/prettier.config.mjs"
 }

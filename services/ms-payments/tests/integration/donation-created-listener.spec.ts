@@ -1,14 +1,9 @@
+import { describe, expect, it, jest } from "@jest/globals";
 import {
   Currency,
   DonationCreatedEvent,
   DonationStatus,
-  MediaCreatedEvent,
-  MediaUpdatedEvent,
-  PaymentModels,
-  Visibility,
-} from "@devops-premade/ms-common";
-import { faker } from "@faker-js/faker";
-import { describe, expect, it, jest } from "@jest/globals";
+} from "@media-premade/ms-common";
 import mongoose from "mongoose";
 
 import { DonationCreatedListener } from "../../src/events/listeners";

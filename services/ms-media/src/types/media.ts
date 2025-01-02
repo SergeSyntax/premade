@@ -1,4 +1,4 @@
-import { Currency, PaymentModels, Visibility } from "@devops-premade/ms-common/src/enums";
+import { Currency, PaymentModels, Visibility } from "@media-premade/ms-common/src/enums";
 
 export interface MediaReqBody {
   title: string;

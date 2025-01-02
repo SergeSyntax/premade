@@ -1,4 +1,4 @@
-import { logger } from "@devops-premade/ms-common/src/logger";
+import { logger } from "@media-premade/ms-common/src/logger";
 
 import { app } from "./app";
 import { PORT } from "./config";

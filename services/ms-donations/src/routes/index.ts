@@ -1,4 +1,4 @@
-import { injectCurrentUser, requireAuth } from '@devops-premade/ms-common'
+import { injectCurrentUser, requireAuth } from '@media-premade/ms-common'
 import { Router } from 'express'
 
 import { donationsRoutes } from './donations'

@@ -1,6 +1,6 @@
-import { Currency, MediaCreatedEvent, PaymentModels, Visibility } from "@devops-premade/ms-common";
 import { faker } from "@faker-js/faker";
 import { describe, expect, it, jest } from "@jest/globals";
+import { Currency, MediaCreatedEvent, PaymentModels, Visibility } from "@media-premade/ms-common";
 import mongoose from "mongoose";
 
 import { MediaCreatedListener } from "../../src/events";

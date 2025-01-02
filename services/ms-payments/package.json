@@ -1,5 +1,5 @@
 {
-  "name": "@devops-premade/ms-payments",
+  "name": "@media-premade/ms-payments",
   "version": "1.0.0",
   "type": "module",
   "private": true,
@@ -32,7 +32,7 @@
   },
   "homepage": "https://github.com/SergeSyntax/premade#readme",
   "dependencies": {
-    "@devops-premade/ms-common": "workspace:*",
+    "@media-premade/ms-common": "workspace:*",
     "@types/cookie-session": "^2.0.49",
     "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",
@@ -69,5 +69,5 @@
     "supertest": "^7.0.0",
     "ts-node": "^10.9.2"
   },
-  "prettier": "@devops-premade/ms-common/prettier.config.mjs"
+  "prettier": "@media-premade/ms-common/prettier.config.mjs"
 }

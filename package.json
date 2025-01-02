@@ -1,5 +1,5 @@
 {
-  "name": "devops-premade",
+  "name": "media-premade",
   "private": true,
   "scripts": {
     "graph": "nx graph",

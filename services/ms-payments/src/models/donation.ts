@@ -1,4 +1,4 @@
-import { Currency, DonationStatus, PaymentModels, Visibility } from "@devops-premade/ms-common";
+import { Currency, DonationStatus } from "@media-premade/ms-common";
 import mongoose from "mongoose";
 
 interface IDonation {

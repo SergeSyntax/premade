@@ -1,6 +1,3 @@
-import { logger } from "@devops-premade/ms-common/src/logger";
-
-import { PORT } from "./config";
 import { DonationCreatedListener } from "./events/listeners/donation-created-listener";
 import { messageBusClient } from "./message-bus-client";
 

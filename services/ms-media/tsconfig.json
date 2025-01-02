@@ -1,5 +1,5 @@
 {
-  "extends": "@devops-premade/ms-common/tsconfig.json",
+  "extends": "@media-premade/ms-common/tsconfig.json",
   "compilerOptions": {
     "declaration": false,
     "outDir": "./build"
