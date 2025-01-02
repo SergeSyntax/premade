@@ -31,6 +31,14 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
+      - name: Run Lint
+        working-directory: ${{ matrix.package.folder }}
+        run: pnpm lint
+
+      - name: Build TypeScript
+        working-directory: ${{ matrix.package.folder }}
+        run: pnpm build
+
       - name: Run tests
         working-directory: ${{ matrix.packages.folder }}
         run: pnpm test
