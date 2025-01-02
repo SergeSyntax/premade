@@ -35,7 +35,7 @@
     "url": "https://github.com/SergeSyntax/premade/issues"
   },
   "engines": {
-    "node": ">=18.20.5",
+    "node": ">=22.12.0",
     "pnpm": ">=9.1.4"
   },
   "homepage": "https://github.com/SergeSyntax/premade#readme",
