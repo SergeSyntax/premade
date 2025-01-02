@@ -1,5 +1,6 @@
 import { DropzoneOptions } from "react-dropzone";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import { useRouter } from "@tanstack/react-router";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import {
   Box,
@@ -27,13 +28,12 @@ import {
 } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { RadioDescribedInput } from "@/components/RadioDescribedInput";
-import { Currency, PaymentModel, Visibility } from "@/types/upload";
 import { DateTimePicker } from "@mui/x-date-pickers";
 
 import { UploadInput } from "@/components/inputs/Upload/UploadInput";
 import { UploadDropZoneContainer } from "@/components/inputs/Upload/UploadDropZoneContainer";
 import { mediaSchema } from "@/schemas/mediaSchema";
-import { MediaSchema } from "@/auth/types/media";
+import { MediaSchema } from "@/types/media";
 import { LadledSection } from "@/components/layout/LadledSection";
 import {
   ACCEPT_IMAGE_TYPES,
@@ -48,8 +48,9 @@ import {
   getThumbnailUploadUrl,
   getVideoUploadUrl,
   uploadPresignedURLFile,
-} from "@/auth/api/upload";
-import { createMedia } from "@/auth/api/media";
+} from "@/media/api/upload";
+import { createMedia } from "@/media/api/media";
+import { Currency, PaymentModel, Visibility } from "@/types";
 
 const handleDropZone =
   (
@@ -66,7 +67,8 @@ const handleDropZone =
   };
 
 export const MediaUpload = () => {
-  const { control, handleSubmit, setError, setValue } = useForm<MediaSchema>({
+  const router = useRouter();
+  const { control, handleSubmit, setError, setValue, reset } = useForm<MediaSchema>({
     resolver: zodResolver(mediaSchema),
     defaultValues: {
       title: "",
@@ -91,7 +93,6 @@ export const MediaUpload = () => {
       data: { key: thumbnailKey, url: thumbnailURL },
     } = await getThumbnailUploadUrl(thumbnailSignUrlArgs);
 
-    
     await createMedia({
       ...rest,
       videoUrl: videoKey,
@@ -99,9 +100,13 @@ export const MediaUpload = () => {
       price: +price!,
       scheduledDate: scheduledDate?.toJSDate(),
     });
-    
+
     await uploadPresignedURLFile(thumbnailURL, thumbnail, thumbnailSignUrlArgs);
     await uploadPresignedURLFile(videoUploadUrl, video, videoSignUrlArgs);
+
+    await router.navigate({
+      to: "/",
+    });
   };
 
   return (
@@ -120,7 +125,10 @@ export const MediaUpload = () => {
               icon={<CloudUploadIcon />}
               actions={
                 <Button
-                  onClick={(e) => e.stopPropagation()}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    reset();
+                  }}
                   variant="contained"
                   size="small"
                   startIcon={<RefreshIcon />}

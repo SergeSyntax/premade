@@ -3,12 +3,9 @@ import mime from "mime";
 import { v4 as uuid } from "uuid";
 
 import { MIO_MEDIA_BUCKET, MIO_THUMBNAIL_BUCKET } from "../config";
+import { IMAGE_EXPIRE_IN, VIDEO_EXPIRE_IN } from "../config/const";
 import { storageClient } from "../storage-client";
 import { UploadRequestQuery, UploadResponse } from "../types/uploads";
-
-const HOUR = 3600; // seconds
-const IMAGE_EXPIRE_IN = 1 * HOUR; // 1 hour
-const VIDEO_EXPIRE_IN = 12 * HOUR; // 12 hours in seconds
 
 const validateContentType = (typePrefix: "video" | "image", contentType: string | null) => {
   if (!contentType || !contentType.includes(typePrefix)) {
@@ -35,7 +32,7 @@ export const getVideoUploadUrl = async (
 
   const key = `${userId}/${uuid()}.${fileExt}`;
 
-  const url = await storageClient.getPutObjectSignedUrl(
+  const url = await storageClient.signPutObjectSignedUrl(
     MIO_MEDIA_BUCKET,
     contentType,
     key,
@@ -55,7 +52,7 @@ export const getThumbnailUploadUrl = async (
   const contentType = validateContentType("image", mime.getType(fileExt));
   const key = `${userId}/${uuid()}.${fileExt}`;
 
-  const url = await storageClient.getPutObjectSignedUrl(
+  const url = await storageClient.signPutObjectSignedUrl(
     MIO_THUMBNAIL_BUCKET,
     contentType,
     key,

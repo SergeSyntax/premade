@@ -23,7 +23,7 @@ export class DonationCreatedListener extends Listener<DonationCreatedEvent> {
       currency: media.currency!,
       paymentModel: media.paymentModel!,
       visibility: media.visibility!,
-      scheduledDate: media.scheduledDate!.toISOString(),
+      scheduledDate: media.scheduledDate?.toISOString(),
       donationInProgress: media.donationInProgress,
       version: media.version,
       userId: data.userId,

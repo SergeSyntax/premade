@@ -8,6 +8,7 @@ interface MediaAttrs {
   visibility: Visibility;
   scheduledDate?: Date;
   thumbnailUrl: string;
+  videoUrl: string;
   paymentModel: PaymentModels;
   price: number;
   currency: Currency;
@@ -38,6 +39,10 @@ const MediaSchema = new mongoose.Schema<MediaAttrs>(
       type: Date,
     },
     thumbnailUrl: {
+      type: String,
+      required: true,
+    },
+    videoUrl: {
       type: String,
       required: true,
     },
