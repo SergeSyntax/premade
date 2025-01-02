@@ -14,22 +14,21 @@ jobs:
             folder: packages/ms-common
             node-version: v22.12.0
 
-    name: ${{ matrix.package.name }}
-
     steps:
-      - name: Checkout code
+      - name: Checkout code for ${{ matrix.package.name }}
         uses: actions/checkout@v4
 
-      - run: corepack enable
+      - name: Enable Corepack for ${{ matrix.package.name }}
+        run: corepack enable
 
-      - name: Setup Node.js
+      - name: Setup Node.js for ${{ matrix.package.name }}
         uses: actions/setup-node@v4
         with:
           cache: "pnpm"
 
-      - name: Install dependencies
+      - name: Install dependencies for ${{ matrix.package.name }}
         run: pnpm install
 
-      - name: Run tests
+      - name: Run tests ${{ matrix.package.name }}
         working-directory: ${{ matrix.packages.folder }}
         run: pnpm test
