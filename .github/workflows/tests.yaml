@@ -34,14 +34,14 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      # - name: Run Lint
-      #   working-directory: ${{ matrix.workspaces.folder }}
-      #   run: pnpm lint
+      - name: Run Lint
+        working-directory: ${{ matrix.workspaces.folder }}
+        run: pnpm lint
 
-      # - name: Build TypeScript
-      #   working-directory: ${{ matrix.workspaces.folder }}
-      #   run: pnpm build
+      - name: Build TypeScript
+        working-directory: ${{ matrix.workspaces.folder }}
+        run: pnpm build
 
-      # - name: Run tests
-      #   working-directory: ${{ matrix.workspaces.folder }}
-      #   run: pnpm test
+      - name: Run tests
+        working-directory: ${{ matrix.workspaces.folder }}
+        run: pnpm test
