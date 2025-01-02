@@ -1,0 +1,35 @@
+name: Packages PR tests
+
+on:
+  pull_request
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        packages:
+          - name: ms-common
+            folder: packages/ms-common
+            node-version: v22.12.0
+
+    name: ${{ matrix.package.name }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{matrix.packages.node-version}}
+          cache: "npm"
+
+      - name: Install dependencies
+        working-directory: ${{ matrix.packages.folder }}
+        run: pnpm install
+
+      - name: Run tests
+        working-directory: ${{ matrix.packages.folder }}
+        run: pnpm test
