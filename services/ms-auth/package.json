@@ -32,7 +32,7 @@
   },
   "homepage": "https://github.com/SergeSyntax/premade#readme",
   "dependencies": {
-    "@media-premade/ms-common": "workspace:*",
+    "@media-premade/ms-common": "1.0.4",
     "cookie-session": "^2.1.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
