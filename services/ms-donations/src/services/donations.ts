@@ -3,6 +3,7 @@ import {
   ConsumeMessage,
   DonationStatus,
   ExpirationCompleteEvent,
+  logger,
   NotAuthorizedError,
   NotFoundError,
 } from "@devops-premade/ms-common";
@@ -99,13 +100,19 @@ export const onExpirationComplete = async (
 };
 
 export const onPaymentCreatedService = async (donationId: string) => {
+  logger.debug(`Starting payment processing for Donation ID: ${donationId}`);
+
   const donation = await Donation.findById(donationId);
 
-  if (!donation) throw new Error("Order not found");
+  if (!donation) throw new Error(`Donation not found for ID: ${donationId}`);
 
   donation.set({
     status: DonationStatus.COMPLETE,
   });
 
   await donation.save();
+
+  logger.info(`Donation status updated to COMPLETE for ID: ${donationId}`);
 };
+
+

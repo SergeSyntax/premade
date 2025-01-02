@@ -1,4 +1,4 @@
-import { SignUrlArgs } from "@/auth/types";
+import { SignUrlArgs } from "@/types";
 
 const getSHA256Hash = async (file: File): Promise<string> => {
   const buffer = await file.arrayBuffer();

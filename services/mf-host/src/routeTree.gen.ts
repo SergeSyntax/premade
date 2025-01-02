@@ -18,6 +18,9 @@ import { Route as AuthImport } from './routes/_auth'
 import { Route as AuthLogoutImport } from './routes/auth/logout'
 import { Route as AuthRegisterImport } from './routes/_auth/register'
 import { Route as AuthLoginImport } from './routes/_auth/login'
+import { Route as DashboardDonationsIndexImport } from './routes/_dashboard/donations/index'
+import { Route as DashboardWatchMediaIdImport } from './routes/_dashboard/watch/$mediaId'
+import { Route as DashboardDonationsDonationIdImport } from './routes/_dashboard/donations/$donationId'
 
 // Create Virtual Routes
 
@@ -76,6 +79,25 @@ const AuthLoginRoute = AuthLoginImport.update({
   path: '/login',
   getParentRoute: () => AuthRoute,
 } as any)
+
+const DashboardDonationsIndexRoute = DashboardDonationsIndexImport.update({
+  id: '/donations/',
+  path: '/donations/',
+  getParentRoute: () => DashboardRoute,
+} as any)
+
+const DashboardWatchMediaIdRoute = DashboardWatchMediaIdImport.update({
+  id: '/watch/$mediaId',
+  path: '/watch/$mediaId',
+  getParentRoute: () => DashboardRoute,
+} as any)
+
+const DashboardDonationsDonationIdRoute =
+  DashboardDonationsDonationIdImport.update({
+    id: '/donations/$donationId',
+    path: '/donations/$donationId',
+    getParentRoute: () => DashboardRoute,
+  } as any)
 
 // Populate the FileRoutesByPath interface
 
@@ -137,6 +159,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardIndexLazyImport
       parentRoute: typeof DashboardImport
     }
+    '/_dashboard/donations/$donationId': {
+      id: '/_dashboard/donations/$donationId'
+      path: '/donations/$donationId'
+      fullPath: '/donations/$donationId'
+      preLoaderRoute: typeof DashboardDonationsDonationIdImport
+      parentRoute: typeof DashboardImport
+    }
+    '/_dashboard/watch/$mediaId': {
+      id: '/_dashboard/watch/$mediaId'
+      path: '/watch/$mediaId'
+      fullPath: '/watch/$mediaId'
+      preLoaderRoute: typeof DashboardWatchMediaIdImport
+      parentRoute: typeof DashboardImport
+    }
+    '/_dashboard/donations/': {
+      id: '/_dashboard/donations/'
+      path: '/donations'
+      fullPath: '/donations'
+      preLoaderRoute: typeof DashboardDonationsIndexImport
+      parentRoute: typeof DashboardImport
+    }
   }
 }
 
@@ -157,11 +200,17 @@ const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 interface DashboardRouteChildren {
   DashboardUploadLazyRoute: typeof DashboardUploadLazyRoute
   DashboardIndexLazyRoute: typeof DashboardIndexLazyRoute
+  DashboardDonationsDonationIdRoute: typeof DashboardDonationsDonationIdRoute
+  DashboardWatchMediaIdRoute: typeof DashboardWatchMediaIdRoute
+  DashboardDonationsIndexRoute: typeof DashboardDonationsIndexRoute
 }
 
 const DashboardRouteChildren: DashboardRouteChildren = {
   DashboardUploadLazyRoute: DashboardUploadLazyRoute,
   DashboardIndexLazyRoute: DashboardIndexLazyRoute,
+  DashboardDonationsDonationIdRoute: DashboardDonationsDonationIdRoute,
+  DashboardWatchMediaIdRoute: DashboardWatchMediaIdRoute,
+  DashboardDonationsIndexRoute: DashboardDonationsIndexRoute,
 }
 
 const DashboardRouteWithChildren = DashboardRoute._addFileChildren(
@@ -176,6 +225,9 @@ export interface FileRoutesByFullPath {
   '/auth/logout': typeof AuthLogoutRoute
   '/upload': typeof DashboardUploadLazyRoute
   '/': typeof DashboardIndexLazyRoute
+  '/donations/$donationId': typeof DashboardDonationsDonationIdRoute
+  '/watch/$mediaId': typeof DashboardWatchMediaIdRoute
+  '/donations': typeof DashboardDonationsIndexRoute
 }
 
 export interface FileRoutesByTo {
@@ -186,6 +238,9 @@ export interface FileRoutesByTo {
   '/auth/logout': typeof AuthLogoutRoute
   '/upload': typeof DashboardUploadLazyRoute
   '/': typeof DashboardIndexLazyRoute
+  '/donations/$donationId': typeof DashboardDonationsDonationIdRoute
+  '/watch/$mediaId': typeof DashboardWatchMediaIdRoute
+  '/donations': typeof DashboardDonationsIndexRoute
 }
 
 export interface FileRoutesById {
@@ -198,6 +253,9 @@ export interface FileRoutesById {
   '/auth/logout': typeof AuthLogoutRoute
   '/_dashboard/upload': typeof DashboardUploadLazyRoute
   '/_dashboard/': typeof DashboardIndexLazyRoute
+  '/_dashboard/donations/$donationId': typeof DashboardDonationsDonationIdRoute
+  '/_dashboard/watch/$mediaId': typeof DashboardWatchMediaIdRoute
+  '/_dashboard/donations/': typeof DashboardDonationsIndexRoute
 }
 
 export interface FileRouteTypes {
@@ -210,8 +268,21 @@ export interface FileRouteTypes {
     | '/auth/logout'
     | '/upload'
     | '/'
+    | '/donations/$donationId'
+    | '/watch/$mediaId'
+    | '/donations'
   fileRoutesByTo: FileRoutesByTo
-  to: '' | '/about' | '/login' | '/register' | '/auth/logout' | '/upload' | '/'
+  to:
+    | ''
+    | '/about'
+    | '/login'
+    | '/register'
+    | '/auth/logout'
+    | '/upload'
+    | '/'
+    | '/donations/$donationId'
+    | '/watch/$mediaId'
+    | '/donations'
   id:
     | '__root__'
     | '/_auth'
@@ -222,6 +293,9 @@ export interface FileRouteTypes {
     | '/auth/logout'
     | '/_dashboard/upload'
     | '/_dashboard/'
+    | '/_dashboard/donations/$donationId'
+    | '/_dashboard/watch/$mediaId'
+    | '/_dashboard/donations/'
   fileRoutesById: FileRoutesById
 }
 
@@ -266,7 +340,10 @@ export const routeTree = rootRoute
       "filePath": "_dashboard.tsx",
       "children": [
         "/_dashboard/upload",
-        "/_dashboard/"
+        "/_dashboard/",
+        "/_dashboard/donations/$donationId",
+        "/_dashboard/watch/$mediaId",
+        "/_dashboard/donations/"
       ]
     },
     "/about": {
@@ -289,6 +366,18 @@ export const routeTree = rootRoute
     },
     "/_dashboard/": {
       "filePath": "_dashboard/index.lazy.tsx",
+      "parent": "/_dashboard"
+    },
+    "/_dashboard/donations/$donationId": {
+      "filePath": "_dashboard/donations/$donationId.ts",
+      "parent": "/_dashboard"
+    },
+    "/_dashboard/watch/$mediaId": {
+      "filePath": "_dashboard/watch/$mediaId.ts",
+      "parent": "/_dashboard"
+    },
+    "/_dashboard/donations/": {
+      "filePath": "_dashboard/donations/index.ts",
       "parent": "/_dashboard"
     }
   }

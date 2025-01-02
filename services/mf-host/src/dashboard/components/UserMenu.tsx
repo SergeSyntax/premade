@@ -30,7 +30,7 @@ export const UserMenu: React.FC<UserMenuProps> = ({ handleClose, anchorEl, curre
       onClose={handleClose}
     >
       {/* TODO: convert to an array */}
-      {currentUser && <MenuItem onClick={handleClose}>My account</MenuItem>}
+      {currentUser && <MenuItemLink to="/donations">My Donations</MenuItemLink>}
       {currentUser && <MenuItemLink to="/auth/logout">Logout</MenuItemLink>}
       <MenuItem onClick={handleClose}>My account</MenuItem>
     </Menu>

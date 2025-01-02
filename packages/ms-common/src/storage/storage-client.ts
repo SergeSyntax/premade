@@ -1,4 +1,10 @@
-import { ChecksumAlgorithm, PutObjectCommand, S3Client, S3ClientConfig } from "@aws-sdk/client-s3";
+import {
+  ChecksumAlgorithm,
+  GetObjectCommand,
+  PutObjectCommand,
+  S3Client,
+  S3ClientConfig,
+} from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 export class StorageClient {
@@ -13,7 +19,7 @@ export class StorageClient {
     });
   }
 
-  getPutObjectSignedUrl(
+  signPutObjectSignedUrl(
     bucket: string,
     contentType: string,
     key: string,
@@ -29,5 +35,21 @@ export class StorageClient {
       // ServerSideEncryption: "AES256", you can't use that feature without a vault to manage the keys... https://min.io/docs/minio/linux/administration/server-side-encryption/server-side-encryption-sse-kms.html
     });
     return getSignedUrl(this.client, command, { expiresIn });
+  }
+
+  async signGetObjectCommand(
+    bucket: string,
+    key: string,
+    expiresIn: number,
+    cacheControl = "no-store",
+  ) {
+    const command = new GetObjectCommand({
+      Bucket: bucket,
+      Key: key,
+      ResponseCacheControl: cacheControl,
+      ResponseContentType: "application/octet-stream", 
+    });
+
+    return await getSignedUrl(this.client, command, { expiresIn });
   }
 }

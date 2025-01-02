@@ -2,6 +2,7 @@ import {
   ConsumeMessage,
   DonationCancelledEvent,
   DonationCreatedEvent,
+  logger,
 } from "@devops-premade/ms-common";
 
 import { Media } from "../models";
@@ -10,15 +11,24 @@ export const onDonationCreatedService = async (
   data: DonationCreatedEvent["data"],
   _msg: ConsumeMessage,
 ) => {
-  const media = await Media.findById(data.media.id);
+  try {
+    const media = await Media.findById(data.media.id);
 
-  if (!media) throw new Error("no media found");
+    if (!media) throw new Error(`Media not found for ID: ${data.media.id}`);
+    logger.debug(`Media fetched successfully: ${media.id}`);
 
-  media.set({ donationInProgress: true });
+    media.set({ donationInProgress: true });
 
-  await media.save();
+    await media.save();
 
-  return media;
+    return media;
+  } catch (err) {
+    logger.error(`Error processing donation for media ID: ${data.media.id}`, {
+      error: (err as Error).message,
+      stack: (err as Error).stack,
+    });
+    throw new Error((err as Error).message);
+  }
 };
 
 export const onDonationCancelledService = async (data: DonationCancelledEvent["data"]) => {

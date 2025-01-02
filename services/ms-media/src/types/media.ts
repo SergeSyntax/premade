@@ -6,6 +6,7 @@ export interface MediaReqBody {
   visibility: Visibility;
   scheduledDate: Date;
   thumbnailUrl: string;
+  videoUrl: string;
   paymentModel: PaymentModels;
   price: number;
   currency: Currency;

@@ -84,3 +84,21 @@ const start = async () => {
 ```
 
 - add paypal support if not troublesome with stripe
+
+UI:
+ - when submitting an media creation seperate all to mutation for example
+  - the get url for upload should be separate hook that show a loading spinner on the image and if fail to get url show internal error
+    with the ability to retry.
+  - when submitting show the error base on the field or as general server error
+
+  - change submit 2 requests first one submit create media requests create TTL reids entry with the payload, get the ID, streams the video
+    when the video on minio add a hook that invoke the DB data creation, show % of file upload allow to go to a diffrent page while uploading the file
+    
+
+Auth service:
+- create seasons with the ability to list connected users ips and date of login with refresh and access tokens (oidc approach)
+- usally in auth you have something like group in video streaming platform is more like channels, need to be added
+
+
+
+setup cors should be able to fetch videos only from the origin web client localhost:3000

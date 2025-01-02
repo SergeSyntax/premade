@@ -36,13 +36,12 @@ function generate_users() {
             local policy_file="/tmp/${policy_name}.json"
             sed "s|\${BUCKET_NAME}|$bucket|g" /app/templates/policy-template.json > $policy_file
             mc admin policy create local "$policy_name" "$policy_file" || exit_error "Failed to create policy $policy_name. Exiting."
-         # Attach the policy to the user
+            # Attach the policy to the user
             mc admin policy attach local $policy_name --user "$MINIO_BUCKET_USER" || exit_error "Failed to attach policy $policy_name to user $MINIO_BUCKET_USER. Exiting."
 
             echo "Policy $policy_name attached to user $MINIO_BUCKET_USER for bucket $bucket."
-done
+      done
 }
-
 
 generate_users
 mc admin info local

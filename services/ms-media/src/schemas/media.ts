@@ -12,6 +12,7 @@ export const mediaBodySchema = Joi.object<MediaReqBody>({
   paymentModel: enumeration(PaymentModels),
   price: Joi.number(),
   scheduledDate: Joi.date().optional(),
+  videoUrl: text.required(),
   thumbnailUrl: text.required(),
   visibility: enumeration(Visibility),
 });

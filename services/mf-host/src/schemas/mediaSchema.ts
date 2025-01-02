@@ -1,4 +1,4 @@
-import { Currency, PaymentModel, Visibility } from "@/types/upload";
+import { Currency, PaymentModel, Visibility } from "@/types";
 import { DateTime } from "luxon";
 import { z } from "zod";
 
