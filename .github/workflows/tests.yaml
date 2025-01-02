@@ -32,7 +32,6 @@ jobs:
           cache: "pnpm"
 
       - name: Install dependencies
-        working-directory: ${{ matrix.workspaces.folder }}
         run: pnpm install
 
       # - name: Run Lint
