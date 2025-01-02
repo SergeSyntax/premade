@@ -33,6 +33,9 @@ export abstract class Publisher<T extends EventStructure> {
     }
   }
 
+  console.log(test);
+  
+
   /**
    * Creates an instance of Publisher.
    * @param client - The channel wrapper for managing AMQP connections.
