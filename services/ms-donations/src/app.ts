@@ -8,7 +8,7 @@ dotenv.config({
 });
 
 import { Env, errorRequestHandler, notFoundController } from "@media-premade/ms-common";
-import { httpLogMiddleware } from "@media-premade/ms-common/src/logger";
+import { httpLogMiddleware } from "@media-premade/ms-common/lib/logger";
 import cookieSession from "cookie-session";
 import cors from "cors";
 import express from "express";

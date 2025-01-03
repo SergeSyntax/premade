@@ -1,4 +1,4 @@
-import { logger } from "@media-premade/ms-common/src/logger";
+import { logger } from "@media-premade/ms-common/lib/logger";
 
 import { app } from "./app";
 import { PORT, STRIPE_SECRET_KEY } from "./config";

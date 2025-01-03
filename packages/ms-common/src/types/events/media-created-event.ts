@@ -1,5 +1,5 @@
-import { Currency, PaymentModels, Visibility } from "../../enums";
-import { Subjects } from "../../events/subjects";
+import { Currency, PaymentModels, Visibility } from "#src/enums";
+import { Subjects } from "#src/events";
 
 export interface MediaCreatedEvent {
   subject: Subjects.MEDIA_CREATED;

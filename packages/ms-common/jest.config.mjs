@@ -96,6 +96,11 @@ const jestConfig = {
   // moduleNameMapper: {
   //   '^(\\.{1,2}/.*)\\.js$': '$1',
   // },
+  moduleNameMapper: {
+    "^(\\.{1,2}/.*)\\.js$": "$1",
+    "@/(.*)": ["<rootDir>/src/$1"],
+  },
+
   // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader
   modulePathIgnorePatterns: ["build"],
 

@@ -1,4 +1,4 @@
-import { logger } from "@media-premade/ms-common/src/logger";
+import { logger } from "@media-premade/ms-common/lib/logger";
 
 import { mongodbClient } from "../mongodb-client";
 

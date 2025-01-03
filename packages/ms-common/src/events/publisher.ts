@@ -2,8 +2,8 @@ import { Channel, ChannelWrapper } from "amqp-connection-manager";
 import { PublishOptions } from "amqp-connection-manager/dist/types/ChannelWrapper";
 import { Options } from "amqplib";
 
-import { logger } from "../logger";
-import { EventStructure } from "../types/events";
+import { logger } from "#src/logger";
+import { EventStructure } from "#src/types/events";
 
 export abstract class Publisher<T extends EventStructure> {
   abstract subject: T["subject"];

@@ -1,4 +1,4 @@
-import { CommonEnvVars, MongoEnvVars, ServiceEnvVars } from "@media-premade/ms-common/src/types";
+import { CommonEnvVars, MongoEnvVars, ServiceEnvVars } from "@media-premade/ms-common/lib/types";
 
 export interface RMQEnvVars {
   RMQ_USERNAME: string;
@@ -10,7 +10,7 @@ export interface RMQEnvVars {
 
 type EnvVars = CommonEnvVars & ServiceEnvVars & MongoEnvVars & RMQEnvVars;
 
-export * from "@media-premade/ms-common/src/config/env";
+export * from "@media-premade/ms-common/lib/config/env";
 
 export const {
   PORT = "5001",

@@ -1,4 +1,4 @@
-import { LevelType } from "../enums";
+import { LevelType } from "#src/enums";
 
 interface LogEnvVars {
   CREATE_LOG_FILE?: string;

@@ -2,8 +2,8 @@ import { Channel, ChannelWrapper } from "amqp-connection-manager";
 import { ConsumeMessage, Options } from "amqplib";
 import ms from "ms";
 
-import { logger } from "../logger";
-import { EventStructure } from "../types/events";
+import { logger } from "#src/logger";
+import { EventStructure } from "#src/types/events";
 
 // NOTE: this is only a good choice if all the services written in Javascript/TypeScript if you have for example a service in Java Check alternatives JSON Schema, ProtoBuf and ApacheAvro (mostly focus on java)
 export abstract class Listener<T extends EventStructure> {

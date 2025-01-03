@@ -48,6 +48,6 @@ beforeEach(async () => {
 });
 
 afterAll(async () => {
-  await mongo.stop();
+  await mongo?.stop({ doCleanup: true });
   await mongoose.connection.close(true);
 });

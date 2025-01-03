@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
-import { logger } from "../logger";
-import { parseConnectionConfig } from "../utils";
+import { logger } from "#src/logger";
+import { parseConnectionConfig } from "#src/utils";
 
 export class MongoDBClient {
   constructor(

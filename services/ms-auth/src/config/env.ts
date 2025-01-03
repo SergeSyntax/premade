@@ -1,8 +1,8 @@
-import { CommonEnvVars, MongoEnvVars, ServiceEnvVars } from "@media-premade/ms-common/src/types";
+import { CommonEnvVars, MongoEnvVars, ServiceEnvVars } from "@media-premade/ms-common";
 
 type EnvVars = CommonEnvVars & ServiceEnvVars & MongoEnvVars;
 
-export * from "@media-premade/ms-common/src/config/env";
+export * from "@media-premade/ms-common/lib/config/env";
 
 export const {
   PORT = "5000",
