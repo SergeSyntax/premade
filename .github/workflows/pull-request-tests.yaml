@@ -51,7 +51,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Process ms-common Changes
-        if: contains(needs.detect-changes.outputs.changed_folders, 'ms-common')
+        if: contains(needs.detect-changes.outputs.changed_folders, 'ms-test')
         run: |
           echo "ms-common folder has changes."
           # Add your backend processing commands here
