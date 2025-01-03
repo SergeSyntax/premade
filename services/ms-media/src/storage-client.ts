@@ -1,4 +1,4 @@
-import { StorageClient } from "@devops-premade/ms-common";
+import { StorageClient } from "@media-premade/ms-common";
 
 import { MIO_ACCESS_KEY, MIO_ENDPOINT, MIO_SECRET_KEY } from "./config";
 

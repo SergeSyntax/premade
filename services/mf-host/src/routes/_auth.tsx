@@ -10,8 +10,9 @@ export const Route = createFileRoute("/_auth")({
       queryKey: ["auth"],
     });
 
-    if (data.user) throw redirect({
-      to: '/'
-    })
+    if (data.user)
+      throw redirect({
+        to: "/",
+      });
   },
 });

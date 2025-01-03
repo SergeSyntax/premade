@@ -1,5 +1,5 @@
-import { Currency, DonationStatus } from "../../enums";
-import { Subjects } from "../../events";
+import { Currency, DonationStatus } from "#src/enums";
+import { Subjects } from "#src/events";
 
 export interface DonationCreatedEvent {
   subject: Subjects.DONATION_CREATED;

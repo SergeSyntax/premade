@@ -47,7 +47,7 @@ export class StorageClient {
       Bucket: bucket,
       Key: key,
       ResponseCacheControl: cacheControl,
-      ResponseContentType: "application/octet-stream", 
+      ResponseContentType: "application/octet-stream",
     });
 
     return await getSignedUrl(this.client, command, { expiresIn });

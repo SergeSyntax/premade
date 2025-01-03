@@ -15,6 +15,7 @@ venv/
 
 ### Node ###
 # Custom build generate output
+lib
 build
 services/auth/build
 docker/cache/volumes

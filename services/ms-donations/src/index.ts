@@ -1,4 +1,4 @@
-import { logger } from "@devops-premade/ms-common/src/logger";
+import { logger } from "@media-premade/ms-common/lib/logger";
 
 import { app } from "./app";
 import { PORT } from "./config";
@@ -22,6 +22,6 @@ await messageBusClient.connect();
 await new MediaCreatedListener(messageBusClient.channelWrapper).listen();
 await new MediaUpdatedListener(messageBusClient.channelWrapper).listen();
 await new ExpirationCompleteListener(messageBusClient.channelWrapper).listen();
-await new PaymentCreatedListener(messageBusClient.channelWrapper).listen()
+await new PaymentCreatedListener(messageBusClient.channelWrapper).listen();
 
 app.listen(PORT, () => logger.info(`Listening on port ${PORT}`));

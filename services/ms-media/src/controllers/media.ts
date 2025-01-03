@@ -1,4 +1,4 @@
-import { NotFoundError } from "@devops-premade/ms-common";
+import { NotFoundError } from "@media-premade/ms-common";
 import { RequestHandler } from "express";
 import { StatusCodes } from "http-status-codes";
 

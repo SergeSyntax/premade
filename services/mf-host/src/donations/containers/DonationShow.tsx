@@ -28,9 +28,8 @@ const DonationShow: React.FC = () => {
     return () => clearInterval(intervalId);
   }, [donation?.expiresAt]);
 
+  if (isLoading) return "loading...";
 
-  if (isLoading) return 'loading...'
-  
   return (
     <div>
       <Box>{JSON.stringify(data?.data.donation)}</Box>

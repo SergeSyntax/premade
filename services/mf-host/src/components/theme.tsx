@@ -9,7 +9,7 @@ const theme = createTheme({
         root: {
           verticalAlign: "middle",
           fontSize: "inherit",
-          scale: '1.1'
+          scale: "1.1",
         },
       },
     },

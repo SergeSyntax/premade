@@ -1,7 +1,13 @@
 import winston from "winston";
 
 import { LevelType } from "../enums";
-import { ALL_LOGS_TRANSPORTER, colors, ERROR_LOGS_TRANSPORTER, levels,TIMESTAMP_FORMAT } from "./config";
+import {
+  ALL_LOGS_TRANSPORTER,
+  colors,
+  ERROR_LOGS_TRANSPORTER,
+  levels,
+  TIMESTAMP_FORMAT,
+} from "./config";
 import { formatLogMessage } from "./format";
 
 const { File, Console } = winston.transports;
@@ -24,7 +30,7 @@ export const createWinstonLogger = ({
     format,
   });
 
-  const fileFormat = combine(timestampFormat, printFormat)
+  const fileFormat = combine(timestampFormat, printFormat);
   const fileTransporters = createLogFile
     ? [
         new File({
@@ -46,5 +52,5 @@ export const createWinstonLogger = ({
     transports: [consoleTransport, ...fileTransporters],
   });
 
-  return createWinstonLogger
+  return createWinstonLogger;
 };

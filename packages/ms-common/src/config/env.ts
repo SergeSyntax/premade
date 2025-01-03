@@ -1,5 +1,5 @@
-import { Env, LevelType } from "../enums";
-import { CommonEnvVars } from "../types";
+import { Env, LevelType } from "#src/enums";
+import { CommonEnvVars } from "#src/types";
 
 export const {
   // common

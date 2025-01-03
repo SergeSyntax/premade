@@ -20,10 +20,7 @@ export const getDonationListController: RequestHandler = async (req, res) => {
 };
 
 export const getDonationController: RequestHandler = async (req, res) => {
-  const donation = await getDonationService(
-    req.params.donationId as string,
-    req.currentUser!.id,
-  );
+  const donation = await getDonationService(req.params.donationId as string, req.currentUser!.id);
 
   res.status(StatusCodes.OK).send({ donation });
 };

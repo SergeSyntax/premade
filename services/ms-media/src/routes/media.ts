@@ -1,4 +1,4 @@
-import { ReqAttr, requireAuth, validateRequest } from "@devops-premade/ms-common";
+import { ReqAttr, requireAuth, validateRequest } from "@media-premade/ms-common";
 import { Router } from "express";
 
 import {
@@ -11,6 +11,15 @@ import { mediaBodySchema, mediaResourceParamsSchema, mediaUpdateBodySchema } fro
 
 const router = Router();
 
+/**
+ * @openapi
+ * /api/media:
+ *  post:
+ *    summary: create a nedia file
+ *    responses:
+ *      201:
+ *        description: created
+ */
 router.post(
   "/",
   requireAuth,

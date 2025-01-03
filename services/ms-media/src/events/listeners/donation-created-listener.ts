@@ -1,10 +1,4 @@
-import {
-  ConsumeMessage,
-  DonationCreatedEvent,
-  DonationStatus,
-  Listener,
-  Subjects,
-} from "@devops-premade/ms-common";
+import { ConsumeMessage, DonationCreatedEvent, Listener, Subjects } from "@media-premade/ms-common";
 
 import { SERVICE_NAME } from "../../config";
 import { onDonationCreatedService } from "../../services/donations";
@@ -15,7 +9,7 @@ export class DonationCreatedListener extends Listener<DonationCreatedEvent> {
   group = SERVICE_NAME;
   async onMessage(data: DonationCreatedEvent["data"], msg: ConsumeMessage): Promise<void> {
     const media = await onDonationCreatedService(data, msg);
-    
+
     await new MediaUpdatedPublisher(this.client).publish({
       id: media.id,
       title: media.title,

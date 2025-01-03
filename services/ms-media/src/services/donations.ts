@@ -3,7 +3,7 @@ import {
   DonationCancelledEvent,
   DonationCreatedEvent,
   logger,
-} from "@devops-premade/ms-common";
+} from "@media-premade/ms-common";
 
 import { Media } from "../models";
 

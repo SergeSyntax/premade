@@ -1,6 +1,6 @@
 import { StatusCodes } from "http-status-codes";
 
-import { ParsedError } from "../types";
+import { ParsedError } from "#src/types";
 
 export abstract class CustomError extends Error {
   abstract statusCode: StatusCodes;

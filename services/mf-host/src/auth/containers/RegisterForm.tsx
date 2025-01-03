@@ -71,7 +71,7 @@ export const RegisterForm = () => {
   useEffect(() => {
     if (isValid) validateEmail(email);
     return validateEmail.cancel;
-  }, [email, isValid]);
+  }, [email, isValid, validateEmail]);
   // const form = useForm({
   //   defaultValues: {
 

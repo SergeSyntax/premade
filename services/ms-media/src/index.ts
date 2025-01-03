@@ -1,8 +1,8 @@
-import { logger } from "@devops-premade/ms-common/src/logger";
+import { logger } from "@media-premade/ms-common/lib/logger";
 
 import { app } from "./app";
 import { PORT } from "./config";
-import { DonationCancelledListener,DonationCreatedListener } from "./events/listeners";
+import { DonationCancelledListener, DonationCreatedListener } from "./events/listeners";
 import { messageBusClient } from "./message-bus-client";
 import { mongodbClient } from "./mongodb-client";
 

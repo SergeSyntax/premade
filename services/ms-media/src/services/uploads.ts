@@ -1,4 +1,4 @@
-import { ValidationError } from "@devops-premade/ms-common";
+import { ValidationError } from "@media-premade/ms-common";
 import mime from "mime";
 import { v4 as uuid } from "uuid";
 

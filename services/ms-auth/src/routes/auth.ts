@@ -1,4 +1,4 @@
-import { injectCurrentUser, ReqAttr, validateRequest } from "@devops-premade/ms-common";
+import { injectCurrentUser, ReqAttr, validateRequest } from "@media-premade/ms-common";
 import { Router } from "express";
 
 import { liveController } from "../controllers";

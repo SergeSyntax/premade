@@ -1,4 +1,4 @@
-import { Subjects } from "../../events";
+import { Subjects } from "#src/events";
 
 export interface DonationCancelledEvent {
   subject: Subjects.DONATION_CANCELLED;

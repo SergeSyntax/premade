@@ -73,7 +73,7 @@ const jestConfig = {
   // globals: {},
 
   // The maximum amount of workers used to run your tests. Can be specified as % or a number. E.g. maxWorkers: 10% will use 10% of your CPU amount + 1 as the maximum worker number. maxWorkers: 2 will use a maximum of 2 workers.
-  // maxWorkers: "50%",
+  maxWorkers: "50%",
 
   // An array of directory names to be searched recursively up from the requiring module's location
   // moduleDirectories: [
@@ -96,6 +96,11 @@ const jestConfig = {
   // moduleNameMapper: {
   //   '^(\\.{1,2}/.*)\\.js$': '$1',
   // },
+  moduleNameMapper: {
+    "^(\\.{1,2}/.*)\\.js$": "$1",
+    "@/(.*)": ["<rootDir>/src/$1"],
+  },
+
   // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader
   modulePathIgnorePatterns: ["build"],
 
@@ -177,6 +182,8 @@ const jestConfig = {
 
   // This option allows use of a custom test runner
   // testRunner: "jest-circus/runner",
+
+  testTimeout: 60000,
 
   // A map from regular expressions to paths to transformers
   transform: {

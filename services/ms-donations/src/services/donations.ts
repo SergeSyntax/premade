@@ -6,7 +6,7 @@ import {
   logger,
   NotAuthorizedError,
   NotFoundError,
-} from "@devops-premade/ms-common";
+} from "@media-premade/ms-common";
 
 import { EXPIRATION_WINDOW_SECONDS } from "../config";
 import { DonationCancelledPublisher, DonationCreatedPublisher } from "../events/publishers";
@@ -114,5 +114,3 @@ export const onPaymentCreatedService = async (donationId: string) => {
 
   logger.info(`Donation status updated to COMPLETE for ID: ${donationId}`);
 };
-
-

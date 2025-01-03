@@ -1,11 +1,13 @@
 {
-  "name": "devops-premade",
+  "name": "media-premade",
   "private": true,
   "scripts": {
     "graph": "nx graph",
     "test": "lerna run test --parallel",
+    "test:ci": "lerna run test",
     "build": "lerna run build",
     "format": "lerna run format",
+    "lint": "lerna run lint",
     "predev": "npm run build && docker compose up --build --force-recreate -d",
     "dev": "lerna run dev",
     "postdev": "docker compose down -v",

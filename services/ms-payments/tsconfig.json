@@ -1,8 +1,18 @@
 {
-  "extends": "@devops-premade/ms-common/tsconfig.json",
+  "extends": "@media-premade/ms-common/tsconfig.base.json",
   "compilerOptions": {
     "declaration": false,
-    "outDir": "./build"
+    "baseUrl": ".",
+    "outDir": "build",
+    "paths": {
+      "#src/*": ["src/*"],
+      // "@media-premade/ms-common/*": ["@media-premade/ms-common/lib/*"]
+    },
   },
-  "include": ["./src", "../../test.js"]
+  "include": ["./**/*.ts"],
+  "exclude": ["node_modules", "build"],
+  "tsc-alias": {
+    "resolveFullPaths": true,
+    "verbose": true
+  },
 }

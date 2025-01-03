@@ -3,7 +3,6 @@ export interface UploadRequestQuery {
   checksum: string;
 }
 
-
 export interface UploadResponse {
   url: string;
   key: string;

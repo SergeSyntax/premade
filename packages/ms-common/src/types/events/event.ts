@@ -1,4 +1,4 @@
-import { Subjects } from "../../events/subjects";
+import { Subjects } from "#src/events/subjects";
 
 export interface EventStructure {
   subject: Subjects;

@@ -12,7 +12,7 @@ import {
   errorRequestHandler,
   httpLogMiddleware,
   notFoundController,
-} from "@devops-premade/ms-common";
+} from "@media-premade/ms-common";
 import cookieSession from "cookie-session";
 import cors from "cors";
 import express from "express";

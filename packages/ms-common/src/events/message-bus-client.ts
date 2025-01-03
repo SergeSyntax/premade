@@ -1,8 +1,8 @@
 import amqp, { AmqpConnectionManager, ChannelWrapper } from "amqp-connection-manager";
-import { Channel,Message, Options } from "amqplib";
+import { Channel, Message, Options } from "amqplib";
 
-import { logger } from "../logger";
-import { parseConnectionConfig } from "../utils";
+import { logger } from "#src/logger";
+import { parseConnectionConfig } from "#src/utils";
 
 interface MessageBusClientOptions {
   hostsEnv: string;

@@ -1,4 +1,4 @@
-import { ConsumeMessage, MediaCreatedEvent, MediaUpdatedEvent } from "@devops-premade/ms-common";
+import { ConsumeMessage, MediaCreatedEvent, MediaUpdatedEvent } from "@media-premade/ms-common";
 
 import { Media } from "../models";
 
