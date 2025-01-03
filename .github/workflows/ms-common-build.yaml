@@ -4,8 +4,8 @@ on:
   push:
     branches:
       - master
-    # paths:
-    #   - "packages/ms-common/**"
+    paths:
+      - "packages/ms-common/**"
 
 env:
   PACKAGE_NAME: ms-common
