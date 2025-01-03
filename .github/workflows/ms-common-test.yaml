@@ -1,31 +1,20 @@
-name: Validate Pull Request
+name: Validate ms-common Pull Request
 
 on:
   pull_request:
     paths:
-      - './packages/ms-common/**.js'
+      - "./packages/ms-common/**.js"
+
+env:
+  PACKAGE_NAME: ms-common
+  PACKAGE_FOLDER: packages/ms-common
+  NODE_VERSION: v22.12.0
 
 jobs:
   test:
     runs-on: ubuntu-latest
 
-    strategy:
-      fail-fast: true
-
-      matrix:
-        workspaces:
-          - name: ms-common
-            type: package
-            folder: packages/ms-common
-            node-version: v22.12.0
-
-          - name: ms-auth
-            type: service
-            folder: services/ms-auth
-            node-version: v22.12.0
-
-
-    name: Run Tests for ${{ matrix.workspaces.name }}
+    name: Run Tests for ${{ env.PACKAGE_NAME }}
 
     steps:
       - name: Checkout code
@@ -37,20 +26,20 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.workspaces.node-version }}
+          node-version: ${{ env.NODE_VERSION }}
           cache: "pnpm"
 
       - name: Install dependencies
         run: pnpm install
 
       - name: Run Lint
-        working-directory: ${{ matrix.workspaces.folder }}
+        working-directory: ${{ env.PACKAGE_FOLDER }}
         run: pnpm lint
 
       - name: Build TypeScript
-        working-directory: ${{ matrix.workspaces.folder }}
+        working-directory: ${{ env.PACKAGE_FOLDER }}
         run: pnpm build
 
       - name: Run tests
-        working-directory: ${{ matrix.workspaces.folder }}
+        working-directory: ${{ env.PACKAGE_FOLDER }}
         run: pnpm test
