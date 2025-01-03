@@ -61,7 +61,6 @@ jobs:
           git commit -am "chore: bump version to patch"
           git push origin HEAD:master
 
-      - 
       - name: Publish to NPM
         run: pnpm publish --provenance --access public
         working-directory: ${{ env.PACKAGE_FOLDER }}
