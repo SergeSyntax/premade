@@ -49,8 +49,8 @@ jobs:
             node-version: v22.12.0
             enabled: ${{ needs.filter-paths.outputs.ms_auth == 'true' }}
 
+    if: ${{ matrix.workspaces.enabled == 'true' }} # Job-level condition
     name: Run Tests for ${{ matrix.workspaces.name }}
-    if: ${{ matrix.workspaces.enabled != 'true' }}
 
     steps:
       - name: Checkout code
