@@ -56,7 +56,9 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        if: ${{ matrix.workspaces.enabled == 'true' }}
+        
+      - name: Test
+        run: echo ${{ matrix.workspaces.enabled }}
 
       - name: Enable Corepack
         run: corepack enable
