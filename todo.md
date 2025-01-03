@@ -102,3 +102,6 @@ Auth service:
 
 
 setup cors should be able to fetch videos only from the origin web client localhost:3000
+
+
+test
