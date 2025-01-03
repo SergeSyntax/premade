@@ -39,19 +39,19 @@ jobs:
             folder: packages/ms-common
             node-version: v22.12.0
 
-  #         # - name: ms-auth
-  #         #   type: service
-  #         #   folder: services/ms-auth
-  #         #   node-version: v22.12.0
+          - name: ms-auth
+            type: service
+            folder: services/ms-auth
+            node-version: v22.12.0
 
     name: Run Tests for ${{ matrix.workspaces.name }}
-    if: contains(needs.detect-changes.outputs.changed_folders, matrix.workspaces.name)
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Process ms-common Changes
+        if: contains(needs.detect-changes.outputs.changed_folders, matrix.workspaces.name)
         run: |
           echo "ms-common folder has changes."
           # Add your backend processing commands here
