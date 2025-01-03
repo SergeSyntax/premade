@@ -35,7 +35,7 @@ jobs:
       - name: Bump Version and Commit Changes
         working-directory: ${{ env.PACKAGE_FOLDER }}
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ github.token }}
         run: |
           pnpm version patch
           git config user.name "GitHub Actions"
