@@ -57,32 +57,33 @@ jobs:
           # Add your backend processing commands here
 
         
-      # - name: Enable Corepack
-      #   run: corepack enable
-      #   if: ${{ matrix.workspaces.enabled == 'true' }}
+      - name: Enable Corepack
+        run: corepack enable
+        if: contains(needs.detect-changes.outputs.changed_folders, matrix.workspaces.name)
 
-      # - name: Setup Node.js
-      #   uses: actions/setup-node@v4
-      #   with:
-      #     node-version: ${{ matrix.workspaces.node-version }}
-      #     cache: "pnpm"
-      #   if: ${{ matrix.workspaces.enabled == 'true' }}
 
-      # - name: Install dependencies
-      #   run: pnpm install
-      #   if: ${{ matrix.workspaces.enabled == 'true' }}
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.workspaces.node-version }}
+          cache: "pnpm"
+        if: contains(needs.detect-changes.outputs.changed_folders, matrix.workspaces.name)
 
-      # - name: Run Lint
-      #   working-directory: ${{ matrix.workspaces.folder }}
-      #   run: pnpm lint
-      #   if: ${{ matrix.workspaces.enabled == 'true' }}
+      - name: Install dependencies
+        run: pnpm install
+        if: contains(needs.detect-changes.outputs.changed_folders, matrix.workspaces.name)
 
-      # - name: Build TypeScript
-      #   working-directory: ${{ matrix.workspaces.folder }}
-      #   run: pnpm build
-      #   if: ${{ matrix.workspaces.enabled == 'true' }}
-
-      # - name: Run tests
-      #   working-directory: ${{ matrix.workspaces.folder }}
-      #   run: pnpm test
-      #   if: ${{ matrix.workspaces.enabled == 'true' }}
+      - name: Run Lint
+        working-directory: ${{ matrix.workspaces.folder }}
+        run: pnpm lint
+        if: contains(needs.detect-changes.outputs.changed_folders, matrix.workspaces.name)
+      
+      - name: Build TypeScript
+        working-directory: ${{ matrix.workspaces.folder }}
+        run: pnpm build
+        if: contains(needs.detect-changes.outputs.changed_folders, matrix.workspaces.name)
+      
+      - name: Run tests
+        working-directory: ${{ matrix.workspaces.folder }}
+        run: pnpm test
+        if: contains(needs.detect-changes.outputs.changed_folders, matrix.workspaces.name)
