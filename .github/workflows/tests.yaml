@@ -1,14 +1,6 @@
 name: Validate ms-common Pull Request
 
-on:
-  pull_request:
-    paths:
-      - "./packages/ms-common/**.js"
-
-env:
-  PACKAGE_NAME: ms-common
-  PACKAGE_FOLDER: packages/ms-common
-  NODE_VERSION: v22.12.0
+on: ["pull_request"]
 
 jobs:
   test:
@@ -33,13 +25,10 @@ jobs:
         run: pnpm install
 
       - name: Run Lint
-        working-directory: ${{ env.PACKAGE_FOLDER }}
         run: pnpm lint
 
       - name: Build TypeScript
-        working-directory: ${{ env.PACKAGE_FOLDER }}
         run: pnpm build
 
       - name: Run tests
-        working-directory: ${{ env.PACKAGE_FOLDER }}
         run: pnpm test
