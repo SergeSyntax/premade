@@ -27,8 +27,12 @@ jobs:
 
       - name: Log Filter Output
         run: |
-          echo "Changed files:"
-          echo "${{ steps.changes.outputs }}"
+          echo "Changed files for ms-common:"
+          echo "${{ steps.changes.outputs.ms-common }}"
+          echo "Changed files for ms-auth:"
+          echo "${{ steps.changes.outputs.ms-auth }}"
+          echo "Passing list of modified files as JSON:"
+          echo "${{ steps.changes.outputs.changed_files }}"
 
   # test:
   #   needs: filter-paths
