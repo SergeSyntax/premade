@@ -7,64 +7,56 @@ on:
       - "services/**"
 
 jobs:
-  filter-paths:
+  detect-changes:
     runs-on: ubuntu-latest
-
+    outputs:
+      changed_folders: ${{ steps.filter.outputs.changes }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Filter Paths
-        id: changes
-        uses: dorny/paths-filter@v3.0.2
+      - name: Filter changes
+        id: filter
+        uses: dorny/paths-filter@v3
         with:
-          list-files: 'json'
           filters: |
             ms-common:
               - "packages/ms-common/**"
             ms-auth:
               - "services/ms-auth/**"
 
-      - name: Log Filter Output
-        run: |
-          echo "Changed files for ms-common:"
-          echo "${{ steps.changes.outputs.ms-common }}"
-          echo "Changed files for ms-auth:"
-          echo "${{ steps.changes.outputs.ms-auth }}"
-          echo "Passing list of modified files as JSON:"
-          echo "${{ steps.changes.outputs.changed_files }}"
+  test:
+    needs: filter-paths
+    runs-on: ubuntu-latest
 
-  # test:
-  #   needs: filter-paths
-  #   runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
 
-  #   strategy:
-  #     fail-fast: true
-
-  #     matrix:
-  #       workspaces:
-  #         - name: ms-common
-  #           type: package
-  #           folder: packages/ms-common
-  #           node-version: v22.12.0
+      matrix:
+        workspaces:
+          - name: ms-common
+            type: package
+            folder: packages/ms-common
+            node-version: v22.12.0
 
   #         # - name: ms-auth
   #         #   type: service
   #         #   folder: services/ms-auth
   #         #   node-version: v22.12.0
 
-  #   name: Run Tests for ${{ matrix.workspaces.name }}
+    name: Run Tests for ${{ matrix.workspaces.name }}
 
-  #   steps:
-  #     - name: Checkout code
-  #       uses: actions/checkout@v4
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Process ms-common Changes
+        if: contains(needs.detect-changes.outputs.changed_folders, 'ms-common')
+        run: |
+          echo "ms-common folder has changes."
+          # Add your backend processing commands here
+
         
-  #     - name: Log Changed Files
-  #       shell: bash
-  #       run: |
-  #         echo "Changed files:"
-  #         echo "${{ needs.filter-paths.outputs.changed_files }}"
-
       # - name: Enable Corepack
       #   run: corepack enable
       #   if: ${{ matrix.workspaces.enabled == 'true' }}
