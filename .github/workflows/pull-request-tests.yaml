@@ -24,13 +24,22 @@ jobs:
               - "packages/ms-common/**"
             ms-auth:
               - "services/ms-auth/**"
+            ms-donations:
+              - "services/ms-donations/**"
+            ms-expiration:
+              - "services/ms-expiration/**"
+            ms-media:
+              - "services/ms-media/**"
+            ms-payments:
+              - "services/ms-payments/**"
+            mf-host:
+              - "services/mf-host/**"
 
   test:
     needs: detect-changes
     runs-on: ubuntu-latest
 
     strategy:
-      fail-fast: true
 
       matrix:
         workspaces:
@@ -44,23 +53,41 @@ jobs:
             folder: services/ms-auth
             node-version: v22.12.0
 
+          - name: ms-donations
+            type: service
+            folder: services/ms-donations
+            node-version: v22.12.0
+
+          - name: ms-expiration
+            type: service
+            folder: services/ms-expiration
+            node-version: v22.12.0
+
+          - name: ms-media
+            type: service
+            folder: services/ms-media
+            node-version: v22.12.0
+
+          - name: ms-payments
+            type: service
+            folder: services/ms-payments
+            node-version: v22.12.0
+
+          - name: mf-host
+            type: service
+            folder: services/mf-host
+            node-version: v22.12.0
+
     name: Run Tests for ${{ matrix.workspaces.name }}
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Process ms-common Changes
-        if: contains(needs.detect-changes.outputs.changed_folders, matrix.workspaces.name)
-        run: |
-          echo "ms-common folder has changes."
-          # Add your backend processing commands here
 
-        
       - name: Enable Corepack
         run: corepack enable
         if: contains(needs.detect-changes.outputs.changed_folders, matrix.workspaces.name)
-
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -77,12 +104,12 @@ jobs:
         working-directory: ${{ matrix.workspaces.folder }}
         run: pnpm lint
         if: contains(needs.detect-changes.outputs.changed_folders, matrix.workspaces.name)
-      
+
       - name: Build TypeScript
         working-directory: ${{ matrix.workspaces.folder }}
         run: pnpm build
         if: contains(needs.detect-changes.outputs.changed_folders, matrix.workspaces.name)
-      
+
       - name: Run tests
         working-directory: ${{ matrix.workspaces.folder }}
         run: pnpm test
