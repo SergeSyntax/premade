@@ -1,0 +1,44 @@
+name: Publish ms-common Package
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - "packages/ms-common/**"
+
+env:
+  PACKAGE_NAME: ms-common
+  PACKAGE_FOLDER: packages/ms-common
+  NODE_VERSION: v22.12.0
+
+jobs:
+  publish:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+
+    name: Publish ${{ env.PACKAGE_NAME }} Package
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Enable Corepack for Dependency Management
+        run: corepack enable
+
+      - name: Set Up Node.js Environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "pnpm"
+
+      - name: Bump Version and Commit Changes
+        working-directory: ${{ env.PACKAGE_FOLDER }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          pnpm version patch
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git commit -am "chore: bump version to patch"
+          git push origin HEAD:master
