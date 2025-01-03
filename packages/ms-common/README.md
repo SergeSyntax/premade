@@ -1,5 +1,7 @@
 # ms-common
 
+> ⚠️ **Note:** This package relies heavily on environment variables for configuration. Ensure that all required variables are properly set in your environment to prevent runtime errors or unexpected behavior.
+
 a reusable library designed to streamline common operations such as database connections, logging, and event handling. It is optimized for use in projects under the **media-premade** ecosystem.
 
 ## Table of Contents

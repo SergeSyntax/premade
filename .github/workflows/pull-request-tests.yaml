@@ -21,7 +21,7 @@ jobs:
 
       - name: Filter Paths
         id: changes
-        uses: dorny/paths-filter@v3
+        uses: dorny/paths-filter@v3.0.2
         with:
           filters: |
             ms_common:
