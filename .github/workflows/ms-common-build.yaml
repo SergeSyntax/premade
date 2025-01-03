@@ -25,8 +25,27 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Enable Corepack for Dependency Management
-        run: corepack enable
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+          run_install: false
+
+      - name: Setup pnpm config
+        run: pnpm config set store-dir "$PNPM_CACHE_FOLDER"
+      # Makes sure the pnpm store path exists (which is exactly what setup-node cares about)
+      - name: Verify PNPM Cache Directory
+        run: |
+          PNPM_STORE_PATH="$( pnpm store path --silent )"
+          if [ ! -d "$PNPM_STORE_PATH" ]; then
+            echo "PNPM store directory does not exist, creating it."
+            mkdir -p "$PNPM_STORE_PATH"
+          else
+            echo "PNPM store directory exists."
+          fi
+
+      # - name: Enable Corepack for Dependency Management
+      #   run: corepack enable
 
       - name: Set Up Node.js Environment
         uses: actions/setup-node@v4
@@ -34,13 +53,13 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: "pnpm"
 
-      - name: Bump Version and Commit Changes
-        working-directory: ${{ env.PACKAGE_FOLDER }}
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-        run: |
-          pnpm version patch
-          git config user.name "GitHub Actions"
-          git config user.email "actions@github.com"
-          git commit -am "chore: bump version to patch"
-          git push origin HEAD:master
+      # - name: Bump Version and Commit Changes
+      #   working-directory: ${{ env.PACKAGE_FOLDER }}
+      #   env:
+      #     GITHUB_TOKEN: ${{ github.token }}
+      #   run: |
+      #     pnpm version patch
+      #     git config user.name "GitHub Actions"
+      #     git config user.email "actions@github.com"
+      #     git commit -am "chore: bump version to patch"
+      #     git push origin HEAD:master
