@@ -1,12 +1,10 @@
 name: Validate Pull Request
 
-on: pull_request
-
-# on:
-# pull_request:
-#   paths:
-#   - "packages/**"
-#   - "services/**"
+on:
+  pull_request:
+    paths:
+    - "packages/**"
+    - "services/**"
 
 jobs:
   filter-paths:
