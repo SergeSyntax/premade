@@ -32,5 +32,5 @@ export const {
   POD_NAME = "payments-deployment-6b97d4b9c-q5dmn",
   // payment details
   STRIPE_SECRET_KEY,
-  STRIPE_WEBHOOK_SECRET
+  STRIPE_WEBHOOK_SECRET,
 } = process.env as EnvVars;

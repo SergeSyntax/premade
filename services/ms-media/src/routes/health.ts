@@ -1,11 +1,10 @@
+import { Router } from "express";
 
-import { Router } from 'express';
-
-import { liveController, readyController } from '../controllers';
+import { liveController, readyController } from "../controllers";
 
 const router = Router();
 
-router.get('/ready', readyController)
-router.get('/live', liveController)
+router.get("/ready", readyController);
+router.get("/live", liveController);
 
-export { router as healthRoutes }
+export { router as healthRoutes };

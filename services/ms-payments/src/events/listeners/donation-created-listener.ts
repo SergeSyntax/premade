@@ -1,8 +1,4 @@
-import {
-  DonationCreatedEvent,
-  Listener,
-  Subjects,
-} from "@media-premade/ms-common";
+import { DonationCreatedEvent, Listener, Subjects } from "@media-premade/ms-common";
 
 import { SERVICE_NAME } from "../../config";
 import { onDonationCreatedService } from "../../services/donations";

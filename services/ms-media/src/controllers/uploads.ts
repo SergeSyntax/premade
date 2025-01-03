@@ -14,7 +14,6 @@ type UploadRequestHandler = RequestHandler<
 >;
 
 export const getVideoUploadResourceController: UploadRequestHandler = async (req, res) => {
-  req.query;
   const uploadDetails = await getVideoUploadUrl(req.query, req.currentUser?.id);
 
   res.status(StatusCodes.OK).send(uploadDetails);

@@ -11,4 +11,4 @@ process.on("SIGINT", handleTerm);
 
 await messageBusClient.connect();
 
-await new DonationCreatedListener(messageBusClient.channelWrapper).listen()
+await new DonationCreatedListener(messageBusClient.channelWrapper).listen();

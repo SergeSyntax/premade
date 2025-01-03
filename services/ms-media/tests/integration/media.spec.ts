@@ -137,7 +137,7 @@ describe("update media by id", () => {
       .put(`${TestRoutes.MEDIA}/${media.id}`)
       .set("Cookie", global.login())
       .send({
-        title: faker.internet.userName(),
+        title: faker.internet.username(),
         description: faker.lorem.paragraph(1),
         thumbnailUrl: faker.internet.url(),
         videoUrl: faker.internet.url(),
@@ -147,7 +147,7 @@ describe("update media by id", () => {
 
   it("updated the media provided valid inputs", async () => {
     const userId = new mongoose.Types.ObjectId().toHexString();
-    const title = faker.internet.userName();
+    const title = faker.internet.username();
     const description = faker.lorem.paragraph(1);
 
     const media = new Media({
@@ -173,7 +173,7 @@ describe("update media by id", () => {
 
   it("publish an update event on update rest", async () => {
     const userId = new mongoose.Types.ObjectId().toHexString();
-    const title = faker.internet.userName();
+    const title = faker.internet.username();
     const description = faker.lorem.paragraph(1);
 
     const media = new Media({
@@ -199,7 +199,7 @@ describe("update media by id", () => {
 
   it("reject updates if the media is reserved", async () => {
     const userId = new mongoose.Types.ObjectId().toHexString();
-    const title = faker.internet.userName();
+    const title = faker.internet.username();
     const description = faker.lorem.paragraph(1);
 
     const media = new Media({

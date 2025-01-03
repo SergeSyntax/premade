@@ -4,7 +4,6 @@ import { ControllerFieldState, ControllerRenderProps } from "react-hook-form";
 import * as changeCase from "change-case";
 import { ControllerCommonProps } from "../../types/input";
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 type CustomTextFieldProps = TextFieldProps &
   ControllerCommonProps & {
     omitLabel?: boolean;

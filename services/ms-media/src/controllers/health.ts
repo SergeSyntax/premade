@@ -1,3 +1,4 @@
+import { logger } from "@media-premade/ms-common";
 import { RequestHandler } from "express";
 import { StatusCodes } from "http-status-codes";
 
@@ -8,7 +9,8 @@ export const readyController: RequestHandler = async (_req, res) => {
     await readyService();
 
     res.sendStatus(StatusCodes.OK);
-  } catch (error) {
+  } catch (err) {
+    logger.warn("failed health check", { err });
     res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
   }
 };

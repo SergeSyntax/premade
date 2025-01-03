@@ -11,6 +11,7 @@ export type ControllerRenderProps = {
 
 export type ControllerCommonProps = {
   field: ControllerRenderProps | unknown;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   formState: UseFormStateReturn<any>;
   fieldState: ControllerFieldState;
 };

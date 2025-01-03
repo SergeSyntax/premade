@@ -2,7 +2,7 @@ import { Currency, PaymentModels, Visibility } from "@media-premade/ms-common/li
 import mongoose, { Document, Model } from "mongoose";
 
 export interface MediaDoc extends Document {
-  _id: mongoose.Schema.Types.ObjectId
+  _id: mongoose.Schema.Types.ObjectId;
   version: number;
   title: string;
   price: number;

@@ -8,9 +8,9 @@ export interface AlertDisplayPayload {
 export type AlertState = AlertDisplayPayload[];
 
 export enum AlertActionType {
-  ALERT_DISPLAY = 'alert/display',
-  ALERT_STALE = 'alert/stale',
-  ALERT_CLEAR = 'alert/clear',
+  ALERT_DISPLAY = "alert/display",
+  ALERT_STALE = "alert/stale",
+  ALERT_CLEAR = "alert/clear",
 }
 
 export type AlertDisplayAction = {

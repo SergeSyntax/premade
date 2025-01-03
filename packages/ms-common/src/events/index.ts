@@ -2,4 +2,4 @@ export * from "./listener";
 export * from "./message-bus-client";
 export * from "./publisher";
 export * from "./subjects";
-export { ConsumeMessage } from 'amqplib'
+export { ConsumeMessage } from "amqplib";

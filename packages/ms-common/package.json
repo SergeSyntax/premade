@@ -1,6 +1,6 @@
 {
   "name": "@media-premade/ms-common",
-  "version": "1.0.31",
+  "version": "1.0.32",
   "type": "module",
   "private": false,
   "description": "",
@@ -15,7 +15,7 @@
   },
   "files": [
     "eslint.config.mjs",
-    ".prettierrc.json",
+    "prettier.config.mjs",
     "jest.config.mjs",
     "tsconfig.base.json",
     "lib"

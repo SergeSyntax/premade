@@ -114,5 +114,3 @@ export const onPaymentCreatedService = async (donationId: string) => {
 
   logger.info(`Donation status updated to COMPLETE for ID: ${donationId}`);
 };
-
-
