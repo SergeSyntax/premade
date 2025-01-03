@@ -10,8 +10,8 @@ jobs:
   filter-paths:
     runs-on: ubuntu-latest
     outputs:
-      ms_common_folder: ${{ steps.changes.outputs.ms_common }}
-      ms_auth_folder: ${{ steps.changes.outputs.ms_auth }}
+      changes: ${{ steps.changes.outputs }}
+      # ms_auth_folder: ${{ steps.changes.outputs.ms_auth }}
 
     steps:
       - name: Checkout code
