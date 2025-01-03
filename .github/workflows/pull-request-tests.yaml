@@ -2,13 +2,32 @@ name: Validate Pull Request
 
 on:
   pull_request:
-    types:
-      - opened
     paths:
-      - '**.js'
+      - "packages/**"
+      - "services/**"
 
 jobs:
+  filter-paths:
+    runs-on: ubuntu-latest
+    outputs:
+      ms_common_folder: ${{ steps.changes.outputs.ms_common }}
+      ms_auth_folder: ${{ steps.changes.outputs.ms_auth }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@4
+
+      - name: Filter Paths
+        id: changes
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            ms_common:
+              - "packages/ms-common/**"
+            ms_auth:
+              - "services/ms-auth/**"
   test:
+    needs: filter-paths
     runs-on: ubuntu-latest
 
     strategy:
@@ -20,15 +39,17 @@ jobs:
             type: package
             folder: packages/ms-common
             node-version: v22.12.0
+            enabled: ${{ needs.filter-paths.outputs.ms_common == 'true' }}
 
           - name: ms-auth
             type: service
             folder: services/ms-auth
             node-version: v22.12.0
-
-
+            enabled: ${{ needs.filter-paths.outputs.ms_auth == 'true' }}
+ 
     name: Run Tests for ${{ matrix.workspaces.name }}
-
+    if: ${{ matrix.workspaces.enabled == 'true' }}
+ 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
