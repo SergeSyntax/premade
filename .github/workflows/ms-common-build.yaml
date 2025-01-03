@@ -46,6 +46,14 @@ jobs:
           git commit -am "chore: bump version to patch"
           git push origin HEAD:master
 
+
+      - name: Install Project Dependencies
+        run: pnpm install
+
+      - name: Compile TypeScript Files
+        working-directory: ${{ env.PACKAGE_FOLDER }}
+        run: pnpm build
+
       - name: Publish to NPM
         run: pnpm publish
         working-directory: ${{ env.PACKAGE_FOLDER }}
