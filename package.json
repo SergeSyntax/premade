@@ -4,6 +4,7 @@
   "scripts": {
     "graph": "nx graph",
     "test": "lerna run test --parallel",
+    "test:ci": "lerna run test",
     "build": "lerna run build",
     "format": "lerna run format",
     "lint": "lerna run lint",
