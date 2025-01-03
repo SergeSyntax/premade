@@ -9,9 +9,6 @@ on:
 jobs:
   filter-paths:
     runs-on: ubuntu-latest
-    outputs:
-      changed_files: ${{ steps.changes.outputs.changed_files }}
-      # ms_auth_folder: ${{ steps.changes.outputs.ms_auth }}
 
     steps:
       - name: Checkout code
@@ -29,41 +26,40 @@ jobs:
               - "services/ms-auth/**"
 
       - name: Log Filter Output
-        shell: bash
         run: |
           echo "Changed files:"
-          echo "${{ steps.changes.outputs.changed_files }}"
+          echo "${{ steps.changes.outputs }}"
 
-  test:
-    needs: filter-paths
-    runs-on: ubuntu-latest
+  # test:
+  #   needs: filter-paths
+  #   runs-on: ubuntu-latest
 
-    strategy:
-      fail-fast: true
+  #   strategy:
+  #     fail-fast: true
 
-      matrix:
-        workspaces:
-          - name: ms-common
-            type: package
-            folder: packages/ms-common
-            node-version: v22.12.0
+  #     matrix:
+  #       workspaces:
+  #         - name: ms-common
+  #           type: package
+  #           folder: packages/ms-common
+  #           node-version: v22.12.0
 
-          # - name: ms-auth
-          #   type: service
-          #   folder: services/ms-auth
-          #   node-version: v22.12.0
+  #         # - name: ms-auth
+  #         #   type: service
+  #         #   folder: services/ms-auth
+  #         #   node-version: v22.12.0
 
-    name: Run Tests for ${{ matrix.workspaces.name }}
+  #   name: Run Tests for ${{ matrix.workspaces.name }}
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v4
         
-      - name: Log Changed Files
-        shell: bash
-        run: |
-          echo "Changed files:"
-          echo "${{ needs.filter-paths.outputs.changed_files }}"
+  #     - name: Log Changed Files
+  #       shell: bash
+  #       run: |
+  #         echo "Changed files:"
+  #         echo "${{ needs.filter-paths.outputs.changed_files }}"
 
       # - name: Enable Corepack
       #   run: corepack enable
