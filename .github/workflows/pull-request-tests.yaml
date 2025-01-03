@@ -26,7 +26,7 @@ jobs:
               - "services/ms-auth/**"
 
   test:
-    needs: filter-paths
+    needs: detect-changes
     runs-on: ubuntu-latest
 
     strategy:
