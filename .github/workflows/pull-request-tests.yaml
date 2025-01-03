@@ -47,10 +47,6 @@ jobs:
             node-version: v22.12.0
             enabled: ${{ needs.filter-paths.outputs.ms_auth }}
 
-        exclude:
-          - workspaces:
-              enabled: "false"
-
     name: Run Tests for ${{ matrix.workspaces.name }}
 
     steps:
