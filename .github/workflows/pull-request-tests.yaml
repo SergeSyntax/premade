@@ -50,14 +50,9 @@ jobs:
             enabled: ${{ needs.filter-paths.outputs.ms_auth == 'true' }}
 
     name: Run Tests for ${{ matrix.workspaces.name }}
+    if: ${{ matrix.workspaces.enabled != 'true' }}
 
     steps:
-      - name: Skip job if not enabled
-        if: ${{ matrix.workspaces.enabled != 'true' }}
-        run: |
-          echo "No changes detected for ${{ matrix.workspaces.name }}. Skipping job."
-          exit 0
-
       - name: Checkout code
         uses: actions/checkout@v4
 
