@@ -65,4 +65,4 @@ jobs:
         working-directory: ${{ env.PACKAGE_FOLDER }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: pnpm publish
+        run: pnpm publish --no-git-checks
