@@ -50,35 +50,42 @@ jobs:
             enabled: ${{ needs.filter-paths.outputs.ms_auth == 'true' }}
 
         exclude:
-          - workspaces: 
-              enabled: 'false'
+          - workspaces:
+              enabled: "false"
 
     name: Run Tests for ${{ matrix.workspaces.name }}
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        if: ${{ matrix.workspaces.enabled }}
 
       - name: Enable Corepack
         run: corepack enable
+        if: ${{ matrix.workspaces.enabled }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.workspaces.node-version }}
           cache: "pnpm"
+        if: ${{ matrix.workspaces.enabled }}
 
       - name: Install dependencies
         run: pnpm install
+        if: ${{ matrix.workspaces.enabled }}
 
       - name: Run Lint
         working-directory: ${{ matrix.workspaces.folder }}
         run: pnpm lint
+        if: ${{ matrix.workspaces.enabled }}
 
       - name: Build TypeScript
         working-directory: ${{ matrix.workspaces.folder }}
         run: pnpm build
+        if: ${{ matrix.workspaces.enabled }}
 
       - name: Run tests
         working-directory: ${{ matrix.workspaces.folder }}
         run: pnpm test
+        if: ${{ matrix.workspaces.enabled }}
