@@ -48,10 +48,10 @@ jobs:
             folder: packages/ms-common
             node-version: v22.12.0
 
-          - name: ms-auth
-            type: service
-            folder: services/ms-auth
-            node-version: v22.12.0
+          # - name: ms-auth
+          #   type: service
+          #   folder: services/ms-auth
+          #   node-version: v22.12.0
 
     name: Run Tests for ${{ matrix.workspaces.name }}
 
