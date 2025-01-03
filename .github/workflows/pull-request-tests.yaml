@@ -10,7 +10,7 @@ jobs:
   filter-paths:
     runs-on: ubuntu-latest
     outputs:
-      changes: ${{ steps.changes.outputs }}
+      changed_files: ${{ steps.changes.outputs.changed_files }}
       # ms_auth_folder: ${{ steps.changes.outputs.ms_auth }}
 
     steps:
@@ -53,7 +53,7 @@ jobs:
         uses: actions/checkout@v4
         
       - name: Test
-        run: echo ${{ needs.filter-paths.outputs }}
+        run: echo ${{ needs.filter-paths.outputs.changed_files }}
 
       # - name: Enable Corepack
       #   run: corepack enable
