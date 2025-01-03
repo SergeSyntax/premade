@@ -27,6 +27,13 @@ jobs:
               - "packages/ms-common/**"
             ms-auth:
               - "services/ms-auth/**"
+
+      - name: Log Filter Output
+        shell: bash
+        run: |
+          echo "Changed files:"
+          echo "${{ steps.changes.outputs.changed_files }}"
+
   test:
     needs: filter-paths
     runs-on: ubuntu-latest
@@ -52,8 +59,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         
-      - name: Test
-        run: echo ${{ needs.filter-paths.outputs.changed_files }}
+      - name: Log Changed Files
+        shell: bash
+        run: |
+          echo "Changed files:"
+          echo "${{ needs.filter-paths.outputs.changed_files }}"
 
       # - name: Enable Corepack
       #   run: corepack enable
