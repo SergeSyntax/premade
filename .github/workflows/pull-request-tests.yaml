@@ -3,10 +3,10 @@ name: Validate Pull Request
 on: pull_request
 
 # on:
-  # pull_request:
-  #   paths:
-    #   - "packages/**"
-    #   - "services/**"
+# pull_request:
+#   paths:
+#   - "packages/**"
+#   - "services/**"
 
 jobs:
   filter-paths:
@@ -48,19 +48,18 @@ jobs:
             folder: services/ms-auth
             node-version: v22.12.0
             enabled: ${{ needs.filter-paths.outputs.ms_auth == 'true' }}
- 
-    name: Run Tests for ${{ matrix.workspaces.name }}
- 
-    steps:
 
-      - name: Check if workspace should run
+    name: Run Tests for ${{ matrix.workspaces.name }}
+
+    steps:
+      - name: Skip job if not enabled
+        if: ${{ matrix.workspaces.enabled != 'true' }}
         run: |
-          if [ "${{ matrix.workspaces.enabled }}" != "true" ]; then
-            echo "No changes detected for ${{ matrix.workspaces.name }}. Skipping job."
-            exit 0
-          fi
+          echo "No changes detected for ${{ matrix.workspaces.name }}. Skipping job."
+          exit 0
 
       - name: Checkout code
+        if: ${{ "${{ matrix.workspaces.enabled }}" == "true" }}
         uses: actions/checkout@v4
 
       - name: Enable Corepack
