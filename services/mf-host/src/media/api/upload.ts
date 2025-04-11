@@ -46,7 +46,6 @@ export const uploadPresignedURLFile = async (
     headers: {
       "Content-Type": type,
       "x-amz-checksum-sha256": checksum,
-      // "x-amz-server-side-encryption": "AES256", // Include this header
     },
   });
 };

@@ -104,4 +104,46 @@ Auth service:
 setup cors should be able to fetch videos only from the origin web client localhost:3000
 
 
-test
+- Setup private endpoint Gateway for S3 for security
+- Set ENA for better network
+- consider cluster placement for EC2
+- check AMI template for Autoscaling 
+- consider EC2 fleet for partial spot instance for auto scaling
+- include cloudwatch agent for EKS pods and nodes for metrics and log collections
+- consider Grafana or alternatives for cloud watch integration
+- for uploading videos setup multipart uploads s3
+- for downloading/watching videos use S3 Byte Range Fetches
+- check what netflix system design suggest / if we have 36 hour video no point in downloading it all point where stopped 00:02:00 + 1 hour and then stop downloading till point progress
+
+ - setup s3 lifecycle to remove multipart partial uploaded files after a week (7 days)
+
+
+- consider kms cost more not sure what the benfit over SSE-S3
+    // {
+    //   "Effect": "Deny",
+    //   "Principal": "*",
+    //   "Action": ["s3:PutObject"],
+    //   "Resource": [
+    //     "arn:aws:s3:::${BUCKET_NAME}/*",
+    //     "arn:aws:s3:::${BUCKET_NAME}"
+    //   ],
+    //   "Condition": {
+    //     "StringNotEquals": {
+    //       "s3:x-amz-server-size-encryption": "aws:kms"
+    //     }
+    //   }
+    // },
+
+  - reduce the amount of buckets and add Access Points
+   - media/thumbnails - thumbnails prefix
+   - media/video - video prefix
+   - auth/profiles - profiles prefix
+  a bucket per service
+
+
+  - find alternative to AWS Rekognition on prem for content moderation to create a safer user experience
+    - check flag sensitive conent  for manual review in Amazon Augmented AI A2I review process can be done via the app.
+
+  - find alternative to AWS Transcribe to convert video audio to subtitles
+
+   - lifecycle for s3 to move videos that not in use to inconsistent S3 class after a year of not being in use to S3 Glacier

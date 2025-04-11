@@ -8,8 +8,9 @@
 
 1. [Overview](#overview)
 2. [Structure](#structure)
-3. [Installation](#installation)
-4. [Creating a Package](#creating-a-package)
+3. [Prerequisite Tools](#prerequisite-tools)
+4. [Installation](#installation)
+5. [Creating a Package](#creating-a-package)
 
 ---
 
@@ -32,6 +33,17 @@ The repository is organized into the following sections:
   - Example: [ms-common](./packages/ms-common/README.md) - A utility library for common operations like database management, logging, and event handling.
 - `services/`: Microservices that provide the core functionality of the platform.
 - `operations/`: Python and Bash scripts for cron jobs, initialization tasks, and other operational utilities.
+
+---
+
+## Prerequisite Tools
+
+Before setting up the project, ensure the following tools are installed:
+
+- **AWS CLI**: For managing cloud resources. [Install AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-version.html)
+- **Corepack**: For managing Node.js package managers like pnpm.
+- **pnpm**: A fast and efficient package manager for Node.js.
+- **Git**: For version control and repository management.
 
 ---
 
