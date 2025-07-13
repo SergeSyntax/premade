@@ -46,11 +46,11 @@ jobs:
           git commit -am "chore: bump version to patch"
           git push origin HEAD:master
 
-          - name: Restore node modules cache if preset
-          uses: actions/cache@v4
-          with:
-            key: ${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
-            path: "**/node_modules"
+      - name: Restore node modules cache if preset
+        uses: actions/cache@v4
+        with:
+          key: ${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
+          path: "**/node_modules"
 
       - name: Install Project Dependencies
         run: pnpm install
