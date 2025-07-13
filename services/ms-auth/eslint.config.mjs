@@ -1,4 +1,4 @@
-import eslintCommonConfig from "@media-premade/ms-common/eslint.config.mjs"
+import eslintCommonConfig from "@media-premade/ms-common/eslint.config.mjs";
 
-/** @type {import('eslint').Linter.FlatConfig[]} */
-export default eslintCommonConfig
+/** @type {import('eslint').Linter.Config[]} */
+export default eslintCommonConfig;

@@ -1,4 +1,8 @@
-import { injectCurrentUser, ReqAttr, validateRequest } from "@media-premade/ms-common";
+import {
+  injectCurrentUser,
+  ReqAttr,
+  validateRequest,
+} from "@media-premade/ms-common";
 import { Router } from "express";
 
 import { liveController } from "../controllers";
@@ -9,14 +13,30 @@ import {
   registerController,
   verifyEmailController,
 } from "../controllers/auth";
-import { loginBodySchema, registerBodySchema, verifyEmailSchema } from "../schemas/login.schemas";
+import {
+  loginBodySchema,
+  registerBodySchema,
+  verifyEmailSchema,
+} from "../schemas/login.schemas";
 
 const router = Router();
 
 // TODO: add swagger
-router.post("/login", validateRequest(ReqAttr.BODY, loginBodySchema), loginController);
-router.post("/register", validateRequest(ReqAttr.BODY, registerBodySchema), registerController);
-router.post("/email", validateRequest(ReqAttr.BODY, verifyEmailSchema), verifyEmailController);
+router.post(
+  "/login",
+  validateRequest(ReqAttr.BODY, loginBodySchema),
+  loginController,
+);
+router.post(
+  "/register",
+  validateRequest(ReqAttr.BODY, registerBodySchema),
+  registerController,
+);
+router.post(
+  "/email",
+  validateRequest(ReqAttr.BODY, verifyEmailSchema),
+  verifyEmailController,
+);
 router.get("/current-user", injectCurrentUser, currentUserController);
 router.get("/live", liveController);
 router.post("/logout", logoutController);
