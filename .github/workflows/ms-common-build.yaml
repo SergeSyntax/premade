@@ -6,6 +6,7 @@ on:
       - master
     paths:
       - "packages/ms-common/**"
+  workflow_dispatch: {}
 
 env:
   PACKAGE_NAME: ms-common
@@ -26,14 +27,13 @@ jobs:
       - name: Install pnpm
         uses: pnpm/action-setup@v4
         with:
-          run_install: false
+          version: 10
 
       - name: Set Up Node.js Environment
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: "pnpm"
-          registry-url: "https://registry.npmjs.org"
 
       - name: Bump Version and Commit Changes
         working-directory: ${{ env.PACKAGE_FOLDER }}
@@ -46,6 +46,11 @@ jobs:
           git commit -am "chore: bump version to patch"
           git push origin HEAD:master
 
+          - name: Restore node modules cache if preset
+          uses: actions/cache@v4
+          with:
+            key: ${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
+            path: "**/node_modules"
 
       - name: Install Project Dependencies
         run: pnpm install
